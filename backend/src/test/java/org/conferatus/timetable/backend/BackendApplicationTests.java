@@ -9,9 +9,5 @@ class BackendApplicationTests {
     void contextLoads() {
         Assertions.assertTrue(true);
     }
-    @Test
-    void failedTest(){
-        Assertions.assertFalse(true);
-    }
 
 }
