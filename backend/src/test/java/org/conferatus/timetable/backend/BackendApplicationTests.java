@@ -10,4 +10,9 @@ class BackendApplicationTests {
         Assertions.assertTrue(true);
     }
 
+    @Test
+    void parasha() {
+        Assertions.assertFalse(2 == 1);
+    }
+
 }
