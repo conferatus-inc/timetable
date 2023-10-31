@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 @ControllerAdvice
-public class BaseController {
+public class ExceptionHandlingController {
     @ExceptionHandler(ServerException.class)
     private void handle(HttpServletResponse response, ServerException serverException) {
         response.setStatus(serverException.getStatus().value());

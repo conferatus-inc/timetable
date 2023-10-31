@@ -4,7 +4,7 @@ global:
     monitor: 'codelab-monitor'
 
 scrape_configs:
-  - job_name: 'note-servce'
+  - job_name: 'app-servce'
     scrape_interval: 5s
     metrics_path: '/actuator/prometheus'
     static_configs:
