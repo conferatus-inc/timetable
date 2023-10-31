@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-@RestController
+@ControllerAdvice
 public class BaseController {
     @ExceptionHandler(ServerException.class)
     private void handle(HttpServletResponse response, ServerException serverException) {
