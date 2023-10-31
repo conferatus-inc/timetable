@@ -1,17 +1,18 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    >
+  <q-page padding class="flex flex-left">
+
+    <q-list dense bordered padding> 
+      <q-item clickable v-ripple @click="gavna.push(`GAGAGAGSJGDHSKGG`)" v-for="a in gavna" :key="a">
+        <q-item-section>
+          {{ a }}
+        </q-item-section>
+      </q-item>
+    </q-list>
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { ref } from 'vue'
 
-export default defineComponent({
-  name: 'IndexPage'
-})
+const gavna = ref(['a', 'b'])
 </script>
