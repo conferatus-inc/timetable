@@ -1,37 +1,32 @@
 package org.conferatus.timetable.backend.control;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import org.conferatus.timetable.backend.exception.ServerException;
-import org.springframework.http.HttpStatus;
+import org.conferatus.timetable.backend.services.SomeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.LongAdder;
 
 @RestController
 @RequestMapping("/api/1.0")
-public class PingController extends BaseController {
+public class PingController {
     private final MeterRegistry meterRegistry;
     private final LongAdder counter;
+    private final SomeService someService;
 
-    public PingController(MeterRegistry meterRegistry) {
+    public PingController(MeterRegistry meterRegistry, SomeService someService) {
         this.meterRegistry = meterRegistry;
         counter = new LongAdder();
-        meterRegistry.gauge("noteCounter", counter);
+        meterRegistry.gauge("pingCounter", counter);
+        this.someService = someService;
     }
 
     @GetMapping("/ping")
-    public CompletableFuture<ResponseEntity<?>> ping() {
-        return CompletableFuture.supplyAsync(() -> {
-            counter.increment();
-            if (counter.longValue() == 2) {
-                ServerException.throwException(HttpStatus.NOT_FOUND);
-            }
-            return counter.longValue();
-        }).thenApplyAsync(ResponseEntity::ok);
+    public ResponseEntity<String> ping() {
+        counter.increment();
+        return ResponseEntity.ok("pong");
 
     }
 }

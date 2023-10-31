@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
-public enum TypicalServerExceptions {
+public enum ServerExceptions {
     NOT_FOUND_EXCEPTION(new ServerException(HttpStatus.NOT_FOUND, "NOT_FOUND_EXCEPTION")),
     ACCESS_TOKEN_EXPIRED(new ServerException(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN_EXPIRED")),
     REFRESH_TOKEN_EXPIRED(new ServerException(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN_EXPIRED")),
@@ -20,20 +20,20 @@ public enum TypicalServerExceptions {
 
     private final ServerException serverException;
 
-    TypicalServerExceptions(HttpStatus httpStatus, String message, String moreInfo) {
+    ServerExceptions(HttpStatus httpStatus, String message, String moreInfo) {
         serverException = new ServerException(httpStatus, message, moreInfo);
     }
 
-    TypicalServerExceptions(ServerException serverException) {
+    ServerExceptions(ServerException serverException) {
         this.serverException = serverException;
     }
 
-    public TypicalServerExceptions message(String message) {
+    public ServerExceptions message(String message) {
         this.serverException.setCode(message);
         return this;
     }
 
-    public TypicalServerExceptions moreInfo(String moreInfo) {
+    public ServerExceptions moreInfo(String moreInfo) {
         this.serverException.setMessage(moreInfo);
         return this;
     }
