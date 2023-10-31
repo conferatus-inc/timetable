@@ -33,7 +33,7 @@ jobs:
       - name: chmod gradlew
         working-directory: ./backend
         run: chmod +x ./gradlew
-          -
+
       - name: build gradle project
         working-directory: ./backend
         run: ./gradlew build
