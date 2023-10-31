@@ -27,8 +27,8 @@ jobs:
       
 
       - name: Setup Gradle
-        working-directory: ./backend
         uses: gradle/gradle-build-action@v2
+
 
       - name: chmod gradlew
         working-directory: ./backend
@@ -47,7 +47,6 @@ jobs:
         run: ./gradlew jacocoTestReport
 
       - uses: actions/upload-artifact@v3
-        working-directory: ./backend
         with:
           name: Package
-          path: build/libs
+          path: ./backend/build/libs
