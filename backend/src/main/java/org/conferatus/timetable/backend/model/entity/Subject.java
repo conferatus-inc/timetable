@@ -13,13 +13,22 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "subject")
 public class Subject {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     String name;
     //todo: maybe extended
     @ManyToMany
-    @JoinTable
+    @JoinTable(
+            name = "subject_teacher",
+            joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    )
     List<Teacher> possibleTeacher;
+
+    @OneToMany
+    @JoinColumn(name = "lesson_id")
+    List<Lesson> lessons;
 }

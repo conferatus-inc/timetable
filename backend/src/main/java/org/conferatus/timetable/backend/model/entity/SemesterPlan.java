@@ -13,14 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "semesterplan")
 public class SemesterPlan {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "subject_id")
+    private List<Subject> subjects;
     //todo: ? manytomany
     //@JoinTable
-    private List<Subject> subjects;
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.atomic.LongAdder;
 
 @RestController
-@RequestMapping("/api/1.0")
+@RequestMapping("/api/ping")
 public class PingController {
     private final MeterRegistry meterRegistry;
     private final LongAdder counter;

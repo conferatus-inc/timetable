@@ -17,7 +17,7 @@ import org.conferatus.timetable.backend.model.AuditoryType;
 @Setter
 public class Auditory {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private AuditoryType auditoryType;
     private String auditoryNumber;
