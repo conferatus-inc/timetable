@@ -6,7 +6,7 @@ app = FastAPI()
 
 origins = [
     'http://localhost',
-    'http://localhost:9000',
+    'http://localhost:3000',
 ]
 
 app.add_middleware(
@@ -21,7 +21,7 @@ app.add_middleware(
 
 @app.get('/api/example')
 async def root():
-    return {'message': 'Hello World'}
+    return 'Hello World'
 
 
     
@@ -41,8 +41,7 @@ for i, tea in enumerate(teachers):
 
 @app.get('/teacher')
 async def getAllTeachers():
-    print(json.dumps(teachers))
-    return {'teachers': teachers}
+    return teachers
 
 
 audiences = [
@@ -60,7 +59,7 @@ for i, aud in enumerate(audiences):
 
 @app.get('/audience')
 async def getAllAudiences():
-    return {'audiences': audiences}
+    return audiences
 
 
 
@@ -80,7 +79,7 @@ for i, subj in enumerate(subjects):
 
 @app.get('/subject')
 async def getAllSubjects():
-    return {'subjects': subjects}
+    return subjects
 
 
 
@@ -100,7 +99,7 @@ for i, grp in enumerate(groups):
 
 @app.get('/group')
 async def getAllSubjects():
-    return {'groups': groups}
+    return groups
 
 
 
@@ -152,4 +151,4 @@ async def getTable(group_id: int):
 
     print(newTable)
 
-    return {'table': newTable}
+    return newTable
