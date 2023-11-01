@@ -24,13 +24,12 @@ public class StudyGroupService {
 
     public StudyGroup addGroup(String groupName) {
         notExistsByNameOrThrow(groupName);
-
         return studyGroupRepository.save(StudyGroup.builder().name(groupName).build());
     }
 
     public StudyGroup updateGroup(String previousGroupName, String newGroupName) {
         var group = getGroupByNameOrThrow(previousGroupName);
-        if (newGroupName == previousGroupName) {
+        if (newGroupName.equals(previousGroupName)) {
             return group;
         }
         notExistsByNameOrThrow(newGroupName);
