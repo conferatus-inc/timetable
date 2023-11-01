@@ -22,12 +22,12 @@ public class StudyGroupController {
         }
     }
 
-    @PutMapping("/{groupName}")
-    public ResponseEntity<String> updateGroup(@PathVariable String groupName) {
-        if (studyGroupService.updateGroup(groupName)) {
+    @PutMapping("/{previousGroupName}/{newGroupName}")
+    public ResponseEntity<String> updateGroup(@PathVariable String previousGroupName, @PathVariable String newGroupName) {
+        if (studyGroupService.updateGroup(previousGroupName, newGroupName)) {
             return ResponseEntity.ok().build();
         } else {
-            throw new ServerException(HttpStatus.NOT_FOUND, "Group with name " + groupName + " does not exist");
+            throw new ServerException(HttpStatus.NOT_FOUND, "Group with name " + previousGroupName + " does not exist");
         }
     }
 
