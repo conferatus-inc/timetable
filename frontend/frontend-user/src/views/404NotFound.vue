@@ -1,5 +1,5 @@
 <template>
-  <my-error-container :errorMessage="msg"></my-error-container>
+  <MyErrorContainer :errorMessage="msg"></MyErrorContainer>
 </template>
 
 <script setup>

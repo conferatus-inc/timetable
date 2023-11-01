@@ -1,11 +1,11 @@
 <template>
   <div v-if="state === 'loading'">
     <v-container>
-      <v-row>
+      <!-- <v-row>
         <v-col>
           <v-progress-linear>Загрузка</v-progress-linear>
         </v-col>
-      </v-row>
+      </v-row> -->
     </v-container>
   </div>
   <div v-else-if="state === 'loaded'">
@@ -30,8 +30,8 @@
     </v-container>
   </div>
   <div v-else>
-    <my-error-container :errorMessage="errorMessage">
-    </my-error-container>
+    <MyErrorContainer :errorMessage="errorMessage">
+    </MyErrorContainer>
   </div>
 </template>
 
