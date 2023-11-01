@@ -1,6 +1,8 @@
 <template>
   <v-main>
-    <router-view />
+    <v-fade-transition appear hide-on-leave="true">
+      <router-view />
+    </v-fade-transition>
   </v-main>
 </template>
 

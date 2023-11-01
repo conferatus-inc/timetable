@@ -12,18 +12,18 @@
     <v-container>
       <v-row>
         <v-col>
-          <h2 class="ma-1">Расписание преподавателей</h2>
+          <h2 class="ma-1">Расписание преподавателя {{ $route.params.id }}</h2>
 
-          <div v-for="item in items" :key="item.id">
+          <!-- <div v-for="item in items" :key="item.id">
             <v-spacer></v-spacer>
             <v-btn 
             variant="outlined" 
             class="ma-1"
-            @click="$router.push({ path: '/teacher/' + item.id })"
+            @click="router.push({ 'path' : '/teacher/' + item.id})"
             >
               {{ item.name }}
             </v-btn>
-          </div>
+          </div> -->
 
         </v-col>
       </v-row>
@@ -37,16 +37,20 @@
 
 <script setup>
 // todo все перенести в компонент
-  import ItemsButtonsList from '@/components/ItemsButtonsList.vue';
   import MyErrorContainer from '@/components/MyErrorContainer.vue'
   import { http } from '@/http-common';
   import { ref } from 'vue'
+  import router from '@/router';
 
   const items = ref([])
-  const state = ref('loading')
+  // const state = ref('loading')
+  const state = ref('loaded')
+
   const errorMessage = ref('') // tmp
 
-  http.get('/teacher')
+  console.log(router.currentRoute)
+
+  http.get('/teacher/' + route.params.id)
   .then(response => {
       items.value = response.data
       state.value = 'loaded'

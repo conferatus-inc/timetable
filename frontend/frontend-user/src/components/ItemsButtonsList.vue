@@ -10,7 +10,7 @@
     </div>
 </template>
 
-<script>
+<script> // todo unused
 export default {
   name: 'items-buttons-list',
   props: {
@@ -19,5 +19,8 @@ export default {
       required: true,
     },
   },
+  created() {
+    this.$emit('onClick', this.customHeaderButtons);
+  }
 }
 </script>
