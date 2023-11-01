@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.conferatus.timetable.backend.model.AuditoryType;
+import org.conferatus.timetable.backend.model.AudienceType;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class Audience {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private AuditoryType auditoryType;
+    private AudienceType audienceType;
     private String name;
     @OneToMany
     @JoinColumn(name = "lesson_id")
