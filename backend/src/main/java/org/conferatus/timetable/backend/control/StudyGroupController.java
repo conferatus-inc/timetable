@@ -1,5 +1,6 @@
 package org.conferatus.timetable.backend.control;
 
+import feign.Param;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.services.StudyGroupService;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,9 @@ public class StudyGroupController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{previousGroupName}/{newGroupName}")
-    public ResponseEntity<String> updateGroup(@PathVariable String previousGroupName, @PathVariable String newGroupName) {
+    @PutMapping("/update")
+    public ResponseEntity<String> updateGroup(@Param("current") String previousGroupName,
+                                              @Param("new") String newGroupName) {
         studyGroupService.updateGroup(previousGroupName, newGroupName);
         return ResponseEntity.ok().build();
 
