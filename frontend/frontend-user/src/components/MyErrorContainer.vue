@@ -22,18 +22,23 @@
   </v-container>
 </template>
 
-<script>
-import { h } from 'vue';
+<script setup>
+// import { h } from 'vue';
 
- // todo unused
-export default {
-    name: 'my-error-container',
-    props: {
-        errorMessage: {
-            type: Object,
-            default: "unknown"
-        },
-    },
-    components: { h }
-}
+// export default {
+//     name: 'my-error-container',
+//     props: {
+//         errorMessage: {
+//             type: Object,
+//             default: "unknown"
+//         },
+//     },
+//     components: { h }
+// }
+const props = defineProps({
+  errorMessage: {
+    type: String,
+    default: "undefined"
+  }
+})
 </script>
