@@ -1,43 +1,47 @@
 package org.conferatus.timetable.backend.services;
 
 import lombok.RequiredArgsConstructor;
+import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
 import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class StudyGroupService {
     private final StudyGroupRepository studyGroupRepository;
 
-    public boolean addGroup(String groupName) {
-        if (studyGroupRepository.existsStudyGroupByName(groupName)) {
-            return false;
-        } else {
-            studyGroupRepository.save(new StudyGroup(null, groupName, null)); // TODO constructor
-            return true;
-        }
+    private StudyGroup getGroupByNameOrThrow(String name) {
+        return studyGroupRepository.findStudyGroupByName(name)
+                .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
+                        "Group with name " + name + " does not exist"));
     }
 
-    public boolean updateGroup(String previousGroupName, String newGroupName) {
-        if (!studyGroupRepository.existsStudyGroupByName(previousGroupName)) {
-            return false;
-        } else {
-            Optional<StudyGroup> studyGroup = studyGroupRepository.findStudyGroupByName(previousGroupName);
-            studyGroup.ifPresent(value -> value.setName(newGroupName)); // FIXME
-            studyGroup.ifPresent(studyGroupRepository::save); // FIXME
-            return true;
-        }
+    private void notExistsByNameOrThrow(String name) {
+        getGroupByNameOrThrow(name);
     }
 
-    public boolean deleteGroup(String groupName) {
-        if (!studyGroupRepository.existsStudyGroupByName(groupName)) {
-            return false;
-        } else {
-            studyGroupRepository.deleteStudyGroupByName(groupName);
-            return true;
+    public StudyGroup addGroup(String groupName) {
+        notExistsByNameOrThrow(groupName);
+        return studyGroupRepository.save(new StudyGroup(null, groupName, List.of()));
+    }
+
+    public StudyGroup updateGroup(String previousGroupName, String newGroupName) {
+        var group = getGroupByNameOrThrow(previousGroupName);
+        if (newGroupName == previousGroupName) {
+            return group;
         }
+        notExistsByNameOrThrow(newGroupName);
+        group.setName(newGroupName);
+        return studyGroupRepository.save(group);
+    }
+
+    public StudyGroup deleteGroupOrThrow(String groupName) {
+        var group = getGroupByNameOrThrow(groupName);
+        studyGroupRepository.delete(group);
+        return group;
     }
 }
