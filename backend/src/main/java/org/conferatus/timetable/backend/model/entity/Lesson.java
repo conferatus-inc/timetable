@@ -33,7 +33,7 @@ public class Lesson {
     private Subject subject;
     @ManyToOne
     @JoinColumn(name = "auditory_id")
-    private Auditory auditory;
+    private Audience audience;
 
     private int numberOfTime; //time
     private int weekDay; //day of the week

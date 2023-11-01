@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Auditory {
+public class Audience {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

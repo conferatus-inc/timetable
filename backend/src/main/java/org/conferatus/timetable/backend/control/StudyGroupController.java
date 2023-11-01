@@ -15,7 +15,7 @@ public class StudyGroupController {
 
     @GetMapping("/")
     public ResponseEntity<StudyGroupResponseDTO> getGroup(@Param("name") Long id) {
-        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(id).getName()));
+        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(id)));
     }
 
     @PostMapping("/")
