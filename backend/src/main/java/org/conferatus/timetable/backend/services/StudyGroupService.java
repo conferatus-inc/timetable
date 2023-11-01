@@ -19,7 +19,10 @@ public class StudyGroupService {
     }
 
     private void notExistsByNameOrThrow(String name) {
-        getGroupByNameOrThrow(name);
+        if (studyGroupRepository.findStudyGroupByName(name).isPresent()) {
+            throw new ServerException(HttpStatus.NOT_FOUND,
+                    "Group with name " + name + " does not exist");
+        }
     }
 
     public StudyGroup addGroup(String groupName) {
