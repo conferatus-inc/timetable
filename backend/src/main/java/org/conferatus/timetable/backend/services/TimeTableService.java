@@ -25,26 +25,37 @@ public class TimeTableService {
     private final AuditoryRepository auditoryRepository;
     private final TeacherRepository teacherRepository;
 
-    private StudyGroup getGroupByNameOrThrow(String name) {
+    private StudyGroup getGroupOrThrow(String name) {
         return studyGroupRepository.findStudyGroupByName(name)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Group with name " + name + " does not exist"));
     }
 
-    private Audience getAuditoryByNameOrThrow(String name) {
+    private StudyGroup getGroupOrThrow(Long id) {
+        return studyGroupRepository.findStudyGroupById(id)
+                .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
+                        "Group with name " + id + " does not exist"));
+    }
+
+    private Audience getAuditoryOrThrow(String name) {
         return auditoryRepository.findByName(name)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Group with name " + name + " does not exist"));
     }
 
 
-    public List<Lesson> getLessonsByGroupName(String groupName) {
-        StudyGroup group = getGroupByNameOrThrow(groupName);
+    public List<Lesson> getLessonsByGroup(String groupName) {
+        StudyGroup group = getGroupOrThrow(groupName);
+        return group.getLessons();
+    }
+
+    public List<Lesson> getLessonsByGroup(Long id) {
+        StudyGroup group = getGroupOrThrow(id);
         return group.getLessons();
     }
 
     public List<Lesson> getLessonsByAuditory(String auditoryName) {
-        Audience audience = getAuditoryByNameOrThrow(auditoryName);
+        Audience audience = getAuditoryOrThrow(auditoryName);
         return List.of();
     }
 
@@ -62,6 +73,10 @@ public class TimeTableService {
     }
 
     public Map<String, Map<Integer, Lesson>> getTableByGroupName(String groupName) {
-        return getTable(getLessonsByGroupName(groupName));
+        return getTable(getLessonsByGroup(groupName));
+    }
+
+    public Map<String, Map<Integer, Lesson>> getTableByGroupId(Long id) {
+        return getTable(getLessonsByGroup(id));
     }
 }
