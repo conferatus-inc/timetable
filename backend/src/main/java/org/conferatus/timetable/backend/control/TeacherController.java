@@ -22,9 +22,8 @@ public class TeacherController {
 
     @GetMapping("/all")
     public ResponseEntity<List<TeacherResponseDTO>> getAllTeachers() {
-        List<TeacherResponseDTO> teachersDTO = teacherService.getAllTeachers().stream()
-                .map(TeacherResponseDTO::new).toList();
-        return ResponseEntity.ok(teachersDTO);
+        return ResponseEntity.ok(teacherService.getAllTeachers().stream()
+                .map(TeacherResponseDTO::new).toList());
     }
 
     @PostMapping("/")
