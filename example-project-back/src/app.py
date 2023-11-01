@@ -151,9 +151,8 @@ async def getTableByGroupId(group_id: int):
 
 @app.get('/table/by-teacher-id/{teacher_id}')
 async def getTableByTeacherId(teacher_id: int):
-    newTable = table.copy()['cells'] = list(filter((lambda x : x['teacher']['id'] == teacher_id), table['cells']))
-
-    print(newTable)
+    newTable = table.copy()
+    newTable['cells'] = list(filter((lambda x : x['teacher']['id'] == teacher_id), table['cells']))
 
     return newTable
 
