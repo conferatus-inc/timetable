@@ -18,12 +18,12 @@ public class WebSecurityConfiguration //implements WebSecurityConfigurerAdapter
 {
 
 
-
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http
+//                .authorizeHttpRequests(authz -> authz.requestMatchers("/admin").authenticated()) // TODO
+//                .httpBasic(withDefaults())                                                       // TODO
+                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
