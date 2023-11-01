@@ -8,7 +8,7 @@ import java.util.List;
 public record LessonDTO(
         Long id,
         TeacherResponseDTO teacher,
-        AuditoryDTO auditory,
+        AudienceDTO auditory,
         List<StudyGroupResponseDTO> groups,
         @JsonProperty("day_index") int dayNumber,
         @JsonProperty("time_index") int timeNumber
@@ -17,7 +17,7 @@ public record LessonDTO(
     public LessonDTO(Lesson lesson) {
         this(lesson.getId(),
                 new TeacherResponseDTO(lesson.getTeacher()),
-                new AuditoryDTO(lesson.getAudience()),
+                new AudienceDTO(lesson.getAudience()),
                 lesson.getGroups()
                         .stream()
                         .map(StudyGroupResponseDTO::new)

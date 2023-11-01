@@ -6,7 +6,7 @@ import org.conferatus.timetable.backend.model.entity.Audience;
 import org.conferatus.timetable.backend.model.entity.Lesson;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
 import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.repos.AuditoryRepository;
+import org.conferatus.timetable.backend.model.repos.AudienceRepository;
 import org.conferatus.timetable.backend.model.repos.LessonRepository;
 import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
 import org.conferatus.timetable.backend.model.repos.TeacherRepository;
@@ -32,7 +32,7 @@ public class TimeTableService {
 
     private final LessonRepository lessonRepository;
     private final StudyGroupRepository studyGroupRepository;
-    private final AuditoryRepository auditoryRepository;
+    private final AudienceRepository audienceRepository;
     private final TeacherRepository teacherRepository;
 
     private StudyGroup getGroupOrThrow(String name) {
@@ -60,7 +60,7 @@ public class TimeTableService {
     }
 
     private Audience getAuditoryOrThrow(String name) {
-        return auditoryRepository.findByName(name)
+        return audienceRepository.findByName(name)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Group with name " + name + " does not exist"));
     }

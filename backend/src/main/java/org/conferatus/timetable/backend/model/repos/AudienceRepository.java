@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AuditoryRepository extends JpaRepository<Audience, Long> {
+public interface AudienceRepository extends JpaRepository<Audience, Long> {
     Optional<Audience> findByName(String previousGroupName);
+
+    Optional<Audience> findAudienceById(Long id);
+
+    Optional<Audience> findAudienceByName(String name);
 }

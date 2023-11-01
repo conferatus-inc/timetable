@@ -1,10 +1,7 @@
 package org.conferatus.timetable.backend.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.conferatus.timetable.backend.model.AudienceType;
 
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Audience {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,7 +20,7 @@ public class Audience {
     private String name;
     @OneToMany
     @JoinColumn(name = "lesson_id")
-    private List<Lesson> auditory;
+    private List<Lesson> lessons;
 
 
 }
