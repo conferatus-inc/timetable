@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,7 @@ public class SemesterPlan {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "subject_id")
-    private List<Subject> subjects;
+    private List<Subject> subjects = new ArrayList<>();
     //todo: ? manytomany
     //@JoinTable
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,5 +22,5 @@ public class Teacher {
 
     @OneToMany
     @JoinColumn(name = "lesson_id")
-    List<Lesson> lessons;
+    List<Lesson> lessons = new ArrayList<>();
 }

@@ -1,11 +1,9 @@
 package org.conferatus.timetable.backend.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "studygroup")
+@Builder
 public class StudyGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,6 +20,6 @@ public class StudyGroup {
     private String name;
 
     @ManyToMany(mappedBy = "groups", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    List<Lesson> lessons;
+    List<Lesson> lessons = new ArrayList<>();
 
 }

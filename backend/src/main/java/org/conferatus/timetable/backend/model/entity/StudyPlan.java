@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,5 +20,5 @@ public class StudyPlan {
     private Long id;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "semesterplan_id")
-    private List<SemesterPlan> semesterPlans;
+    private List<SemesterPlan> semesterPlans = new ArrayList<>();
 }

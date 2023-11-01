@@ -7,8 +7,6 @@ import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class StudyGroupService {
@@ -26,7 +24,8 @@ public class StudyGroupService {
 
     public StudyGroup addGroup(String groupName) {
         notExistsByNameOrThrow(groupName);
-        return studyGroupRepository.save(new StudyGroup(null, groupName, List.of()));
+
+        return studyGroupRepository.save(StudyGroup.builder().name(groupName).build());
     }
 
     public StudyGroup updateGroup(String previousGroupName, String newGroupName) {
