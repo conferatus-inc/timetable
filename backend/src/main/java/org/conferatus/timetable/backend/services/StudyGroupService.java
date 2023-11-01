@@ -5,14 +5,17 @@ import org.conferatus.timetable.backend.model.entity.StudyGroup;
 import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class StudyGroupService {
     private final StudyGroupRepository studyGroupRepository;
 
-    public Optional<StudyGroup> getGroup(String groupName) {
-        return studyGroupRepository.findStudyGroupByGroupName(groupName);
+    public boolean addGroup(String groupName) {
+        if (studyGroupRepository.existsStudyGroupByName(groupName)) {
+            return false;
+        } else {
+            studyGroupRepository.save(new StudyGroup(null, groupName, null)); // TODO constructor
+            return true;
+        }
     }
 }
