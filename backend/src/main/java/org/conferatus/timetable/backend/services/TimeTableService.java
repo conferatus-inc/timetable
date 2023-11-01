@@ -2,6 +2,7 @@ package org.conferatus.timetable.backend.services;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
+import org.conferatus.timetable.backend.model.entity.Auditory;
 import org.conferatus.timetable.backend.model.entity.Lesson;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
 import org.conferatus.timetable.backend.model.repos.AuditoryRepository;
@@ -27,11 +28,20 @@ public class TimeTableService {
                         "Group with name " + name + " does not exist"));
     }
 
+    private Auditory getAuditoryByNameOrThrow(String name) {
+        return auditoryRepository.findByName(name)
+                .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
+                        "Group with name " + name + " does not exist"));
+    }
+
 
     public List<Lesson> getLessonsByGroupName(String groupName) {
         StudyGroup group = getGroupByNameOrThrow(groupName);
         return group.getLessons();
     }
 
-    public List<Lesson> getLessonsByAuditory(String audit)
+    public List<Lesson> getLessonsByAuditory(String auditoryName) {
+        var auditory = getAuditoryByNameOrThrow(auditoryName);
+        return List.of();
+    }
 }
