@@ -7,6 +7,8 @@ import org.conferatus.timetable.backend.services.TeacherService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/teacher")
@@ -16,6 +18,13 @@ public class TeacherController {
     @GetMapping("/")
     public ResponseEntity<TeacherResponseDTO> getTeacher(@Param("id") Long id) {
         return ResponseEntity.ok(new TeacherResponseDTO(teacherService.getTeacher(id)));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<TeacherResponseDTO>> getAllTeachers() {
+        List<TeacherResponseDTO> teachersDTO = teacherService.getAllTeachers().stream()
+                .map(TeacherResponseDTO::new).toList();
+        return ResponseEntity.ok(teachersDTO);
     }
 
     @PostMapping("/")

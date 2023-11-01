@@ -7,6 +7,8 @@ import org.conferatus.timetable.backend.model.repos.TeacherRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TeacherService {
@@ -34,6 +36,10 @@ public class TeacherService {
 
     public Teacher getTeacher(Long id) {
         return getTeacherByIdOrThrow(id);
+    }
+
+    public List<Teacher> getAllTeachers() {
+        return teacherRepository.findAll();
     }
 
     public Teacher addTeacher(String teacherName) {
