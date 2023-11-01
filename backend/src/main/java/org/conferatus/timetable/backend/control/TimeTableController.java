@@ -31,4 +31,16 @@ public class TimeTableController {
         );
     }
 
+    @GetMapping("/lessons/by_teacher")
+    public ResponseEntity<TimeListDTO> getTeacherLessons(@RequestParam(value = "name", required = false) String name,
+                                                         @RequestParam(value = "id", required = false) Long id) {
+        List<Lesson> lessons = id == null
+                ? timeTableService.getLessonsByTeacher(name)
+                : timeTableService.getLessonsByTeacher(id);
+        return ResponseEntity.ok(
+                new TimeListDTO(List.of("Monday", "Tuesday"), 2, 5,
+                        lessons.stream().map(LessonDTO::new).toList())
+        );
+    }
+
 }
