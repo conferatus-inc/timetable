@@ -2,6 +2,7 @@ package org.conferatus.timetable.backend.control;
 
 import feign.Param;
 import lombok.RequiredArgsConstructor;
+import org.conferatus.timetable.backend.control.dto.StudyGroupResponseDTO;
 import org.conferatus.timetable.backend.services.StudyGroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,18 @@ import org.springframework.web.bind.annotation.*;
 public class StudyGroupController {
     private final StudyGroupService studyGroupService;
 
-    @PostMapping("/{groupName}")
-    public ResponseEntity<String> addGroup(@PathVariable String groupName) {
+    @GetMapping("/")
+    public ResponseEntity<StudyGroupResponseDTO> getGroup(@Param("name") Long id) {
+        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(id).getName()));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<String> addGroup(@Param("name") String groupName) {
         studyGroupService.addGroup(groupName);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update")
+    @PutMapping("/")
     public ResponseEntity<String> updateGroup(@Param("current") String previousGroupName,
                                               @Param("new") String newGroupName) {
         studyGroupService.updateGroup(previousGroupName, newGroupName);
@@ -26,8 +32,8 @@ public class StudyGroupController {
 
     }
 
-    @DeleteMapping("/{groupName}")
-    public ResponseEntity<String> deleteGroup(@PathVariable String groupName) {
+    @DeleteMapping("/")
+    public ResponseEntity<String> deleteGroup(@Param("name") String groupName) {
         studyGroupService.deleteGroupOrThrow(groupName);
         return ResponseEntity.ok().build();
     }

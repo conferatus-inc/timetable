@@ -14,4 +14,6 @@ public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long> {
     void deleteStudyGroupByName(String groupName);
 
     Optional<StudyGroup> findStudyGroupByName(String previousGroupName);
+
+    Optional<StudyGroup> findStudyGroupById(Long id);
 }

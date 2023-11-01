@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 public class StudyGroupService {
     private final StudyGroupRepository studyGroupRepository;
 
+    private StudyGroup getGroupByIdOrThrow(Long id) {
+        return studyGroupRepository.findStudyGroupById(id)
+                .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
+                        "Group with id " + id + " does not exist"));
+    }
+
     private StudyGroup getGroupByNameOrThrow(String name) {
         return studyGroupRepository.findStudyGroupByName(name)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
@@ -44,5 +50,9 @@ public class StudyGroupService {
         var group = getGroupByNameOrThrow(groupName);
         studyGroupRepository.delete(group);
         return group;
+    }
+
+    public StudyGroup getGroup(Long id) {
+        return getGroupByIdOrThrow(id);
     }
 }
