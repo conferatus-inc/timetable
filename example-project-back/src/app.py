@@ -142,13 +142,18 @@ async def getTable():
     return {'table': table}
 
 @app.get('/table/by-group-id/{group_id}')
-async def getTable(group_id: int):
-    def groupFilter(cell):
-        cell['groupId'] == group_id
-
-    
+async def getTableByGroupId(group_id: int):
     newTable = table.copy()['cells'] = list(filter((lambda x : x['group']['id'] == group_id), table['cells']))
 
     print(newTable)
 
     return newTable
+
+@app.get('/table/by-teacher-id/{teacher_id}')
+async def getTableByTeacherId(teacher_id: int):
+    newTable = table.copy()['cells'] = list(filter((lambda x : x['teacher']['id'] == teacher_id), table['cells']))
+
+    print(newTable)
+
+    return newTable
+

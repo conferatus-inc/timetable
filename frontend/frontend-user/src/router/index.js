@@ -19,16 +19,28 @@ const routes = [
       },
 
       {
-        path: '/auditory',
-        name: 'Auditories',
-        component: () => import('@/views/AllAuditories.vue'),
+        path: '/teacher/:id',
+        name: 'Table by teacher',
+        component: () => import('@/views/TeacherTable.vue')
       },
+      
+      { 
+        path: '/:pathMatch(.*)*', 
+        name: 'NotFound', 
+        component: () => import('@/views/404NotFound.vue')
+      }
 
-      {
-        path: '/group',
-        name: 'Groups',
-        component: () => import('@/views/AllGroups.vue'),
-      },
+      // {
+      //   path: '/auditory',
+      //   name: 'Auditories',
+      //   component: () => import('@/views/AllAuditories.vue'),
+      // },
+
+      // {
+      //   path: '/group',
+      //   name: 'Groups',
+      //   component: () => import('@/views/AllGroups.vue'),
+      // },
     ],
   },
 ]
