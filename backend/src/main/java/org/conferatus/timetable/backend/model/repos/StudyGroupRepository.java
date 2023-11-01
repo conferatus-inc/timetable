@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long> {
 
     boolean existsStudyGroupByName(String groupName);
+
+    void deleteStudyGroupByName(String groupName);
 }
