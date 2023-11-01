@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-public record TimeTable(
-        @JsonProperty("study_days_per_week") List<String> days,
+public record TimeTableDTO(
+        @JsonProperty("days_name") List<String> days,
+        @JsonProperty("study_days_per_week") int daysPerWeek,
         @JsonProperty("lessons_per_day") int lessonsPerDay,
-        Map<String, Map<Integer, LessonDTO>> lessons
+        Map<String, Map<Integer, LessonDTO>> lessonsTable
 ) {
 
 
