@@ -31,6 +31,9 @@ public class Lesson {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
+    @ManyToOne
+    @JoinColumn(name = "auditory_id")
+    private Auditory auditory;
 
     private int numberOfTime; //time
     private int weekDay; //day of the week
