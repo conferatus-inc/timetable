@@ -14,7 +14,7 @@
         <v-col>
           <h2 class="ma-1">Расписание преподавателей</h2>
 
-          <div v-for="item in items" :key="item.id">
+          <!-- <div v-for="item in items" :key="item.id">
             <v-spacer></v-spacer>
             <v-btn 
             variant="outlined" 
@@ -23,7 +23,17 @@
             >
               {{ item.name }}
             </v-btn>
-          </div>
+          </div> -->
+          <v-card class="ma-1" max-width="300" variant='flat'>
+            <v-list lines="one">
+              <v-list-item
+                v-for="item in items"
+                :key="item.id"
+                :title="item.name"
+                @click="$router.push({ path: '/teacher/' + item.id })"
+              ></v-list-item>
+            </v-list>
+          </v-card>
 
         </v-col>
       </v-row>
