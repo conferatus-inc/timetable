@@ -26,9 +26,13 @@ public class StudyGroupService {
 
     private void notExistsByNameOrThrow(String name) {
         if (studyGroupRepository.findStudyGroupByName(name).isPresent()) {
-            throw new ServerException(HttpStatus.NOT_FOUND,
-                    "Group with name " + name + " does not exist");
+            throw new ServerException(HttpStatus.BAD_REQUEST,
+                    "Group with name " + name + " already exists");
         }
+    }
+
+    public StudyGroup getGroup(Long id) {
+        return getGroupByIdOrThrow(id);
     }
 
     public StudyGroup addGroup(String groupName) {
@@ -50,9 +54,5 @@ public class StudyGroupService {
         var group = getGroupByNameOrThrow(groupName);
         studyGroupRepository.delete(group);
         return group;
-    }
-
-    public StudyGroup getGroup(Long id) {
-        return getGroupByIdOrThrow(id);
     }
 }
