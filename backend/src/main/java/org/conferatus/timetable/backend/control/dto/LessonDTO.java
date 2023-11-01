@@ -1,5 +1,9 @@
 package org.conferatus.timetable.backend.control.dto;
 
-public record LessonDTO() {
+import org.conferatus.timetable.backend.model.entity.Lesson;
 
+public record LessonDTO() {
+    public LessonDTO(Lesson lesson) {
+        this();
+    }
 }
