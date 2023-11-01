@@ -20,7 +20,7 @@ public class Auditory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private AuditoryType auditoryType;
-    private String auditoryNumber;
+    private String name;
 
 
 }

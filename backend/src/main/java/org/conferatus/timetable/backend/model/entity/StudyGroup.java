@@ -18,7 +18,7 @@ public class StudyGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String groupName;
+    private String name;
 
     @ManyToMany(mappedBy = "groups", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     List<Lesson> lessons;
