@@ -35,6 +35,11 @@ dependencies {
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testImplementation 'org.mockito:mockito-core:4.11.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'io.jenetics:jenetics:7.2.0'
+    // https://mvnrepository.com/artifact/io.jenetics/prngine
+    implementation 'io.jenetics:prngine:2.0.0'
+
 }
 
 test {

@@ -22,7 +22,7 @@ public class Audience {
     private String name;
     @OneToMany
     @JoinColumn(name = "lesson_id")
-    private List<Lesson> auditory;
+    private List<Lesson> lessons;
 
 
 }
