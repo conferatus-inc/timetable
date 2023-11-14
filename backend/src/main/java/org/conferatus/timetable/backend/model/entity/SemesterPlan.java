@@ -2,6 +2,7 @@ package org.conferatus.timetable.backend.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "semesterplan")
+@Builder
 public class SemesterPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
