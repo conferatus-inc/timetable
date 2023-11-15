@@ -15,7 +15,6 @@ public class App {
     private final static int ITEM_COUNT = 10;
     private final static int KNAPSACK_SIZE = 20;
     private final static int POPULATION_SIZE = 500;
-
     private final Knapsack knapsack = Knapsack.initializeWithRandomItems(ITEM_COUNT, KNAPSACK_SIZE);
 
     public static void main(String[] args) {
