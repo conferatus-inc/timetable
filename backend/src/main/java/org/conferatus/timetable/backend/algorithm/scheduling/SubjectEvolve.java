@@ -5,12 +5,12 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-public class Subject {
+public class SubjectEvolve {
     public String id;
     public int seminarAmount;
     public int lectureAmount;
-    public List<Teacher> seminarTeacher;
-    public Teacher lectureTeacher;
+    public List<TeacherEvolve> seminarTeacherEvolve;
+    public TeacherEvolve lectureTeacherEvolve;
 
     @Override
     public String toString() {
