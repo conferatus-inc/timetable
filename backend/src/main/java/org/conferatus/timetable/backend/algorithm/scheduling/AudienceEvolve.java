@@ -3,12 +3,18 @@ package org.conferatus.timetable.backend.algorithm.scheduling;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class Teacher {
+
+public class AudienceEvolve {
     public String id;
-    public AuditoryEvolve.AuditoryType teacherType;
+    public AuditoryType auditoryType;
+
+    public enum AuditoryType {
+        LECTURE,
+        SEMINAR
+    }
 
     @Override
     public String toString() {
-        return id + ':' + teacherType;
+        return "{" + id + ":" + auditoryType + '}';
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @ToString
-public class StudyPlan {
-    public List<Subject> subjects;
-    public List<Group> groups;
+public class StudyPlanEvolve {
+    public List<SubjectEvolve> subjectEvolves;
+    public List<GroupEvolve> groupEvolves;
 }
