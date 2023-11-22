@@ -9,14 +9,16 @@ import io.jenetics.engine.EvolutionStart;
 import io.jenetics.util.Factory;
 import lombok.NoArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.constraints.Penalties;
+import org.conferatus.timetable.backend.model.AudienceType;
 import org.conferatus.timetable.backend.model.TableTime;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 
 @NoArgsConstructor
 public class GeneticScheduler {
-    ArrayList<AuditoryTimeCell> cells = new ArrayList<>();
+    ArrayList<AudienceTimeCell> cells = new ArrayList<>();
     ArrayList<LessonGene> lessonGenes = new ArrayList<>();
     List<Function<DataForConstraint, Double>> penalties = new ArrayList<>();
     private int satisfiedScheduleAmount = 3;
@@ -86,26 +88,27 @@ public class GeneticScheduler {
     }
 
     public static void main(String[] args) {
-        AudienceEvolve auditory2128 = new AudienceEvolve("2128", AudienceEvolve.AuditoryType.LECTURE);
-        AudienceEvolve auditory3307 = new AudienceEvolve("3307", AudienceEvolve.AuditoryType.LECTURE);
-        AudienceEvolve auditory3333 = new AudienceEvolve("3333", AudienceEvolve.AuditoryType.SEMINAR);
-        AudienceEvolve auditory4444 = new AudienceEvolve("4444", AudienceEvolve.AuditoryType.SEMINAR);
-        AudienceEvolve auditory5555 = new AudienceEvolve("5555", AudienceEvolve.AuditoryType.SEMINAR);
-        AudienceEvolve auditory6666 = new AudienceEvolve("6666", AudienceEvolve.AuditoryType.SEMINAR);
+        AudienceEvolve auditory2128 = new AudienceEvolve("2128", AudienceType.LECTURE);
+        AudienceEvolve auditory3307 = new AudienceEvolve("3307", AudienceType.LECTURE);
+        AudienceEvolve auditory3333 = new AudienceEvolve("3333", AudienceType.PRACTICAL);
+        AudienceEvolve auditory4444 = new AudienceEvolve("4444", AudienceType.PRACTICAL);
+        AudienceEvolve auditory5555 = new AudienceEvolve("5555", AudienceType.PRACTICAL);
+        AudienceEvolve auditory6666 = new AudienceEvolve("6666", AudienceType.PRACTICAL);
         GroupEvolve groupEvolve21213 = new GroupEvolve("21213");
         GroupEvolve groupEvolve21214 = new GroupEvolve("21214");
         GroupEvolve groupEvolve20214 = new GroupEvolve("20214");
         GroupEvolve groupEvolve20215 = new GroupEvolve("20215");
-        TeacherEvolve gatilov = new TeacherEvolve("gatilov", AudienceEvolve.AuditoryType.LECTURE);
-        TeacherEvolve kutalev = new TeacherEvolve("kutalev", AudienceEvolve.AuditoryType.SEMINAR);
-        TeacherEvolve shvab = new TeacherEvolve("shvab", AudienceEvolve.AuditoryType.SEMINAR);
-        TeacherEvolve molochev = new TeacherEvolve("molochev", AudienceEvolve.AuditoryType.SEMINAR);
+        TeacherEvolve gatilov = new TeacherEvolve("gatilov", AudienceType.LECTURE);
+        TeacherEvolve kutalev = new TeacherEvolve("kutalev", AudienceType.PRACTICAL);
+        TeacherEvolve shvab = new TeacherEvolve("shvab", AudienceType.PRACTICAL);
+        TeacherEvolve molochev = new TeacherEvolve("molochev", AudienceType.PRACTICAL);
         SubjectEvolve subjectEvolve20_1 = new SubjectEvolve("proga:20_1", 1, 1, List.of(kutalev, shvab, molochev), gatilov);
         SubjectEvolve subjectEvolve20_2 = new SubjectEvolve("proga:20_2", 1, 1, List.of(kutalev, shvab, molochev), gatilov);
         SubjectEvolve subjectEvolve21_1 = new SubjectEvolve("proga:21_1", 1, 1, List.of(kutalev, shvab, molochev), gatilov);
         SubjectEvolve subjectEvolve21_2 = new SubjectEvolve("proga:21_2", 1, 1, List.of(kutalev, shvab, molochev), gatilov);
         StudyPlanEvolve studyPlanEvolve20 = new StudyPlanEvolve(List.of(subjectEvolve20_1, subjectEvolve20_2), List.of(groupEvolve20214, groupEvolve20215));
         StudyPlanEvolve studyPlanEvolve21 = new StudyPlanEvolve(List.of(subjectEvolve21_1, subjectEvolve21_2), List.of(groupEvolve21213, groupEvolve21214));
+        Instant instant = Instant.now();
         List<List<LessonWithTime>> results = new GeneticScheduler(Arrays.stream(Penalties.values()).map(Penalties::getPenaltyFunction).toList())
                 .algorithm(List.of(studyPlanEvolve20, studyPlanEvolve21),
                         List.of(auditory2128,
@@ -115,6 +118,8 @@ public class GeneticScheduler {
                                 auditory3333,
                                 auditory4444
                         ), TableTime.getDaysAmount() * TableTime.getCellsAmount());
+        Instant after = Instant.now();
+        System.out.println(Date.from(after).getTime() - Date.from(instant).getTime());
         for (int i = 0; i < results.get(0).size(); i++) {
             var lessons = results.get(0).get(i);
             System.out.println(lessons.time() + ": " + lessons);
@@ -166,7 +171,7 @@ public class GeneticScheduler {
         for (int i = 0; i < gt.length(); i++) {
             LessonGene lesson = lessonGenes.get(i);
             int cellIndex = gt.get(i).gene().intValue();
-            AuditoryTimeCell audCell = cells.get(cellIndex);
+            AudienceTimeCell audCell = cells.get(cellIndex);
             LessonWithTime lessonWithTime = new LessonWithTime(audCell, lesson);
             timeList.add(lessonWithTime);
         }
@@ -175,15 +180,18 @@ public class GeneticScheduler {
 
     private void prepareData(List<StudyPlanEvolve> studyPlanEvolves, List<AudienceEvolve> audiences) {
         studyPlanEvolves.forEach(studyPlanEvolve -> {
-            for (SubjectEvolve subjectEvolve : studyPlanEvolve.subjectEvolves) {
-                if (subjectEvolve.lectureAmount != 0) {
-                    LessonGene lessonGene = new LessonGene(new ArrayList<>(studyPlanEvolve.groupEvolves), subjectEvolve.lectureTeacherEvolve, subjectEvolve);
+            for (SubjectEvolve subjectEvolve : studyPlanEvolve.subjectEvolves()) {
+                if (subjectEvolve.lectureAmount() != 0) {
+                    LessonGene lessonGene = new LessonGene(new ArrayList<>(studyPlanEvolve.groupEvolves()), subjectEvolve.lectureTeacherEvolve(), subjectEvolve);
                     lessonGenes.add(lessonGene);
                 }
                 int i = 0;
-                for (GroupEvolve groupEvolve : studyPlanEvolve.groupEvolves) {
-                    LessonGene lessonGene = new LessonGene(groupEvolve, subjectEvolve.seminarTeacherEvolve.get(i), subjectEvolve);
-                    lessonGenes.add(lessonGene);
+                for (GroupEvolve groupEvolve : studyPlanEvolve.groupEvolves()) {
+                    for (int subId = 0; subId < subjectEvolve.seminarAmount(); subId++) {
+                        LessonGene lessonGene = new LessonGene(groupEvolve, subjectEvolve.seminarTeacherEvolve().get(i),
+                                subjectEvolve.withSubId(subId));
+                        lessonGenes.add(lessonGene);
+                    }
                     i++;
                 }
             }
@@ -191,7 +199,7 @@ public class GeneticScheduler {
         int times = TableTime.getDaysAmount() * TableTime.getCellsAmount();
         for (AudienceEvolve auditory : audiences) {
             for (int i = 0; i < times; i++) {
-                AuditoryTimeCell cell = new AuditoryTimeCell(auditory, i);
+                AudienceTimeCell cell = new AudienceTimeCell(auditory, i);
                 cells.add(cell);
             }
         }
@@ -203,7 +211,7 @@ public class GeneticScheduler {
         for (int i = 0; i < gt.length(); i++) {
             LessonGene lessonGene = lessonGenes.get(i);
             int cellIndex = gt.get(i).gene().intValue();
-            AuditoryTimeCell audCell = cells.get(cellIndex);
+            AudienceTimeCell audCell = cells.get(cellIndex);
             LessonWithTime subjectCell = new LessonWithTime(audCell, lessonGene);
             if (!subjectCells.containsKey(audCell.time().toIndex())) {
                 subjectCells.put(audCell.time().toIndex(), new ArrayList<>());

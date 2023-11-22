@@ -4,7 +4,7 @@ import org.conferatus.timetable.backend.model.TableTime;
 
 import java.util.List;
 
-public record LessonWithTime(AuditoryTimeCell cell, LessonGene lessonGene) {
+public record LessonWithTime(AudienceTimeCell cell, LessonGene lessonGene) {
     public AudienceEvolve audience() {
         return cell.audience();
     }

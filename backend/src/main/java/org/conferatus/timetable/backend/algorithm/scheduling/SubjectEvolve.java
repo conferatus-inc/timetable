@@ -1,16 +1,24 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-import lombok.AllArgsConstructor;
-
 import java.util.List;
 
-@AllArgsConstructor
-public class SubjectEvolve {
-    public String id;
-    public int seminarAmount;
-    public int lectureAmount;
-    public List<TeacherEvolve> seminarTeacherEvolve;
-    public TeacherEvolve lectureTeacherEvolve;
+public record SubjectEvolve(String id,
+                            int seminarAmount,
+                            int lectureAmount,
+                            List<TeacherEvolve> seminarTeacherEvolve,
+                            TeacherEvolve lectureTeacherEvolve,
+                            int subId) {
+    public SubjectEvolve(String id,
+                         int seminarAmount,
+                         int lectureAmount,
+                         List<TeacherEvolve> seminarTeacherEvolve,
+                         TeacherEvolve lectureTeacherEvolve) {
+        this(id, seminarAmount, lectureAmount, seminarTeacherEvolve, lectureTeacherEvolve, 0);
+    }
+
+    public SubjectEvolve withSubId(int subId) {
+        return new SubjectEvolve(id, seminarAmount, lectureAmount, seminarTeacherEvolve, lectureTeacherEvolve, subId);
+    }
 
     @Override
     public String toString() {
