@@ -5,6 +5,7 @@ import org.conferatus.timetable.backend.algorithm.scheduling.AudienceEvolve;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
 import org.conferatus.timetable.backend.algorithm.scheduling.StudyPlanEvolve;
+import org.conferatus.timetable.backend.model.TableTime;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -14,7 +15,6 @@ import java.util.List;
 public class ScheduleAlgorithmService {
     private final GeneticScheduler geneticScheduler;
     private final int populationSize;
-    private final int times;
 
     public ScheduleAlgorithmService() {
         this.geneticScheduler = new GeneticScheduler();
@@ -22,11 +22,12 @@ public class ScheduleAlgorithmService {
                         Penalties.values())
                 .map(Penalties::getPenaltyFunction).toList());
         populationSize = 400;
-        times = 6 * 7;
+        TableTime.setCellsAmount(6);
+        TableTime.setDaysAmount(6);
     }
 
     private List<List<LessonWithTime>> algorithmCreateSchedule(List<StudyPlanEvolve> studyPlans,
                                                                List<AudienceEvolve> audiences) {
-        return geneticScheduler.algorithm(studyPlans, audiences, times, populationSize);
+        return geneticScheduler.algorithm(studyPlans, audiences, populationSize);
     }
 }

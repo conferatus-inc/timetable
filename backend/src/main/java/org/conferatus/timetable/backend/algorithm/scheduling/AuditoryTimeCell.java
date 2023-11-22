@@ -1,4 +1,9 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-public record AuditoryTimeCell(AudienceEvolve auditory, int times) {
+import org.conferatus.timetable.backend.model.TableTime;
+
+public record AuditoryTimeCell(AudienceEvolve audience, TableTime time) {
+    public AuditoryTimeCell(AudienceEvolve audience, int timeIndex) {
+        this(audience, new TableTime(timeIndex));
+    }
 }
