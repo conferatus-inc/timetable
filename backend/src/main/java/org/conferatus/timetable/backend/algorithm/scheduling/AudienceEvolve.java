@@ -1,17 +1,9 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-import lombok.AllArgsConstructor;
+import org.conferatus.timetable.backend.model.AudienceType;
 
-@AllArgsConstructor
-
-public class AudienceEvolve {
-    public String id;
-    public AuditoryType auditoryType;
-
-    public enum AuditoryType {
-        LECTURE,
-        SEMINAR
-    }
+public record AudienceEvolve(String id,
+                             AudienceType auditoryType) {
 
     @Override
     public String toString() {
