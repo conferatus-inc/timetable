@@ -8,11 +8,10 @@ import io.jenetics.engine.Engine;
 import io.jenetics.engine.EvolutionStart;
 import io.jenetics.util.Factory;
 import lombok.NoArgsConstructor;
+import org.conferatus.timetable.backend.algorithm.constraints.Penalties;
+import org.conferatus.timetable.backend.model.TableTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @NoArgsConstructor
@@ -30,7 +29,47 @@ public class GeneticScheduler {
         penalties = newPenalties;
     }
 
-    public record DataForConstraint(List<LessonWithTime> allLessons, LessonWithTime currentLesson) {
+    public record DataForConstraint(List<LessonWithTime> allLessons,
+                                    LessonWithTime currentLesson,
+                                    List<List<List<LessonWithTime>>> timeTable) {
+        public DataForConstraint(List<LessonWithTime> allLessons, LessonWithTime currentLesson) {
+            this(allLessons, currentLesson, generate(allLessons));
+        }
+
+        public List<LessonWithTime> getLessonsInDay(int day) {
+            var dayCells = timeTable.get(day);
+            List<LessonWithTime> lessons = new ArrayList<>();
+            dayCells.forEach(lessons::addAll);
+            return lessons;
+        }
+
+        public List<LessonWithTime> getLessonsInCell(LessonWithTime lesson) {
+            return getLessonsInCell(lesson.cell().time());
+        }
+
+        public List<LessonWithTime> getLessonsInCell(TableTime tableTime) {
+            return getLessonsInCell(tableTime.day(), tableTime.cellNumber());
+        }
+
+        public List<LessonWithTime> getLessonsInCell(int day, int cellNumber) {
+            return new ArrayList<>(timeTable.get(day).get(cellNumber));
+        }
+
+        private static List<List<List<LessonWithTime>>> generate(List<LessonWithTime> lessons) {
+            List<List<List<LessonWithTime>>> timeTable = new ArrayList<>();
+            for (int dayNumber = 0; dayNumber < TableTime.getDaysAmount(); dayNumber++) {
+                List<List<LessonWithTime>> dayCells = new ArrayList<>();
+                for (int cellNumber = 0; cellNumber < TableTime.getCellsAmount(); cellNumber++) {
+                    dayCells.add(new ArrayList<>());
+                }
+                timeTable.add(dayCells);
+            }
+            for (LessonWithTime lesson : lessons) {
+                var timeData = lesson.cell().time();
+                timeTable.get(timeData.day()).get(timeData.cellNumber()).add(lesson);
+            }
+            return timeTable;
+        }
     }
 
     public GeneticScheduler(int satisfiedScheduleAmount) {
@@ -55,7 +94,6 @@ public class GeneticScheduler {
         AudienceEvolve auditory6666 = new AudienceEvolve("6666", AudienceEvolve.AuditoryType.SEMINAR);
         GroupEvolve groupEvolve21213 = new GroupEvolve("21213");
         GroupEvolve groupEvolve21214 = new GroupEvolve("21214");
-//        Group group21215 = new Group("21215");
         GroupEvolve groupEvolve20214 = new GroupEvolve("20214");
         GroupEvolve groupEvolve20215 = new GroupEvolve("20215");
         TeacherEvolve gatilov = new TeacherEvolve("gatilov", AudienceEvolve.AuditoryType.LECTURE);
@@ -68,30 +106,36 @@ public class GeneticScheduler {
         SubjectEvolve subjectEvolve21_2 = new SubjectEvolve("proga:21_2", 1, 1, List.of(kutalev, shvab, molochev), gatilov);
         StudyPlanEvolve studyPlanEvolve20 = new StudyPlanEvolve(List.of(subjectEvolve20_1, subjectEvolve20_2), List.of(groupEvolve20214, groupEvolve20215));
         StudyPlanEvolve studyPlanEvolve21 = new StudyPlanEvolve(List.of(subjectEvolve21_1, subjectEvolve21_2), List.of(groupEvolve21213, groupEvolve21214));
-        new GeneticScheduler().algorithm(List.of(studyPlanEvolve20, studyPlanEvolve21),
-                List.of(auditory2128,
-                        auditory3307,
-                        auditory5555,
-                        auditory6666,
-                        auditory3333,
-                        auditory4444
-                ), 12,
-                400);
+        List<List<LessonWithTime>> results = new GeneticScheduler(Arrays.stream(Penalties.values()).map(Penalties::getPenaltyFunction).toList())
+                .algorithm(List.of(studyPlanEvolve20, studyPlanEvolve21),
+                        List.of(auditory2128,
+                                auditory3307,
+                                auditory5555,
+                                auditory6666,
+                                auditory3333,
+                                auditory4444
+                        ), TableTime.getDaysAmount() * TableTime.getCellsAmount());
+        for (int i = 0; i < results.get(0).size(); i++) {
+            var lessons = results.get(0).get(i);
+            System.out.println(lessons.time() + ": " + lessons);
+        }
     }
 
-    public List<List<LessonWithTime>> algorithm(List<StudyPlanEvolve> studyPlanEvolves, List<AudienceEvolve> audiences, int times, int populationSize) {
+    public List<List<LessonWithTime>> algorithm(List<StudyPlanEvolve> studyPlanEvolves,
+                                                List<AudienceEvolve> audiences,
+                                                int populationSize) {
         cells.clear();
         lessonGenes.clear();
-        prepareData(studyPlanEvolves, audiences, times);
+        prepareData(studyPlanEvolves, audiences);
 
         final Factory<Genotype<IntegerGene>> gtf =
                 Genotype.of(IntegerChromosome.of(0, cells.size()), lessonGenes.size());
+
 
         final Engine<IntegerGene, Double> engine = Engine
                 .builder(this::fitness, gtf)
                 .populationSize(populationSize)
                 .build();
-//        final EvolutionStatistics<Double, ?> statistics = EvolutionStatistics.ofNumber();
         var evolutionResult = engine.evolve(EvolutionStart.empty());
         int goodPhenotypeCounter = 0;
         while (goodPhenotypeCounter < satisfiedScheduleAmount) {
@@ -129,7 +173,7 @@ public class GeneticScheduler {
         return timeList;
     }
 
-    private void prepareData(List<StudyPlanEvolve> studyPlanEvolves, List<AudienceEvolve> audiences, int times) {
+    private void prepareData(List<StudyPlanEvolve> studyPlanEvolves, List<AudienceEvolve> audiences) {
         studyPlanEvolves.forEach(studyPlanEvolve -> {
             for (SubjectEvolve subjectEvolve : studyPlanEvolve.subjectEvolves) {
                 if (subjectEvolve.lectureAmount != 0) {
@@ -144,6 +188,7 @@ public class GeneticScheduler {
                 }
             }
         });
+        int times = TableTime.getDaysAmount() * TableTime.getCellsAmount();
         for (AudienceEvolve auditory : audiences) {
             for (int i = 0; i < times; i++) {
                 AuditoryTimeCell cell = new AuditoryTimeCell(auditory, i);
@@ -160,16 +205,14 @@ public class GeneticScheduler {
             int cellIndex = gt.get(i).gene().intValue();
             AuditoryTimeCell audCell = cells.get(cellIndex);
             LessonWithTime subjectCell = new LessonWithTime(audCell, lessonGene);
-            if (!subjectCells.containsKey(audCell.times())) {
-                subjectCells.put(audCell.times(), new ArrayList<>());
+            if (!subjectCells.containsKey(audCell.time().toIndex())) {
+                subjectCells.put(audCell.time().toIndex(), new ArrayList<>());
             }
-            var timeList = subjectCells.get(audCell.times());
+            var timeList = subjectCells.get(audCell.time().toIndex());
             timeList.add(subjectCell);
         }
-
         double penalty = 0;
         for (Map.Entry<Integer, List<LessonWithTime>> integerListEntry : subjectCells.entrySet()) {
-
             List<LessonWithTime> timeCells = integerListEntry.getValue();
             for (LessonWithTime timeCell : timeCells) {
                 for (Function<DataForConstraint, Double> penaltyFunction : penalties) {

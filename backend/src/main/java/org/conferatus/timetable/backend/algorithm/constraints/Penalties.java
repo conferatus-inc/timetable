@@ -9,10 +9,9 @@ import java.util.function.Function;
 public enum Penalties {
     AuditoryType(
             (data) -> {
-                var lessons = data.allLessons();
                 LessonWithTime lesson = data.currentLesson();
-                if (!lesson.cell().auditory().auditoryType
-                        .equals(lesson.lessonGene().teacherEvolve().teacherType)) {
+                if (!lesson.audience().auditoryType
+                        .equals(lesson.teacher().teacherType)) {
                     return -5.;
                 }
                 return 0.;
@@ -20,12 +19,13 @@ public enum Penalties {
     ),
     AuditoryUnique(
             (data) -> {
-                var lessons = data.allLessons();
                 LessonWithTime lesson = data.currentLesson();
+                var lessonsInCell = data.getLessonsInCell(lesson);
                 //audit unique
-                if (lessons.stream()
-                        .anyMatch(lessonWithTime -> !lessonWithTime.equals(lesson)
-                                && lessonWithTime.cell().auditory().id.equals(lesson.cell().auditory().id))) {
+                if (lessonsInCell.stream()
+                        .anyMatch(lessonWithTime ->
+                                lessonWithTime.audience().id
+                                        .equals(lesson.audience().id))) {
                     return -5.;
                 }
                 return 0.;
@@ -33,12 +33,12 @@ public enum Penalties {
     ),
     TeacherUnique(
             (data) -> {
-                var lessons = data.allLessons();
                 LessonWithTime lesson = data.currentLesson();
-                if (lessons.stream()
-                        .anyMatch(lessonWithTime -> !lessonWithTime.equals(lesson)
-                                && lessonWithTime.lessonGene().teacherEvolve().id
-                                .equals(lesson.lessonGene().teacherEvolve().id))) {
+                var lessonsInCell = data.getLessonsInCell(lesson);
+                if (lessonsInCell.stream()
+                        .anyMatch(lessonWithTime ->
+                                lessonWithTime.teacher().id
+                                        .equals(lesson.teacher().id))) {
                     return -5.;
                 }
                 return 0.;
@@ -46,14 +46,14 @@ public enum Penalties {
     ),
     GroupUnique(
             (data) -> {
-                var lessons = data.allLessons();
                 LessonWithTime lesson = data.currentLesson();
-                if (!lesson.cell().auditory().auditoryType.equals(AudienceEvolve.AuditoryType.LECTURE)
-                        && lessons.stream()
-                        .anyMatch(lessonWithTime -> !lessonWithTime.equals(lesson)
-                                && lessonWithTime.lessonGene().groupEvolves().stream().anyMatch(
-                                lesson.lessonGene().groupEvolves()::contains
-                        ))
+                var lessonsInCell = data.getLessonsInCell(lesson);
+                if (!lesson.audience().auditoryType.equals(AudienceEvolve.AuditoryType.LECTURE)
+                        && lessonsInCell.stream()
+                        .anyMatch(lessonWithTime ->
+                                lessonWithTime.groups().stream().anyMatch(
+                                        lesson.groups()::contains
+                                ))
                 ) {
                     return -5.;
                 }
