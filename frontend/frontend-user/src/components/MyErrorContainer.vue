@@ -23,18 +23,6 @@
 </template>
 
 <script setup>
-// import { h } from 'vue';
-
-// export default {
-//     name: 'my-error-container',
-//     props: {
-//         errorMessage: {
-//             type: Object,
-//             default: "unknown"
-//         },
-//     },
-//     components: { h }
-// }
 const props = defineProps({
   errorMessage: {
     type: String,
