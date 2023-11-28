@@ -16,8 +16,13 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * TODO: checker in another class
+ * TODO: refactor audience optimize
+ * TODO: add constraints
+ */
 @NoArgsConstructor
-public class GeneticScheduler {
+public class GeneticAlgorithmScheduler {
     ArrayList<AudienceTimeCell> cells = new ArrayList<>();
     ArrayList<LessonGene> lessonGenes = new ArrayList<>();
     List<Function<DataForConstraint, Double>> penalties = new ArrayList<>();
@@ -74,15 +79,15 @@ public class GeneticScheduler {
         }
     }
 
-    public GeneticScheduler(int satisfiedScheduleAmount) {
+    public GeneticAlgorithmScheduler(int satisfiedScheduleAmount) {
         this.satisfiedScheduleAmount = satisfiedScheduleAmount;
     }
 
-    public GeneticScheduler(List<Function<DataForConstraint, Double>> penalties) {
+    public GeneticAlgorithmScheduler(List<Function<DataForConstraint, Double>> penalties) {
         this.penalties = penalties;
     }
 
-    public GeneticScheduler(List<Function<DataForConstraint, Double>> penalties, int satisfiedScheduleAmount) {
+    public GeneticAlgorithmScheduler(List<Function<DataForConstraint, Double>> penalties, int satisfiedScheduleAmount) {
         this.penalties = penalties;
         this.satisfiedScheduleAmount = satisfiedScheduleAmount;
     }
@@ -109,7 +114,7 @@ public class GeneticScheduler {
         StudyPlanEvolve studyPlanEvolve20 = new StudyPlanEvolve(List.of(subjectEvolve20_1, subjectEvolve20_2), List.of(groupEvolve20214, groupEvolve20215));
         StudyPlanEvolve studyPlanEvolve21 = new StudyPlanEvolve(List.of(subjectEvolve21_1, subjectEvolve21_2), List.of(groupEvolve21213, groupEvolve21214));
         Instant instant = Instant.now();
-        List<List<LessonWithTime>> results = new GeneticScheduler(Arrays.stream(Penalties.values()).map(Penalties::getPenaltyFunction).toList())
+        List<List<LessonWithTime>> results = new GeneticAlgorithmScheduler(Arrays.stream(Penalties.values()).map(Penalties::getPenaltyFunction).toList())
                 .algorithm(List.of(studyPlanEvolve20, studyPlanEvolve21),
                         List.of(auditory2128,
                                 auditory3307,
@@ -229,6 +234,6 @@ public class GeneticScheduler {
             }
         }
 
-        return -penalty;
+        return penalty;
     }
 }

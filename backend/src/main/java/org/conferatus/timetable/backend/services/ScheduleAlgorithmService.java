@@ -2,7 +2,7 @@ package org.conferatus.timetable.backend.services;
 
 import org.conferatus.timetable.backend.algorithm.constraints.Penalties;
 import org.conferatus.timetable.backend.algorithm.scheduling.AudienceEvolve;
-import org.conferatus.timetable.backend.algorithm.scheduling.GeneticScheduler;
+import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
 import org.conferatus.timetable.backend.algorithm.scheduling.StudyPlanEvolve;
 import org.conferatus.timetable.backend.model.TableTime;
@@ -13,12 +13,12 @@ import java.util.List;
 
 @Service
 public class ScheduleAlgorithmService {
-    private final GeneticScheduler geneticScheduler;
+    private final GeneticAlgorithmScheduler geneticAlgorithmScheduler;
     private final int populationSize;
 
     public ScheduleAlgorithmService() {
-        this.geneticScheduler = new GeneticScheduler();
-        geneticScheduler.setPenalties(Arrays.stream(
+        this.geneticAlgorithmScheduler = new GeneticAlgorithmScheduler();
+        geneticAlgorithmScheduler.setPenalties(Arrays.stream(
                         Penalties.values())
                 .map(Penalties::getPenaltyFunction).toList());
         populationSize = 400;
@@ -28,6 +28,6 @@ public class ScheduleAlgorithmService {
 
     private List<List<LessonWithTime>> algorithmCreateSchedule(List<StudyPlanEvolve> studyPlans,
                                                                List<AudienceEvolve> audiences) {
-        return geneticScheduler.algorithm(studyPlans, audiences, populationSize);
+        return geneticAlgorithmScheduler.algorithm(studyPlans, audiences, populationSize);
     }
 }

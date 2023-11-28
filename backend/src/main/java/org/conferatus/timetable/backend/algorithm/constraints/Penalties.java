@@ -1,11 +1,17 @@
 package org.conferatus.timetable.backend.algorithm.constraints;
 
-import org.conferatus.timetable.backend.algorithm.scheduling.GeneticScheduler;
+import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
 import org.conferatus.timetable.backend.model.AudienceType;
 
 import java.util.function.Function;
 
+/**
+ * negative if penalty
+ * large negative if it's hard constraint
+ * small penalty if it's weak constraint
+ * positive if good ending
+ */
 public enum Penalties {
     TeacherAndAudienceType(
             (data) -> {
@@ -61,13 +67,13 @@ public enum Penalties {
             }
     ),
     ;
-    final Function<GeneticScheduler.DataForConstraint, Double> penaltyFunction;
+    final Function<GeneticAlgorithmScheduler.DataForConstraint, Double> penaltyFunction;
 
-    public Function<GeneticScheduler.DataForConstraint, Double> getPenaltyFunction() {
+    public Function<GeneticAlgorithmScheduler.DataForConstraint, Double> getPenaltyFunction() {
         return penaltyFunction;
     }
 
-    Penalties(Function<GeneticScheduler.DataForConstraint, Double> penaltyFunction) {
+    Penalties(Function<GeneticAlgorithmScheduler.DataForConstraint, Double> penaltyFunction) {
         this.penaltyFunction = penaltyFunction;
     }
 
