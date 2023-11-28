@@ -14,17 +14,13 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=['*'],
-    allow_headers=['*'],
+    allow_headers=['*']
 )
-
-
 
 @app.get('/api/example')
 async def root():
     return 'Hello World'
 
-
-    
 
 teachers = [
     {'name':  'Andrey Vitalievich'},
@@ -107,19 +103,19 @@ async def getAllSubjects():
 
 # table
 
-maxI = 5
-def generateTable():
+import random
+def generateTable(num):
     table = {
         'days': 6,
         'lessonsPerDay': 6,
         'cells': []
     }
 
-    for i in range(maxI):
+    for i in range(num):
         table['cells'].append(
             {
-                'day': i % table['days'],
-                'lesson': (i + 2) % table['lessonsPerDay'],
+                'day': random.randint(0, 100500) % table['days'],
+                'lesson': random.randint(0, 100500) % table['lessonsPerDay'],
                 'teacher': teachers[random.randrange(len(teachers))],
                 'audience': audiences[random.randrange(len(audiences))],
                 'group': groups[random.randrange(len(subjects))],
@@ -130,29 +126,41 @@ def generateTable():
     return table
 
 #init
-table = generateTable()
+table = generateTable(100)
 
 @app.post('/table')
 async def regenerateTable():
-    table = generateTable()
+    table = generateTable(100)
+    return {'ok': 'kok'}
+
+@app.post('/table/{num}')
+async def regenerateTable(num: int):
+    table = generateTable(num)
     return {'ok': 'kok'}
 
 @app.get('/table')
 async def getTable():
     return {'table': table}
 
-@app.get('/table/by-group-id/{group_id}')
-async def getTableByGroupId(group_id: int):
-    newTable = table.copy()['cells'] = list(filter((lambda x : x['group']['id'] == group_id), table['cells']))
-
-    print(newTable)
+@app.get('/table/by-audience/{name}')
+async def getTableByGroupId(name: str):
+    newTable = table.copy()
+    newTable['cells'] = list(filter((lambda x : x['audience']['name'] == name), table['cells']))
 
     return newTable
 
-@app.get('/table/by-teacher-id/{teacher_id}')
-async def getTableByTeacherId(teacher_id: int):
+@app.get('/table/by-group/{name}')
+async def getTableByGroupId(name: str):
     newTable = table.copy()
-    newTable['cells'] = list(filter((lambda x : x['teacher']['id'] == teacher_id), table['cells']))
+    newTable['cells'] = list(filter((lambda x : x['group']['name'] == name), table['cells']))
+
+    return newTable
+
+
+@app.get('/table/by-teacher/{name}')
+async def getTableByTeacherId(name: str):
+    newTable = table.copy()
+    newTable['cells'] = list(filter((lambda x : x['teacher']['name'] == name), table['cells']))
 
     return newTable
 
