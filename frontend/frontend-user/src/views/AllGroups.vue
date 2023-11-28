@@ -1,17 +1,19 @@
 <template>
   <div v-if="state === 'loading'">
     <v-container>
-      <v-row>
-        <!-- <v-col>
-          <v-progress-circular>Загрузка</v-progress-circular>
-        </v-col> -->
-      </v-row>
+      <!-- <v-row>
+        <v-col>
+          <v-progress-linear>Загрузка</v-progress-linear>
+        </v-col>
+      </v-row> -->
     </v-container>
   </div>
   <div v-else-if="state === 'loaded'">
-    <MyTable
-    :items="items"
-    :title="'Расписание для преподавателя ' + name"></MyTable>
+    <ItemsList
+      :items="items"
+      :title="'Список групп'"
+      :pathPrefix="'/group/'">
+    </ItemsList>
   </div>
   <div v-else>
     <MyErrorContainer :errorMessage="errorMessage">
@@ -20,28 +22,25 @@
 </template>
 
 <script setup>
+// todo все перенести в компонент
   import MyErrorContainer from '@/components/MyErrorContainer.vue'
-  import MyTable from '@/components/MyTable.vue';
+  import ItemsList from '@/components/ItemsList.vue';
+
   import { http } from '@/http-common';
   import { ref } from 'vue'
-  import router from '@/router';
 
+  const items = ref([])
   const state = ref('loading')
-  const items = ref('')
-  const errorMessage = ref('') // tmp
+  const errorMessage = ref('')
 
-  const name = ref(router.currentRoute._value.params.id)
-
-  // http.get('/table/by-teacher-id/' + route.params.id)
-  http.get('/table/by-teacher/' + name.value)
+  http.get('/group')
   .then(response => {
       items.value = response.data
       state.value = 'loaded'
-
-      console.log(items)
   })
   .catch(e => {
     errorMessage.value = e 
     state.value = 'error'
   })
+
 </script>
