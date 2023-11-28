@@ -11,7 +11,7 @@
   <div v-else-if="state === 'loaded'">
     <MyTable
     :items="items"
-    :title="'Расписание для преподавателя ' + name"></MyTable>
+    :title="'Расписание для группы ' + name"></MyTable>
   </div>
   <div v-else>
     <MyErrorContainer :errorMessage="errorMessage">
@@ -33,7 +33,7 @@
   const name = ref(router.currentRoute._value.params.id)
 
   // http.get('/table/by-teacher-id/' + route.params.id)
-  http.get('/table/by-teacher/' + name.value)
+  http.get('/table/by-group/' + name.value)
   .then(response => {
       items.value = response.data
       state.value = 'loaded'

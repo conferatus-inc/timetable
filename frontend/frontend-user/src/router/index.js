@@ -24,23 +24,36 @@ const routes = [
         component: () => import('@/views/TeacherTable.vue')
       },
       
+      {
+        path: '/audience',
+        name: 'Audiences',
+        component: () => import('@/views/AllAudiences.vue'),
+      },
+
+      {
+        path: '/audience/:id',
+        name: 'Table by audience',
+        component: () => import('@/views/AudienceTable.vue')
+      },
+
+      {
+        path: '/group',
+        name: 'Groups',
+        component: () => import('@/views/AllGroups.vue'),
+      },
+
+      {
+        path: '/group/:id',
+        name: 'Table by group',
+        component: () => import('@/views/GroupTable.vue')
+      },
+
+      // else
       { 
         path: '/:pathMatch(.*)*', 
         name: 'NotFound', 
         component: () => import('@/views/404NotFound.vue')
-      }
-
-      // {
-      //   path: '/auditory',
-      //   name: 'Auditories',
-      //   component: () => import('@/views/AllAuditories.vue'),
-      // },
-
-      // {
-      //   path: '/group',
-      //   name: 'Groups',
-      //   component: () => import('@/views/AllGroups.vue'),
-      // },
+      },
     ],
   },
 ]
