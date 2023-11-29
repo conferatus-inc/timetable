@@ -38,6 +38,10 @@ public class TeacherService {
         return getTeacherByIdOrThrow(id);
     }
 
+    public Teacher getTeacher(String name) {
+        return getTeacherByNameOrThrow(name);
+    }
+
     public List<Teacher> getAllTeachers() {
         return teacherRepository.findAll();
     }

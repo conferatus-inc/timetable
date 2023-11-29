@@ -20,9 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeacherController {
     private final TeacherService teacherService;
 
-    @GetMapping("/")
-    public ResponseEntity<TeacherResponseDTO> getTeacher(@Param("id") Long id) {
+    @GetMapping("/by-id")
+    public ResponseEntity<TeacherResponseDTO> getTeacherById(@Param("id") Long id) {
         return ResponseEntity.ok(new TeacherResponseDTO(teacherService.getTeacher(id)));
+    }
+
+    @GetMapping("/by-name")
+    public ResponseEntity<TeacherResponseDTO> getTeacherByName(@Param("name") String name) {
+        return ResponseEntity.ok(new TeacherResponseDTO(teacherService.getTeacher(name)));
     }
 
     @GetMapping("/all")
