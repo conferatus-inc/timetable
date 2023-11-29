@@ -10,7 +10,7 @@ public record SubjectDTO(
         Long id,
         String name,
         SubjectType subjectType,
-        List<TeacherResponseDTO> possibleTeacher,
+        List<SimpleTeacher> possibleTeachers,
         List<LessonDTO> lessons
 ) {
     public SubjectDTO(Subject subject) {
@@ -18,7 +18,7 @@ public record SubjectDTO(
                 subject.getId(),
                 subject.getName(),
                 subject.getSubjectType(),
-                subject.getPossibleTeachers().stream().map(TeacherResponseDTO::new).collect(Collectors.toList()),
+                subject.getPossibleTeachers().stream().map(SimpleTeacher::new).collect(Collectors.toList()),
                 subject.getLessons().stream().map(LessonDTO::new).collect(Collectors.toList())
         );
     }
