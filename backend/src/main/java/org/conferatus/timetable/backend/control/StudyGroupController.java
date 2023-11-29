@@ -1,11 +1,18 @@
 package org.conferatus.timetable.backend.control;
 
+import java.util.List;
+
 import feign.Param;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.StudyGroupResponseDTO;
 import org.conferatus.timetable.backend.services.StudyGroupService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,10 +25,16 @@ public class StudyGroupController {
         return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(id)));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<StudyGroupResponseDTO>> getAllGroups() {
+        return ResponseEntity.ok(studyGroupService.getAllGroups().stream()
+                .map(StudyGroupResponseDTO::new).toList());
+    }
+
     @PostMapping("/")
-    public ResponseEntity<String> addGroup(@Param("name") String groupName) {
+    public ResponseEntity<StudyGroupResponseDTO> addGroup(@Param("name") String groupName) {
         studyGroupService.addGroup(groupName);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.addGroup(groupName)));
     }
 
     @PutMapping("/")

@@ -1,5 +1,7 @@
 package org.conferatus.timetable.backend.services;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
@@ -54,5 +56,9 @@ public class StudyGroupService {
         var group = getGroupByNameOrThrow(groupName);
         studyGroupRepository.delete(group);
         return group;
+    }
+
+    public List<StudyGroup> getAllGroups() {
+        return studyGroupRepository.findAll();
     }
 }
