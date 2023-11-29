@@ -25,6 +25,11 @@ public class StudyGroupController {
         return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(id)));
     }
 
+    @GetMapping("/")
+    public ResponseEntity<StudyGroupResponseDTO> getGroup(@Param("name") String name) {
+        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(name)));
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<StudyGroupResponseDTO>> getAllGroups() {
         return ResponseEntity.ok(studyGroupService.getAllGroups().stream()

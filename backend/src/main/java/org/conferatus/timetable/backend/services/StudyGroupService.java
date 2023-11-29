@@ -37,6 +37,10 @@ public class StudyGroupService {
         return getGroupByIdOrThrow(id);
     }
 
+    public StudyGroup getGroup(String name) {
+        return getGroupByNameOrThrow(name);
+    }
+
     public StudyGroup addGroup(String groupName) {
         notExistsByNameOrThrow(groupName);
         return studyGroupRepository.save(StudyGroup.builder().name(groupName).build());
