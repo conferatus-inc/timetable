@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
+import org.conferatus.timetable.backend.model.SubjectType;
 import org.conferatus.timetable.backend.model.entity.Subject;
 import org.conferatus.timetable.backend.model.repos.SubjectRepository;
 import org.springframework.http.HttpStatus;
@@ -42,9 +43,9 @@ public class SubjectService {
         return subjectRepository.findAll();
     }
 
-    public Subject addSubject(String subjectName) {
+    public Subject addSubject(String subjectName, SubjectType subjectType) {
         notExistsByNameOrThrow(subjectName);
-        return subjectRepository.save(Subject.builder().name(subjectName).build());
+        return subjectRepository.save(Subject.builder().name(subjectName).subjectType(subjectType).build());
     }
 
 

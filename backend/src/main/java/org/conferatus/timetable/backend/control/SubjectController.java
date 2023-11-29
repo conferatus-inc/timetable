@@ -5,6 +5,7 @@ import java.util.List;
 import feign.Param;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.SubjectDTO;
+import org.conferatus.timetable.backend.model.SubjectType;
 import org.conferatus.timetable.backend.services.SubjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,14 +34,16 @@ public class SubjectController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> addSubject(@Param("name") String subjectName) {
-        subjectService.addSubject(subjectName);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<SubjectDTO> addSubject(
+            @Param("name") String subjectName,
+            @Param("subject_type") SubjectType subjectType
+    ) {
+        return ResponseEntity.ok(new SubjectDTO(subjectService.addSubject(subjectName, subjectType)));
     }
 
     @PutMapping("/")
     public ResponseEntity<String> updateSubject(@Param("current") String previousSubjectName,
-                                                 @Param("new") String newSubjectName) {
+                                                @Param("new") String newSubjectName) {
         subjectService.updateSubject(previousSubjectName, newSubjectName);
         return ResponseEntity.ok().build();
     }
