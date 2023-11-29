@@ -1,9 +1,9 @@
 package org.conferatus.timetable.backend.services;
 
-import org.conferatus.timetable.backend.algorithm.constraints.Penalties;
+import org.conferatus.timetable.backend.algorithm.constraints.Penalty;
+import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
 import org.conferatus.timetable.backend.algorithm.scheduling.AudienceEvolve;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
-import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
 import org.conferatus.timetable.backend.algorithm.scheduling.StudyPlanEvolve;
 import org.conferatus.timetable.backend.model.TableTime;
 import org.springframework.stereotype.Service;
@@ -15,19 +15,20 @@ import java.util.List;
 public class ScheduleAlgorithmService {
     private final GeneticAlgorithmScheduler geneticAlgorithmScheduler;
     private final int populationSize;
+    private final PenaltyChecker penaltyChecker = PenaltyChecker.newBuilder()
+            .addPenalties(Arrays.stream(Penalty.values())
+                    .toList()).build();
 
     public ScheduleAlgorithmService() {
         this.geneticAlgorithmScheduler = new GeneticAlgorithmScheduler();
-        geneticAlgorithmScheduler.setPenalties(Arrays.stream(
-                        Penalties.values())
-                .map(Penalties::getPenaltyFunction).toList());
+        geneticAlgorithmScheduler.setPenalties(penaltyChecker);
         populationSize = 400;
         TableTime.setCellsAmount(6);
         TableTime.setDaysAmount(6);
     }
 
-    private List<List<LessonWithTime>> algorithmCreateSchedule(List<StudyPlanEvolve> studyPlans,
-                                                               List<AudienceEvolve> audiences) {
+    private List<GeneticAlgorithmScheduler.AlgoSchedule> algorithmCreateSchedule(List<StudyPlanEvolve> studyPlans,
+                                                                                 List<AudienceEvolve> audiences) {
         return geneticAlgorithmScheduler.algorithm(studyPlans, audiences, populationSize);
     }
 }

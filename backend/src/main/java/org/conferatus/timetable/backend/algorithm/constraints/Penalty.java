@@ -12,7 +12,7 @@ import java.util.function.Function;
  * small penalty if it's weak constraint
  * positive if good ending
  */
-public enum Penalties {
+public enum Penalty {
     TeacherAndAudienceType(
             (data) -> {
                 LessonWithTime lesson = data.currentLesson();
@@ -21,12 +21,13 @@ public enum Penalties {
                     return -5.;
                 }
                 return 0.;
-            }
+            },
+            true
     ),
     AudienceUnique(
             (data) -> {
                 LessonWithTime lesson = data.currentLesson();
-                var lessonsInCell = data.getLessonsInCell(lesson);
+                var lessonsInCell = data.getOtherLessons(lesson);
                 //audit unique
                 if (lessonsInCell.stream()
                         .anyMatch(lessonWithTime ->
@@ -35,12 +36,13 @@ public enum Penalties {
                     return -5.;
                 }
                 return 0.;
-            }
+            },
+            true
     ),
     TeacherUnique(
             (data) -> {
                 LessonWithTime lesson = data.currentLesson();
-                var lessonsInCell = data.getLessonsInCell(lesson);
+                var lessonsInCell = data.getOtherLessons(lesson);
                 if (lessonsInCell.stream()
                         .anyMatch(lessonWithTime ->
                                 lessonWithTime.teacher().id()
@@ -48,12 +50,14 @@ public enum Penalties {
                     return -5.;
                 }
                 return 0.;
-            }
+            },
+            true
     ),
     GroupUnique(
             (data) -> {
                 LessonWithTime lesson = data.currentLesson();
-                var lessonsInCell = data.getLessonsInCell(lesson);
+                //todo: optimize other lessons
+                var lessonsInCell = data.getOtherLessons(lesson);
                 if (!lesson.audience().auditoryType().equals(AudienceType.LECTURE)
                         && lessonsInCell.stream()
                         .anyMatch(lessonWithTime ->
@@ -64,17 +68,20 @@ public enum Penalties {
                     return -5.;
                 }
                 return 0.;
-            }
+            },
+            true
     ),
     ;
     final Function<GeneticAlgorithmScheduler.DataForConstraint, Double> penaltyFunction;
+    final boolean isHard;
 
     public Function<GeneticAlgorithmScheduler.DataForConstraint, Double> getPenaltyFunction() {
         return penaltyFunction;
     }
 
-    Penalties(Function<GeneticAlgorithmScheduler.DataForConstraint, Double> penaltyFunction) {
+    Penalty(Function<GeneticAlgorithmScheduler.DataForConstraint, Double> penaltyFunction, boolean isHard) {
         this.penaltyFunction = penaltyFunction;
+        this.isHard = isHard;
     }
 
 }
