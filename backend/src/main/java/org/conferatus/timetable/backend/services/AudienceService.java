@@ -1,13 +1,14 @@
 package org.conferatus.timetable.backend.services;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
+import org.conferatus.timetable.backend.model.AudienceType;
 import org.conferatus.timetable.backend.model.entity.Audience;
 import org.conferatus.timetable.backend.model.repos.AudienceRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +42,9 @@ public class AudienceService {
         return audienceRepository.findAll();
     }
 
-    public Audience addAudience(String audienceName) {
+    public Audience addAudience(String audienceName, AudienceType audienceType) {
         notExistsByNameOrThrow(audienceName);
-        return audienceRepository.save(Audience.builder().name(audienceName).build());
+        return audienceRepository.save(Audience.builder().name(audienceName).audienceType(audienceType).build());
     }
 
     public Audience updateAudience(String previousAudienceName, String newAudienceName) {

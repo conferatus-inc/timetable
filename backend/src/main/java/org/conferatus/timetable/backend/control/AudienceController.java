@@ -1,13 +1,19 @@
 package org.conferatus.timetable.backend.control;
 
+import java.util.List;
+
 import feign.Param;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.AudienceDTO;
+import org.conferatus.timetable.backend.model.AudienceType;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +30,14 @@ public class AudienceController {
     public ResponseEntity<List<AudienceDTO>> getAllAudiences() {
         return ResponseEntity.ok(audienceService.getAllAudiences().stream()
                 .map(AudienceDTO::new).toList());
+    }
+
+    @PostMapping
+    public ResponseEntity<AudienceDTO> addAudience(
+            @Param("name") String name,
+            @Param("audience_type") AudienceType audienceType
+    ) {
+        return ResponseEntity.ok(new AudienceDTO(audienceService.addAudience(name, audienceType)));
     }
 
     @PutMapping("/")
