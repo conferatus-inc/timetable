@@ -1,13 +1,18 @@
 package org.conferatus.timetable.backend.control;
 
+import java.util.List;
+
 import feign.Param;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.TeacherResponseDTO;
 import org.conferatus.timetable.backend.services.TeacherService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +32,8 @@ public class TeacherController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> addTeacher(@Param("name") String teacherName) {
-        teacherService.addTeacher(teacherName);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TeacherResponseDTO> addTeacher(@Param("name") String teacherName) {
+        return ResponseEntity.ok(new TeacherResponseDTO(teacherService.addTeacher(teacherName)));
     }
 
     @PutMapping("/")
