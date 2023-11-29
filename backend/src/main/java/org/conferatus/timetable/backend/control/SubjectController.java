@@ -2,7 +2,6 @@ package org.conferatus.timetable.backend.control;
 
 import java.util.List;
 
-import feign.Param;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.SubjectDTO;
 import org.conferatus.timetable.backend.model.SubjectType;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,12 +23,12 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     @GetMapping("/by-id")
-    public ResponseEntity<SubjectDTO> getSubjectById(@Param("id") Long id) {
+    public ResponseEntity<SubjectDTO> getSubjectById(@RequestParam("id") Long id) {
         return ResponseEntity.ok(new SubjectDTO(subjectService.getSubject(id)));
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<SubjectDTO> getSubjectByName(@Param("name") String name) {
+    public ResponseEntity<SubjectDTO> getSubjectByName(@RequestParam("name") String name) {
         return ResponseEntity.ok(new SubjectDTO(subjectService.getSubject(name)));
     }
 
@@ -40,21 +40,21 @@ public class SubjectController {
 
     @PostMapping("/")
     public ResponseEntity<SubjectDTO> addSubject(
-            @Param("name") String subjectName,
-            @Param("subject_type") SubjectType subjectType
+            @RequestParam("name") String subjectName,
+            @RequestParam("subject_type") SubjectType subjectType
     ) {
         return ResponseEntity.ok(new SubjectDTO(subjectService.addSubject(subjectName, subjectType)));
     }
 
     @PutMapping("/")
-    public ResponseEntity<String> updateSubject(@Param("current") String previousSubjectName,
-                                                @Param("new") String newSubjectName) {
+    public ResponseEntity<String> updateSubject(@RequestParam("current") String previousSubjectName,
+                                                @RequestParam("new") String newSubjectName) {
         subjectService.updateSubject(previousSubjectName, newSubjectName);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<String> deleteSubject(@Param("name") String SubjectName) {
+    public ResponseEntity<String> deleteSubject(@RequestParam("name") String SubjectName) {
         subjectService.deleteSubjectOrThrow(SubjectName);
         return ResponseEntity.ok().build();
     }
