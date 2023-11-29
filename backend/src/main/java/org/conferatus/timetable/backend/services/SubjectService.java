@@ -16,7 +16,7 @@ public class SubjectService {
 
     private final SubjectRepository subjectRepository;
 
-    private Subject getSubjectByIdOrThrow(Long id) {
+    public Subject getSubjectByIdOrThrow(Long id) {
         return subjectRepository.findSubjectById(id)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Subject with id " + id + " does not exist"));

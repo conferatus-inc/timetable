@@ -1,5 +1,7 @@
 package org.conferatus.timetable.backend.services;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Teacher;
@@ -7,14 +9,12 @@ import org.conferatus.timetable.backend.model.repos.TeacherRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class TeacherService {
     private final TeacherRepository teacherRepository;
 
-    private Teacher getTeacherByIdOrThrow(Long id) {
+    public Teacher getTeacherByIdOrThrow(Long id) {
         return teacherRepository.findTeacherById(id)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Teacher with id " + id + " does not exist"));
