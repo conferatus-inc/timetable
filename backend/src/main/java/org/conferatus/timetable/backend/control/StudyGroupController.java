@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudyGroupController {
     private final StudyGroupService studyGroupService;
 
-    @GetMapping("/")
-    public ResponseEntity<StudyGroupResponseDTO> getGroup(@Param("id") Long id) {
+    @GetMapping("/by-id")
+    public ResponseEntity<StudyGroupResponseDTO> getGroupById(@Param("id") Long id) {
         return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(id)));
     }
 
-    @GetMapping("/")
-    public ResponseEntity<StudyGroupResponseDTO> getGroup(@Param("name") String name) {
+    @GetMapping("/by-name")
+    public ResponseEntity<StudyGroupResponseDTO> getGroupByName(@Param("name") String name) {
         return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(name)));
     }
 
