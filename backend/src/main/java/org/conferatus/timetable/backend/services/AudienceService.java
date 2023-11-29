@@ -38,6 +38,10 @@ public class AudienceService {
         return getAudienceByIdOrThrow(id);
     }
 
+    public Audience getAudience(String name) {
+        return getAudienceByNameOrThrow(name);
+    }
+
     public List<Audience> getAllAudiences() {
         return audienceRepository.findAll();
     }

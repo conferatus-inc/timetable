@@ -21,9 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AudienceController {
     private final AudienceService audienceService;
 
-    @GetMapping("/")
+    @GetMapping("/by-id")
     public ResponseEntity<AudienceDTO> getAudience(@Param("id") Long id) {
         return ResponseEntity.ok(new AudienceDTO(audienceService.getAudience(id)));
+    }
+
+    @GetMapping("/by-name")
+    public ResponseEntity<AudienceDTO> getAudience(@Param("name") String name) {
+        return ResponseEntity.ok(new AudienceDTO(audienceService.getAudience(name)));
     }
 
     @GetMapping("/all")
