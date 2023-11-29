@@ -39,6 +39,10 @@ public class SubjectService {
         return getSubjectByIdOrThrow(id);
     }
 
+    public Subject getSubject(String name) {
+        return getSubjectByNameOrThrow(name);
+    }
+
     public List<Subject> getAllSubjects() {
         return subjectRepository.findAll();
     }

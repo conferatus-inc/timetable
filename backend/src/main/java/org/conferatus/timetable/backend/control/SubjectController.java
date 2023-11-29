@@ -22,9 +22,14 @@ public class SubjectController {
 
     private final SubjectService subjectService;
 
-    @GetMapping("/")
-    public ResponseEntity<SubjectDTO> getSubject(@Param("id") Long id) {
+    @GetMapping("/by-id")
+    public ResponseEntity<SubjectDTO> getSubjectById(@Param("id") Long id) {
         return ResponseEntity.ok(new SubjectDTO(subjectService.getSubject(id)));
+    }
+
+    @GetMapping("/by-name")
+    public ResponseEntity<SubjectDTO> getSubjectByName(@Param("name") String name) {
+        return ResponseEntity.ok(new SubjectDTO(subjectService.getSubject(name)));
     }
 
     @GetMapping("/all")
