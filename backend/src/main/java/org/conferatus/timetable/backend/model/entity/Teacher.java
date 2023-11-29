@@ -30,6 +30,7 @@ public class Teacher {
 
     private String name;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "teacher_subject",
@@ -38,6 +39,7 @@ public class Teacher {
     )
     private List<Subject> possibleSubjects = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany
     @JoinColumn(name = "lesson_id")
     private List<Lesson> lessons = new ArrayList<>();
