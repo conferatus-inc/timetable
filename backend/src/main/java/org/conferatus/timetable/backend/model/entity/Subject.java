@@ -35,6 +35,7 @@ public class Subject {
 
     private SubjectType subjectType;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "subject_teacher",
@@ -43,7 +44,9 @@ public class Subject {
     )
     private List<Teacher> possibleTeachers = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany
     @JoinColumn(name = "lesson_id")
     private List<Lesson> lessons = new ArrayList<>();
+
 }
