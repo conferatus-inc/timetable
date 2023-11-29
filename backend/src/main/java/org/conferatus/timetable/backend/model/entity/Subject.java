@@ -41,7 +41,7 @@ public class Subject {
             joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     )
-    private List<Teacher> possibleTeacher = new ArrayList<>();
+    private List<Teacher> possibleTeachers = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "lesson_id")
