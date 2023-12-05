@@ -11,7 +11,7 @@
                 v-for="item in items"
                 :key="item.id"
                 :title="item.name"
-                @click="$router.push({ path: pathPrefix + item.name })"
+                :to="{ path: pathPrefix + item.name }"
               ></v-list-item>
             </v-list>
           </v-card>
