@@ -3,21 +3,13 @@
   <v-container>
     <v-row>
       <v-col>
-        <h2 class="ma-2">knock-knock</h2>
+        <h2 class="ma-2">Добавить преподавателя</h2>
         <div>
           <v-text-field
-            label="Логин"
+            label="ФИО"
             :rules="rules"
             hide-details="auto"
-            v-model="login"
-          ></v-text-field>
-
-          <v-text-field 
-          label="Пароль"
-          type="password"
-          :rules="rules"
-          hide-details=true
-          v-model="pass"
+            v-model="name"
           ></v-text-field>
         </div>
         <v-spacer></v-spacer>
@@ -26,9 +18,10 @@
         variant="flat" 
         class="ma-2"
         :to="{path: '/'}"
-        :disabled="login.length <3 || pass.length <3"
+        @click="showAlert('Преподаватель успешно добавлен')"
+        :disabled="name.length < 1"
         >
-          Войти
+          Создать
         </v-btn>
       </v-col>
     </v-row>
@@ -38,12 +31,15 @@
 <script setup>
 import { http } from '@/http-common';
 import { ref } from 'vue'
+import { showAlert } from '@/store/globalAlert.js'
 
 const rules = [
-  value => !!value || 'Required.',
-  value => (value && value.length >= 3) || 'Min 3 characters',
+  value => !!value || 'Required',
+  value => (value.length >= 3) || 'Min 3 characters',
 ]
 
-const login = ref('')
-const pass = ref('')
+const name = ref('')
+
+// showAlert("asdfsdf")
+
 </script>

@@ -7,39 +7,17 @@
         
         <v-spacer></v-spacer>
 
-        <v-card class="ma-2" width=500>
+        <v-card class="ma-2">
         <v-btn 
         variant="flat" 
         class="ma-2"
-        @click="$router.push({ path: '/group' })"
+        :to="{path: '/new-teacher'}"
         >
-          Расписание для группы
+          Добавить преподавателя
         </v-btn>
         </v-card>
 
         <v-spacer></v-spacer>
-
-        <v-card class="ma-2" width=500>
-          <v-btn 
-          variant="flat" 
-          class="ma-2"
-          @click="$router.push({ path: '/audience' })"
-          >
-            Расписание для аудитории
-          </v-btn>
-        </v-card>
-        
-        <v-spacer></v-spacer>
-
-        <v-card class="ma-2" width=500>
-        <v-btn 
-        variant="flat" 
-        class="ma-2"
-        @click="$router.push({ path: '/teacher' })"
-        >
-          Расписание для преподавателя
-        </v-btn>
-      </v-card>
       </v-col>
     </v-row>
   </v-container>

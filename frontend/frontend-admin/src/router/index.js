@@ -18,6 +18,12 @@ const routes = [
         component: () => import('@/views/Home.vue'),
       },
 
+      {
+        path: '/new-teacher',
+        name: 'New teacher',
+        component: () => import('@/views/NewTeacher.vue'),
+      },
+
       // else
       { 
         path: '/:pathMatch(.*)*', 

@@ -12,11 +12,10 @@
         <v-btn 
           variant="flat" 
           class="ma-1"
-          @click="$router.push({ path : '/'})"
+          :to="{path: '/'}"
           >
             Домой
           </v-btn>
-
       </v-col>
     </v-row>
   </v-container>
