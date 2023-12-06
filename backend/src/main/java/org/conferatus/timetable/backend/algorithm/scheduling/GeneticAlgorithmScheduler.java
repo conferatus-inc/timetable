@@ -1,21 +1,19 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-import io.jenetics.Genotype;
-import io.jenetics.IntegerChromosome;
-import io.jenetics.IntegerGene;
-import io.jenetics.Phenotype;
+import io.jenetics.*;
 import io.jenetics.engine.Engine;
 import io.jenetics.engine.EvolutionStart;
+import io.jenetics.internal.math.Probabilities;
 import io.jenetics.util.Factory;
+import io.jenetics.util.ISeq;
 import lombok.NoArgsConstructor;
-import org.conferatus.timetable.backend.algorithm.constraints.Penalty;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
 import org.conferatus.timetable.backend.model.AudienceType;
 import org.conferatus.timetable.backend.model.TableTime;
 
-import java.time.Instant;
 import java.util.*;
-import java.util.function.Function;
+import java.util.concurrent.CompletableFuture;
+import java.util.random.RandomGenerator;
 
 /**
  * TODO: checker in another class
@@ -25,9 +23,13 @@ import java.util.function.Function;
 @NoArgsConstructor
 public class GeneticAlgorithmScheduler {
     ArrayList<AudienceTimeCell> cells = new ArrayList<>();
+    Map<AudienceType, List<AudienceTimeCell>> audienceMap = new HashMap<>();
+    Map<AudienceTimeCell, Integer> audienceToIndex = new HashMap<>();
     ArrayList<LessonGene> lessonGenes = new ArrayList<>();
     private int satisfiedScheduleAmount = 3;
     PenaltyChecker penaltyChecker;
+    Map<GroupEvolve, List<Integer>> groupToIndexes = new HashMap<>();
+
 
     public void setSatisfiedScheduleAmount(int satisfiedScheduleAmount) {
         this.satisfiedScheduleAmount = satisfiedScheduleAmount;
@@ -37,9 +39,21 @@ public class GeneticAlgorithmScheduler {
         this.penaltyChecker = penaltyChecker;
     }
 
-    public record DataForConstraint(List<LessonWithTime> allLessons,
-                                    LessonWithTime currentLesson,
-                                    List<List<List<LessonWithTime>>> timeTable) {
+    public static final class DataForConstraint {
+        private final List<LessonWithTime> allLessons;
+        private final LessonWithTime currentLesson;
+        private final List<List<List<LessonWithTime>>> timeTable;
+        private List<LessonWithTime> otherLessons = null;
+
+
+        public DataForConstraint(List<LessonWithTime> allLessons,
+                                 LessonWithTime currentLesson,
+                                 List<List<List<LessonWithTime>>> timeTable) {
+            this.allLessons = allLessons;
+            this.currentLesson = currentLesson;
+            this.timeTable = timeTable;
+        }
+
         public DataForConstraint(List<LessonWithTime> allLessons, LessonWithTime currentLesson) {
             this(allLessons, currentLesson, generate(allLessons));
         }
@@ -64,12 +78,14 @@ public class GeneticAlgorithmScheduler {
         }
 
         public List<LessonWithTime> getOtherLessons(LessonWithTime lesson) {
-            var lessons = getLessonsInCell(lesson);
-            lessons.remove(lesson);
-            return lessons;
+            if (otherLessons == null) {
+                otherLessons = getLessonsInCell(lesson);
+                otherLessons.remove(lesson);
+            }
+            return otherLessons;
         }
 
-        private static List<List<List<LessonWithTime>>> generate(List<LessonWithTime> lessons) {
+        public static List<List<List<LessonWithTime>>> generate(List<LessonWithTime> lessons) {
             List<List<List<LessonWithTime>>> timeTable = new ArrayList<>();
             for (int dayNumber = 0; dayNumber < TableTime.getDaysAmount(); dayNumber++) {
                 List<List<LessonWithTime>> dayCells = new ArrayList<>();
@@ -84,6 +100,42 @@ public class GeneticAlgorithmScheduler {
             }
             return timeTable;
         }
+
+        public List<LessonWithTime> allLessons() {
+            return allLessons;
+        }
+
+        public LessonWithTime currentLesson() {
+            return currentLesson;
+        }
+
+        public List<List<List<LessonWithTime>>> timeTable() {
+            return timeTable;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (DataForConstraint) obj;
+            return Objects.equals(this.allLessons, that.allLessons) &&
+                    Objects.equals(this.currentLesson, that.currentLesson) &&
+                    Objects.equals(this.timeTable, that.timeTable);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(allLessons, currentLesson, timeTable);
+        }
+
+        @Override
+        public String toString() {
+            return "DataForConstraint[" +
+                    "allLessons=" + allLessons + ", " +
+                    "currentLesson=" + currentLesson + ", " +
+                    "timeTable=" + timeTable + ']';
+        }
+
     }
 
     public GeneticAlgorithmScheduler(int satisfiedScheduleAmount) {
@@ -99,92 +151,76 @@ public class GeneticAlgorithmScheduler {
         this.satisfiedScheduleAmount = satisfiedScheduleAmount;
     }
 
-    public static void main(String[] args) {
-        AudienceEvolve auditory2128 = new AudienceEvolve("2128", AudienceType.LECTURE);
-        AudienceEvolve auditory3307 = new AudienceEvolve("3307", AudienceType.LECTURE);
-        AudienceEvolve auditory3333 = new AudienceEvolve("3333", AudienceType.PRACTICAL);
-        AudienceEvolve auditory4444 = new AudienceEvolve("4444", AudienceType.PRACTICAL);
-        AudienceEvolve auditory5555 = new AudienceEvolve("5555", AudienceType.PRACTICAL);
-        AudienceEvolve auditory6666 = new AudienceEvolve("6666", AudienceType.PRACTICAL);
-        GroupEvolve groupEvolve21213 = new GroupEvolve("21213");
-        GroupEvolve groupEvolve21214 = new GroupEvolve("21214");
-        GroupEvolve groupEvolve20214 = new GroupEvolve("20214");
-        GroupEvolve groupEvolve20215 = new GroupEvolve("20215");
-        TeacherEvolve gatilov = new TeacherEvolve("gatilov", AudienceType.LECTURE);
-        TeacherEvolve kutalev = new TeacherEvolve("kutalev", AudienceType.PRACTICAL);
-        TeacherEvolve shvab = new TeacherEvolve("shvab", AudienceType.PRACTICAL);
-        TeacherEvolve molochev = new TeacherEvolve("molochev", AudienceType.PRACTICAL);
-        SubjectEvolve subjectEvolve20_1 = new SubjectEvolve("proga:20_1", 1, 1,
-                Map.of("20214", kutalev, "20215", shvab, "20216", molochev), gatilov);
-        SubjectEvolve subjectEvolve20_2 = new SubjectEvolve("proga:20_2", 1, 1,
-                Map.of("20214", kutalev, "20215", shvab, "20216", molochev), gatilov);
-        SubjectEvolve subjectEvolve21_1 = new SubjectEvolve("proga:21_1", 1, 1,
-                Map.of("21214", kutalev, "21213", shvab, "21215", molochev), gatilov);
-        SubjectEvolve subjectEvolve21_2 = new SubjectEvolve("proga:21_2", 1, 1,
-                Map.of("21214", kutalev, "21213", shvab, "21215", molochev), gatilov);
-        StudyPlanEvolve studyPlanEvolve20 = new StudyPlanEvolve(List.of(subjectEvolve20_1, subjectEvolve20_2), List.of(groupEvolve20214, groupEvolve20215));
-        StudyPlanEvolve studyPlanEvolve21 = new StudyPlanEvolve(List.of(subjectEvolve21_1, subjectEvolve21_2), List.of(groupEvolve21213, groupEvolve21214));
-        Instant instant = Instant.now();
-        List<AlgoSchedule> results = new GeneticAlgorithmScheduler(PenaltyChecker.newBuilder()
-                .addPenalties(Arrays.stream(Penalty.values())
-                        .toList()).build())
-                .algorithm(List.of(studyPlanEvolve20, studyPlanEvolve21),
-                        List.of(auditory2128,
-                                auditory3307,
-                                auditory5555,
-                                auditory6666,
-                                auditory3333,
-                                auditory4444
-                        ), TableTime.getDaysAmount() * TableTime.getCellsAmount());
-        Instant after = Instant.now();
-        System.out.println((double) (Date.from(after).getTime() - Date.from(instant).getTime()) / 1000);
-        System.out.println("total penalty: " + results.get(0).checkResult.total());
-        System.out.println(results.get(0).checkResult);
-        for (int i = 0; i < results.get(0).allLessons.size(); i++) {
-            var lessons = results.get(0).allLessons.get(i);
-            System.out.println(lessons.time() + ": " + lessons);
-        }
-
-    }
-
 
     public record AlgoSchedule(List<LessonWithTime> allLessons, PenaltyChecker.CheckResult checkResult) {
 
     }
 
+    public class AlgorithmStatus {
+        double percentage;
+        boolean running;
+
+        PenaltyChecker.CheckResult checkResult;
+
+        CompletableFuture<List<AlgoSchedule>> result;
+    }
+
+    private AlgorithmStatus algorithmStatus;
+
     /**
      * @param studyPlanEvolves
      * @param audiences
-     * @param populationSize
      * @return few schedules
      */
     public List<AlgoSchedule> algorithm(List<StudyPlanEvolve> studyPlanEvolves,
-                                        List<AudienceEvolve> audiences,
-                                        int populationSize) {
+                                        List<AudienceEvolve> audiences) {
+
         cells.clear();
         lessonGenes.clear();
         prepareData(studyPlanEvolves, audiences);
 
         final Factory<Genotype<IntegerGene>> gtf =
                 Genotype.of(IntegerChromosome.of(0, cells.size()), lessonGenes.size());
-
-
         final Engine<IntegerGene, Double> engine = Engine
                 .builder(this::fitness, gtf)
-                .populationSize(5)
+                .populationSize(1000)
+                .alterers(new MyMutator())
                 .build();
         var evolutionResult = engine.evolve(EvolutionStart.empty());
         int goodPhenotypeCounter = 0;
         int maxCounter = 3000;
-        double prev = Double.MIN_NORMAL;
+        double prev = -1e10;
+        int i = 0;
+        algorithmStatus = new AlgorithmStatus();
+        algorithmStatus.percentage = 1;
+        algorithmStatus.running = false;
+        var initialCheck = penaltyChecker.calculatePenalty(phenotypeToLessons(evolutionResult.bestPhenotype()));
+        algorithmStatus.checkResult = initialCheck;
+        double initialMaximum = initialCheck.total();
+
         while (goodPhenotypeCounter < satisfiedScheduleAmount) {
             evolutionResult = engine.evolve(evolutionResult.next());
             goodPhenotypeCounter = 0;
             double bestResult = evolutionResult.bestFitness();
-            if (bestResult >= prev) {
+            if (bestResult <= prev) {
+
                 maxCounter--;
+
+            } else {
+                prev = bestResult;
+                i++;
+                System.out.println(bestResult);
+
+                if (i >= 2) {
+                    i = 0;
+                    PenaltyChecker.CheckResult checkResult =
+                            penaltyChecker.calculatePenalty(phenotypeToLessons(evolutionResult.bestPhenotype()));
+                    checkResult.penaltyToError().forEach((pen, res) -> {
+                        System.out.println(pen + ":" + res.getSummaryPenalty());
+                    });
+                }
+                maxCounter = 3000;
             }
-            prev = bestResult;
             if (bestResult >= 0) {
                 for (Phenotype<IntegerGene, Double> phenotype : evolutionResult.population()) {
                     if (phenotype.fitness() >= 0) {
@@ -230,6 +266,14 @@ public class GeneticAlgorithmScheduler {
             for (SubjectEvolve subjectEvolve : studyPlanEvolve.subjectEvolves()) {
                 if (subjectEvolve.lectureAmount() != 0) {
                     LessonGene lessonGene = new LessonGene(new ArrayList<>(studyPlanEvolve.groupEvolves()), subjectEvolve.lectureTeacherEvolve(), subjectEvolve);
+
+                    for (GroupEvolve group : lessonGene.groups()) {
+                        if (!groupToIndexes.containsKey(group)) {
+                            groupToIndexes.put(group, new ArrayList<>());
+                        }
+                        groupToIndexes.get(group).add(lessonGenes.size());
+                    }
+
                     lessonGenes.add(lessonGene);
                 }
                 for (GroupEvolve groupEvolve : studyPlanEvolve.groupEvolves()) {
@@ -237,22 +281,34 @@ public class GeneticAlgorithmScheduler {
                         LessonGene lessonGene = new LessonGene(groupEvolve,
                                 subjectEvolve.teacherToGroup().get(groupEvolve.id()),
                                 subjectEvolve.withSubId(subId));
+                        for (GroupEvolve group : lessonGene.groups()) {
+                            if (!groupToIndexes.containsKey(group)) {
+                                groupToIndexes.put(group, new ArrayList<>());
+                            }
+                            groupToIndexes.get(group).add(lessonGenes.size());
+                        }
                         lessonGenes.add(lessonGene);
+
+
                     }
                 }
             }
         });
         int times = TableTime.getDaysAmount() * TableTime.getCellsAmount();
+        int lastIndex = 0;
         for (AudienceEvolve auditory : audiences) {
             for (int i = 0; i < times; i++) {
                 AudienceTimeCell cell = new AudienceTimeCell(auditory, i);
+                audienceToIndex.put(cell, lastIndex++);
                 cells.add(cell);
+                if (!audienceMap.containsKey(cell.audience().auditoryType())) {
+                    audienceMap.put(cell.audience().auditoryType(), new ArrayList<>());
+                }
+                audienceMap.get(cell.audience().auditoryType()).add(cell);
+
             }
         }
     }
-
-    private final List<Function<DataForConstraint, Double>> penalties = Arrays.stream(Penalty.values())
-            .map(Penalty::getPenaltyFunction).toList();
 
     private Double fitness(Genotype<IntegerGene> gt) {
         Map<Integer, List<LessonWithTime>> subjectCells = new HashMap<>();
@@ -273,10 +329,70 @@ public class GeneticAlgorithmScheduler {
         for (Map.Entry<Integer, List<LessonWithTime>> integerListEntry : subjectCells.entrySet()) {
             List<LessonWithTime> timeCells = integerListEntry.getValue();
             penalty += penaltyChecker.calculatePenalty(timeCells).total();
-//            for (LessonWithTime timeCell : timeCells) {
-//                penalty += penaltyChecker.calculatePenalty(new DataForConstraint(timeCells, timeCell)).total();
-//            }
         }
         return penalty;
+    }
+
+    private class MyMutator extends Mutator<IntegerGene, Double> {
+
+        @Override
+        protected MutatorResult<Genotype<IntegerGene>> mutate(Genotype<IntegerGene> genotype, double p, RandomGenerator random) {
+            final int P = Probabilities.toInt(p);
+            List<MutatorResult<Chromosome<IntegerGene>>> mutatorResults = new ArrayList<>();
+
+            for (int i = 0; i < genotype.length(); i++) {
+                IntegerChromosome chromosome = genotype.get(i).as(IntegerChromosome.class);
+                if (random.nextInt() < P) {
+                    mutatorResults.add(mutate(chromosome, i, p, random, new int[1]));
+                } else {
+                    mutatorResults.add(new MutatorResult<>(chromosome, 0));
+                }
+            }
+
+            final ISeq<MutatorResult<Chromosome<IntegerGene>>> result = ISeq.of(mutatorResults);
+
+            return new MutatorResult<>(
+                    Genotype.of(result.map(MutatorResult::result)),
+                    result.stream().mapToInt(MutatorResult::mutations).sum()
+            );
+        }
+
+
+        protected MutatorResult<Chromosome<IntegerGene>> mutate(Chromosome<IntegerGene> chromosome, int index, double p, RandomGenerator random, int[] arr) {
+            final int P = Probabilities.toInt(p);
+            var integerChromosome = chromosome.as(IntegerChromosome.class);
+            List<MutatorResult<IntegerGene>> mutatorResults = new ArrayList<>();
+
+            var gene = integerChromosome.gene();
+            if (random.nextInt() < P) {
+                mutatorResults.add(new MutatorResult<>(mutate(gene, index, random, arr), 1));
+            } else {
+                mutatorResults.add(new MutatorResult<>(gene, 0));
+            }
+
+            final ISeq<MutatorResult<IntegerGene>> result = ISeq.of(mutatorResults);
+
+            return new MutatorResult<>(
+                    chromosome.newInstance(result.map(MutatorResult::result)),
+                    result.stream().mapToInt(MutatorResult::mutations).sum()
+            );
+        }
+
+
+        private IntegerGene mutate(IntegerGene gene, int index, RandomGenerator random, int[] arr) {
+
+            LessonGene lesson = lessonGenes.get(index);
+            AudienceTimeCell audienceTimeCell = cells.get(gene.intValue());
+
+
+            List<AudienceTimeCell> possibleAudiences = audienceMap.get(lesson.teacher().teacherType());
+
+
+            int randomCellIndex = random.nextInt(0, possibleAudiences.size());
+
+            var cell = audienceToIndex.get(possibleAudiences.get(randomCellIndex));
+
+            return gene.newInstance(cell);
+        }
     }
 }

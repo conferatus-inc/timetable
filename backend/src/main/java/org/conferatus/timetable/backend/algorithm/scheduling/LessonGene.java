@@ -10,8 +10,8 @@ public record LessonGene(List<GroupEvolve> groups, TeacherEvolve teacher, Subjec
 
     @Override
     public String toString() {
-        return "{G:" + groups + "}" +
-                " {T:" + teacher + "}" +
-                " {S:" + subject + "}";
+        return "{" + groups +
+                "|T:" + teacher + "|" +
+                subject + "}";
     }
 }
