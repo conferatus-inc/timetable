@@ -30,9 +30,6 @@ public record TableTime(int day, int cellNumber) {
 
     @Override
     public String toString() {
-        return "{" +
-                "d:" + day +
-                "c=" + cellNumber +
-                '}';
+        return day + "/" + cellNumber;
     }
 }

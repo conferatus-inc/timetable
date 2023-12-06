@@ -7,28 +7,26 @@ import java.util.*;
 
 public class PenaltyChecker {
     private final List<Penalty> penalties;
-    private final EnumSet<Penalty> penaltySet;
 
     public static PenaltyCheckerBuilder newBuilder() {
         return new PenaltyCheckerBuilder();
     }
 
 
-    private PenaltyChecker(List<Penalty> penalties, EnumSet<Penalty> penaltySet) {
+    private PenaltyChecker(List<Penalty> penalties) {
         this.penalties = penalties;
-        this.penaltySet = penaltySet;
     }
 
     public static final class CheckResult {
-        final EnumMap<Penalty, PenaltyResult> penaltyToError;
+        final Map<Penalty, PenaltyResult> penaltyToError;
         double total;
 
-        public CheckResult(EnumMap<Penalty, PenaltyResult> penaltyToError) {
+        public CheckResult(Map<Penalty, PenaltyResult> penaltyToError) {
             this.penaltyToError = penaltyToError;
             this.total = 0;
         }
 
-        public EnumMap<Penalty, PenaltyResult> penaltyToError() {
+        public Map<Penalty, PenaltyResult> penaltyToError() {
             return penaltyToError;
         }
 
@@ -60,50 +58,79 @@ public class PenaltyChecker {
 
     }
 
-    public class PenaltyResult {
+    public record ProblemLesson(LessonWithTime lesson, String message) {
+        @Override
+        public String toString() {
+            return "{" +
+                    "L=" + lesson +
+                    ":'" + message +
+                    '}';
+        }
+    }
+
+    public static class PenaltyResult {
         double summaryPenalty = 0;
-        List<LessonWithTime> problemLessons = new ArrayList<>();
+        List<ProblemLesson> problemLessons = new ArrayList<>();
 
         public double getSummaryPenalty() {
             return summaryPenalty;
         }
+
+        public List<ProblemLesson> getProblemLessons() {
+            return problemLessons;
+        }
+
+        @Override
+        public String toString() {
+            return "PR{" +
+                    "P=" + summaryPenalty +
+                    "L=" + problemLessons +
+                    '}';
+        }
     }
 
     public CheckResult calculatePenalty(GeneticAlgorithmScheduler.DataForConstraint dataForOneLesson) {
-        EnumMap<Penalty, PenaltyResult> penaltyToError = new EnumMap<>(Penalty.class);
+        Map<Penalty, PenaltyResult> penaltyToError = new HashMap<>();
         var checkResult = new CheckResult(penaltyToError);
         penalties.forEach(penalty -> {
-            double value = penalty.penaltyFunction.apply(dataForOneLesson);
-            if (value < 0) {
+            var calculateResult = penalty.penaltyFunction.apply(dataForOneLesson);
+            var penaltyValue = calculateResult.value();
+            if (penaltyValue < 0) {
                 if (!penaltyToError.containsKey(penalty)) {
                     penaltyToError.put(penalty, new PenaltyResult());
                 }
                 PenaltyResult result = penaltyToError.get(penalty);
-                result.summaryPenalty += value;
-                checkResult.total += value;
-                result.problemLessons.add(dataForOneLesson.currentLesson());
+                result.summaryPenalty += penaltyValue;
+                checkResult.total += penaltyValue;
+                result.problemLessons.add(new ProblemLesson(dataForOneLesson.currentLesson(), calculateResult.message()));
             }
         });
         return checkResult;
     }
 
     public CheckResult calculatePenalty(List<LessonWithTime> lessonWithTimes) {
-        EnumMap<Penalty, PenaltyResult> penaltyToError = new EnumMap<>(Penalty.class);
+        return calculatePenalty(lessonWithTimes, GeneticAlgorithmScheduler.DataForConstraint.generate(lessonWithTimes));
+    }
+
+    public CheckResult calculatePenalty(List<LessonWithTime> lessonWithTimes,
+                                        List<List<List<LessonWithTime>>> allLessons) {
+        Map<Penalty, PenaltyResult> penaltyToError = new HashMap<>();
         var checkResult = new CheckResult(penaltyToError);
         lessonWithTimes.forEach(lesson -> {
-                    var data = new GeneticAlgorithmScheduler.DataForConstraint(lessonWithTimes, lesson);
-                    penalties.forEach(penalty -> {
-                        double value = penalty.penaltyFunction.apply(data);
-                        if (value < 0) {
-                            if (!penaltyToError.containsKey(penalty)) {
-                                penaltyToError.put(penalty, new PenaltyResult());
-                            }
-                            PenaltyResult result = penaltyToError.get(penalty);
-                            result.summaryPenalty += value;
-                            checkResult.total += value;
-                            result.problemLessons.add(data.currentLesson());
-                        }
-                    });
+            var data = new GeneticAlgorithmScheduler.DataForConstraint(lessonWithTimes, lesson, allLessons);
+            penalties.forEach(penalty -> {
+                var calculateResult = penalty.penaltyFunction.apply(data);
+                var value = calculateResult.value();
+                if (value < 0) {
+                    if (!penaltyToError.containsKey(penalty)) {
+                        penaltyToError.put(penalty, new PenaltyResult());
+                    }
+                    PenaltyResult result = penaltyToError.get(penalty);
+                    result.summaryPenalty += value;
+                    checkResult.total += value;
+                    result.problemLessons.add(new ProblemLesson(data.currentLesson(), calculateResult.message()));
+                }
+            });
                 }
         );
         return checkResult;
@@ -112,7 +139,7 @@ public class PenaltyChecker {
 
     public static class PenaltyCheckerBuilder {
         private final List<Penalty> penalties = new ArrayList<>();
-        private final EnumSet<Penalty> penaltySet = EnumSet.noneOf(Penalty.class);
+        private final Set<Penalty> penaltySet = new HashSet<>();
 
         public PenaltyCheckerBuilder addPenalty(Penalty penalty) {
             if (!penaltySet.contains(penalty)) {
@@ -122,14 +149,14 @@ public class PenaltyChecker {
             return this;
         }
 
-        public PenaltyCheckerBuilder addPenalties(Collection<Penalty> penalties) {
-            penalties.forEach(this::addPenalty);
+        public PenaltyCheckerBuilder addPenalties(Collection<PenaltyEnum> penalties) {
+            penalties.stream().map(PenaltyEnum::toPenalty).forEach(this::addPenalty);
             return this;
         }
 
 
         public PenaltyChecker build() {
-            return new PenaltyChecker(penalties, penaltySet);
+            return new PenaltyChecker(penalties);
         }
     }
 }

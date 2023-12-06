@@ -2,8 +2,23 @@ package org.conferatus.timetable.backend.algorithm.scheduling;
 
 import org.conferatus.timetable.backend.model.TableTime;
 
+import java.util.Objects;
+
 public record AudienceTimeCell(AudienceEvolve audience, TableTime time) {
     public AudienceTimeCell(AudienceEvolve audience, int timeIndex) {
         this(audience, new TableTime(timeIndex));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AudienceTimeCell that = (AudienceTimeCell) o;
+        return Objects.equals(audience, that.audience) && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(audience, time);
     }
 }

@@ -7,6 +7,6 @@ public record AudienceEvolve(String id,
 
     @Override
     public String toString() {
-        return "{" + id + ":" + auditoryType + '}';
+        return id + ":" + auditoryType.name().substring(0, 2);
     }
 }
