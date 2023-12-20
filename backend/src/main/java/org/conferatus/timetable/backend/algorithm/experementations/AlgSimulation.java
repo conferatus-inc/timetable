@@ -8,14 +8,16 @@ import org.conferatus.timetable.backend.model.AudienceType;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class AlgSimulation {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         GeneticAlgorithmScheduler geneticAlgorithmScheduler = new GeneticAlgorithmScheduler();
         geneticAlgorithmScheduler.setPenalties(PenaltyChecker.newBuilder().addPenalties(Arrays.stream(PenaltyEnum.values())
                 .toList()).build());
 
-        int audiencesAmount = 100;
+        int audiencesAmount = 400;
         int lectureAmount = 30;
 
         List<AudienceEvolve> audienceEvolves = new ArrayList<>(audiencesAmount + lectureAmount);
@@ -26,10 +28,10 @@ public class AlgSimulation {
             audienceEvolves.add(new AudienceEvolve("L" + i, AudienceType.LECTURE));
         }
 
-        int groups = 100;
-        int studyPlans = 10;
+        int groups = 16;
+        int studyPlans = 3;
 
-        int subjectsPerPlan = 6;
+        int subjectsPerPlan = 7;
         Map<Integer, List<GroupEvolve>> planNumberToGroups = new HashMap<>();
         Map<Integer, List<SubjectEvolve>> planToSubjects = new HashMap<>();
         Map<Integer, List<TeacherEvolve>> planToLectureTeachers = new HashMap<>();
@@ -96,43 +98,60 @@ public class AlgSimulation {
         }
         Instant instant = Instant.now();
         System.out.println("Start");
-        var results = geneticAlgorithmScheduler.algorithm(plansList, audienceEvolves);
-        Instant after = Instant.now();
-        System.out.println((double) (Date.from(after).getTime() - Date.from(instant).getTime()) / 1000);
-        System.out.println("total penalty: " + results.get(0).checkResult().total());
-        GeneticAlgorithmScheduler.AlgoSchedule firstSchedule = results.get(0);
-        System.out.println(firstSchedule.checkResult());
-        List<LessonWithTime> firstAllLessons = firstSchedule.allLessons();
-        firstAllLessons.sort((o1, o2) -> {
-            var t1 = o1.time();
-            var t2 = o2.time();
-            if (t1.day() != t2.day()) {
-                return Integer.compare(t1.day(), t2.day());
+        Executor executor = Executors.newFixedThreadPool(4);
+        var th = new Thread(() -> geneticAlgorithmScheduler.algorithm(plansList, audienceEvolves));
+        th.start();
+        geneticAlgorithmScheduler.algorithmStatus.getResult()
+                .thenAccept(results -> {
+                    Instant after = Instant.now();
+                    System.out.println((double) (Date.from(after).getTime() - Date.from(instant).getTime()) / 1000);
+                    System.out.println("total penalty: " + results.get(0).checkResult().total());
+                    GeneticAlgorithmScheduler.AlgoSchedule firstSchedule = results.get(0);
+                    System.out.println(firstSchedule.checkResult());
+                    List<LessonWithTime> firstAllLessons = firstSchedule.allLessons();
+                    firstAllLessons.sort((o1, o2) -> {
+                        var t1 = o1.time();
+                        var t2 = o2.time();
+                        if (t1.day() != t2.day()) {
+                            return Integer.compare(t1.day(), t2.day());
+                        }
+                        if (t1.cellNumber() != t2.cellNumber()) {
+                            return Integer.compare(t1.cellNumber(), t2.cellNumber());
+                        }
+                        return 0;
+                    });
+                    List<LessonWithTime> firstLessonForGroup1 = firstAllLessons.stream()
+                            .filter(lesson -> lesson.groups().stream().map(GroupEvolve::id).toList().contains("g:1"))
+                            .toList();
+                    for (LessonWithTime lessons : firstAllLessons) {
+                        System.out.println(lessons.time() + ": " + lessons);
+                    }
+
+
+                    var checkResult = results.get(0).checkResult();
+                    for (Map.Entry<Penalty, PenaltyChecker.PenaltyResult> penaltyPenaltyResultEntry : checkResult.penaltyToError().entrySet()) {
+                        Penalty penalty = penaltyPenaltyResultEntry.getKey();
+                        PenaltyChecker.PenaltyResult penResult = penaltyPenaltyResultEntry.getValue();
+                        System.out.println(penalty + ":" + penResult);
+                    }
+                    System.out.println("\n\nGROUP1");
+                    for (LessonWithTime lessons : firstLessonForGroup1) {
+                        System.out.println(lessons.time() + ": " + lessons);
+                    }
+                }).join();
+        while (!geneticAlgorithmScheduler.algorithmStatus.getResult().isDone()) {
+            var perc = geneticAlgorithmScheduler.algorithmStatus.getPercentage();
+            System.out.println(perc);
+        }
+        var status = geneticAlgorithmScheduler.algorithmStatus;
+        while (true) {
+            System.out.println(status.getPercentage());
+            if (status.getResult().isDone()) {
+                break;
             }
-            if (t1.cellNumber() != t2.cellNumber()) {
-                return Integer.compare(t1.cellNumber(), t2.cellNumber());
-            }
-            return 0;
-        });
-        List<LessonWithTime> firstLessonForGroup1 = firstAllLessons.stream()
-                .filter(lesson -> lesson.groups().stream().map(GroupEvolve::id).toList().contains("g:1"))
-                .toList();
-        for (LessonWithTime lessons : firstAllLessons) {
-            System.out.println(lessons.time() + ": " + lessons);
+            Thread.sleep(50);
         }
-
-
-        var checkResult = results.get(0).checkResult();
-        for (Map.Entry<Penalty, PenaltyChecker.PenaltyResult> penaltyPenaltyResultEntry : checkResult.penaltyToError().entrySet()) {
-            Penalty penalty = penaltyPenaltyResultEntry.getKey();
-            PenaltyChecker.PenaltyResult penResult = penaltyPenaltyResultEntry.getValue();
-            System.out.println(penalty + ":" + penResult);
-        }
-        System.out.println("\n\nGROUP1");
-        for (LessonWithTime lessons : firstLessonForGroup1) {
-            System.out.println(lessons.time() + ": " + lessons);
-        }
-
+        th.join();
 
     }
 }
