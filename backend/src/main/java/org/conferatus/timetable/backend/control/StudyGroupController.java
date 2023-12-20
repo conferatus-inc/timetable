@@ -38,7 +38,6 @@ public class StudyGroupController {
 
     @PostMapping("/")
     public ResponseEntity<StudyGroupResponseDTO> addGroup(@RequestParam("name") String groupName) {
-        studyGroupService.addGroup(groupName);
         return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.addGroup(groupName)));
     }
 

@@ -8,8 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,18 +24,18 @@ import lombok.Setter;
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    Long id;
 
     private String name;
 
-    @Builder.Default
-    @ManyToMany
-    @JoinTable(
-            name = "teacher_subject",
-            joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id")
-    )
-    private List<Subject> possibleSubjects = new ArrayList<>();
+//    @Builder.Default
+//    @ManyToMany
+//    @JoinTable(
+//            name = "teacher_subject",
+//            joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id")
+//    )
+//    private List<SubjectPlan> possibleSubjects = new ArrayList<>();
 
     @Builder.Default
     @OneToMany

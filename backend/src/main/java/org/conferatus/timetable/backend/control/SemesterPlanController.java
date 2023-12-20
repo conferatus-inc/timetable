@@ -4,16 +4,19 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.SemesterPlanDTO;
+import org.conferatus.timetable.backend.control.dto.SubjectPlanDTO;
+import org.conferatus.timetable.backend.model.SubjectType;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin/semester-plan")
+@RequestMapping("/api/v1/admin/semesterplans")
 public class SemesterPlanController {
     private final SemesterPlanService semesterPlanService;
 
@@ -26,5 +29,50 @@ public class SemesterPlanController {
     public ResponseEntity<List<SemesterPlanDTO>> getAllSemesterPlans() {
         return ResponseEntity.ok(semesterPlanService.getAllSemesterPlans().stream()
                 .map(SemesterPlanDTO::new).toList());
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<SemesterPlanDTO> addSemesterPlan(@RequestParam("name") String semesterPlanName) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSemesterPlan(semesterPlanName)));
+    }
+
+    @PostMapping("/subject")
+    public ResponseEntity<SemesterPlanDTO> addSubjectPlan(
+            @RequestParam("id") Long semesterId,
+            @RequestParam("times") Long times,
+            @RequestParam("subject_name") String subjectName,
+            @RequestParam("subject_type") SubjectType subjectType
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSubjectPlan(
+                semesterId, times, subjectName, subjectType
+        )));
+    }
+
+    @PostMapping("/subject/teacher")
+    public ResponseEntity<SemesterPlanDTO> addSubjectTeacher(
+            @RequestParam("id") Long semesterId,
+            @RequestParam("subject_id") Long subjectId,
+            @RequestParam("teacher_id") Long teacherId,
+            @RequestParam("possibleTimes") Long possibleTimes
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSubjectTeacher(
+                semesterId, subjectId, teacherId, possibleTimes
+        )));
+    }
+
+    @GetMapping("/subject")
+    public ResponseEntity<SubjectPlanDTO> getSubjectPlan(
+            @RequestParam("id") Long semesterId,
+            @RequestParam("subject_id") Long subjectId
+    ) {
+        return ResponseEntity.ok(new SubjectPlanDTO(semesterPlanService.getSubjectPlan(semesterId, subjectId)));
+    }
+
+    @PostMapping("/groups")
+    public ResponseEntity<SemesterPlanDTO> linkGroup(
+            @RequestParam("id") Long semesterId,
+            @RequestParam("group_id") Long groupId
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.linkGroup(semesterId, groupId)));
     }
 }

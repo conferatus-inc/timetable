@@ -1,18 +1,21 @@
 package org.conferatus.timetable.backend.control.dto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.conferatus.timetable.backend.model.entity.SemesterPlan;
 
 public record SemesterPlanDTO(
         Long id,
-        List<SubjectDTO> subjects
+        String name,
+        List<SubjectPlanDTO> subjectPlans,
+        List<StudyGroupResponseDTO> studyGroups
 ) {
     public SemesterPlanDTO(SemesterPlan semesterPlan) {
         this(
-                semesterPlan.getId(),
-                semesterPlan.getSubjects().stream().map(SubjectDTO::new).collect(Collectors.toList())
+                semesterPlan.id(),
+                semesterPlan.name(),
+                semesterPlan.subjectPlans().stream().map(SubjectPlanDTO::new).toList(),
+                semesterPlan.studyGroups().stream().map(StudyGroupResponseDTO::new).toList()
         );
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class StudyGroupService {
     private final StudyGroupRepository studyGroupRepository;
 
-    private StudyGroup getGroupByIdOrThrow(Long id) {
+    public StudyGroup getGroupByIdOrThrow(Long id) {
         return studyGroupRepository.findStudyGroupById(id)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Group with id " + id + " does not exist"));

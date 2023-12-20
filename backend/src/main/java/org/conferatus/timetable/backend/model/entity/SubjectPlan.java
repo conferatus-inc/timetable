@@ -3,38 +3,33 @@ package org.conferatus.timetable.backend.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.conferatus.timetable.backend.model.SubjectType;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "semesterplan")
+@NoArgsConstructor
+@Table(name = "subject_plan")
 @Accessors(fluent = true)
-public class SemesterPlan {
+public class SubjectPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "subject_plan_id")
-    List<SubjectPlan> subjectPlans = new ArrayList<>();
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "study_group_id")
-    List<StudyGroup> studyGroups = new ArrayList<>();
+    Long id;
+    Long times;
+    @OneToMany
+    @JoinColumn(name = "subject_teacher_id")
+    List<SubjectTeacher> teachers = new ArrayList<>();
     private String name;
+    private SubjectType subjectType;
 }
