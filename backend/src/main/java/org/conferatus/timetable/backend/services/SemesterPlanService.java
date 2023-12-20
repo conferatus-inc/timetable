@@ -9,6 +9,7 @@ import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SemesterPlan;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
+import org.conferatus.timetable.backend.model.entity.SubjectTeacher;
 import org.conferatus.timetable.backend.model.entity.Teacher;
 import org.conferatus.timetable.backend.model.repos.SemesterPlanRepository;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,14 @@ public class SemesterPlanService {
             throw new ServerException(HttpStatus.BAD_REQUEST,
                     "Teacher with id " + teacherId + " already exists in subjectPlan " + subjectPlan.id());
         }
+    }
+
+    private SubjectTeacher getSubjectTeacherInSubjectPlanOrThrow(SubjectPlan subjectPlan, Long teacherId) {
+        return subjectPlan.teachers()
+                .stream().filter(teacher -> Objects.equals(teacher.teacher().getId(), teacherId))
+                .findAny()
+                .orElseThrow(() -> new ServerException(HttpStatus.BAD_REQUEST,
+                        "Teacher with id " + teacherId + " does not exist in subjectPlan " + subjectPlan.id()));
     }
 
     private void notExistsByNameOrThrow(String name) {
@@ -103,6 +112,27 @@ public class SemesterPlanService {
 
         semesterPlan.studyGroups().add(studyGroupService.getGroupByIdOrThrow(groupId));
 
+        return semesterPlanRepository.save(semesterPlan);
+    }
+
+    public SemesterPlan deleteSemesterPlan(Long id) {
+        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(id);
+        semesterPlanRepository.delete(semesterPlan);
+        return semesterPlan;
+    }
+
+    public SemesterPlan deleteSubjectPlan(Long semesterId, Long subjectId) {
+        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
+        SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
+        semesterPlan.subjectPlans().remove(subjectPlan);
+        return semesterPlanRepository.save(semesterPlan);
+    }
+
+    public SemesterPlan deleteSubjectTeacher(Long semesterId, Long subjectId, Long teacherId) {
+        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
+        SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
+        SubjectTeacher subjectTeacher = getSubjectTeacherInSubjectPlanOrThrow(subjectPlan, teacherId);
+        subjectPlan.teachers().remove(subjectTeacher);
         return semesterPlanRepository.save(semesterPlan);
     }
 }

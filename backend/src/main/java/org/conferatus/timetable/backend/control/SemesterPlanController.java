@@ -8,6 +8,7 @@ import org.conferatus.timetable.backend.control.dto.SubjectPlanDTO;
 import org.conferatus.timetable.backend.model.SubjectType;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,11 @@ public class SemesterPlanController {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSemesterPlan(semesterPlanName)));
     }
 
+    @DeleteMapping("/")
+    public ResponseEntity<SemesterPlanDTO> deleteSemesterPlan(@RequestParam("id") Long id) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSemesterPlan(id)));
+    }
+
     @PostMapping("/subject")
     public ResponseEntity<SemesterPlanDTO> addSubjectPlan(
             @RequestParam("id") Long semesterId,
@@ -45,6 +51,16 @@ public class SemesterPlanController {
     ) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSubjectPlan(
                 semesterId, times, subjectName, subjectType
+        )));
+    }
+
+    @DeleteMapping("/subject")
+    public ResponseEntity<SemesterPlanDTO> deleteSubjectPlan(
+            @RequestParam("id") Long semesterId,
+            @RequestParam("subjectId") Long subjectId
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSubjectPlan(
+                semesterId, subjectId
         )));
     }
 
@@ -60,10 +76,21 @@ public class SemesterPlanController {
         )));
     }
 
+    @DeleteMapping("/subject/teacher")
+    public ResponseEntity<SemesterPlanDTO> deleteSubjectTeacher(
+            @RequestParam("id") Long semesterId,
+            @RequestParam("subject_id") Long subjectId,
+            @RequestParam("teacher_id") Long teacherId
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSubjectTeacher(
+                semesterId, subjectId, teacherId
+        )));
+    }
+
     @GetMapping("/subject")
     public ResponseEntity<SubjectPlanDTO> getSubjectPlan(
             @RequestParam("id") Long semesterId,
-            @RequestParam("subject_id") Long subjectId
+            @RequestParam("subjectId") Long subjectId
     ) {
         return ResponseEntity.ok(new SubjectPlanDTO(semesterPlanService.getSubjectPlan(semesterId, subjectId)));
     }
