@@ -15,11 +15,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.random.RandomGenerator;
 
-/**
- * TODO: checker in another class
- * TODO: refactor audience optimize
- * TODO: add constraints
- */
+
 @NoArgsConstructor
 public class GeneticAlgorithmScheduler {
     ArrayList<AudienceTimeCell> cells = new ArrayList<>();
@@ -157,15 +153,31 @@ public class GeneticAlgorithmScheduler {
     }
 
     public class AlgorithmStatus {
-        double percentage;
-        boolean running;
+        volatile double percentage = 1;
+        volatile boolean running = false;
 
-        PenaltyChecker.CheckResult checkResult;
+        volatile PenaltyChecker.CheckResult checkResult = null;
 
-        CompletableFuture<List<AlgoSchedule>> result;
+        CompletableFuture<List<AlgoSchedule>> result = new CompletableFuture<>();
+
+        public double getPercentage() {
+            return percentage;
+        }
+
+        public boolean isRunning() {
+            return running;
+        }
+
+        public PenaltyChecker.CheckResult getCheckResult() {
+            return checkResult;
+        }
+
+        public CompletableFuture<List<AlgoSchedule>> getResult() {
+            return result;
+        }
     }
 
-    private AlgorithmStatus algorithmStatus;
+    public final AlgorithmStatus algorithmStatus = new AlgorithmStatus();
 
     /**
      * @param studyPlanEvolves
@@ -174,11 +186,10 @@ public class GeneticAlgorithmScheduler {
      */
     public List<AlgoSchedule> algorithm(List<StudyPlanEvolve> studyPlanEvolves,
                                         List<AudienceEvolve> audiences) {
-
+        algorithmStatus.running = true;
         cells.clear();
         lessonGenes.clear();
         prepareData(studyPlanEvolves, audiences);
-
         final Factory<Genotype<IntegerGene>> gtf =
                 Genotype.of(IntegerChromosome.of(0, cells.size()), lessonGenes.size());
         final Engine<IntegerGene, Double> engine = Engine
@@ -191,13 +202,10 @@ public class GeneticAlgorithmScheduler {
         int maxCounter = 3000;
         double prev = -1e10;
         int i = 0;
-        algorithmStatus = new AlgorithmStatus();
         algorithmStatus.percentage = 1;
-        algorithmStatus.running = false;
         var initialCheck = penaltyChecker.calculatePenalty(phenotypeToLessons(evolutionResult.bestPhenotype()));
         algorithmStatus.checkResult = initialCheck;
         double initialMaximum = initialCheck.total();
-
         while (goodPhenotypeCounter < satisfiedScheduleAmount) {
             evolutionResult = engine.evolve(evolutionResult.next());
             goodPhenotypeCounter = 0;
@@ -209,8 +217,7 @@ public class GeneticAlgorithmScheduler {
             } else {
                 prev = bestResult;
                 i++;
-                System.out.println(bestResult);
-
+                algorithmStatus.percentage = initialMaximum != 0 ? bestResult / initialMaximum : 0;
                 if (i >= 2) {
                     i = 0;
                     PenaltyChecker.CheckResult checkResult =
@@ -218,6 +225,7 @@ public class GeneticAlgorithmScheduler {
                     checkResult.penaltyToError().forEach((pen, res) -> {
                         System.out.println(pen + ":" + res.getSummaryPenalty());
                     });
+                    algorithmStatus.checkResult = checkResult;
                 }
                 maxCounter = 3000;
             }
@@ -245,6 +253,9 @@ public class GeneticAlgorithmScheduler {
                 .map((List<LessonWithTime> allLessons) ->
                         new AlgoSchedule(allLessons, penaltyChecker.calculatePenalty(allLessons)))
                 .toList();
+        algorithmStatus.result.complete(sortedResults);
+        algorithmStatus.running = false;
+        System.err.println("Algo  end");
         return sortedResults;
     }
 
