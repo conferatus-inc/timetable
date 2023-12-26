@@ -11,7 +11,7 @@
                 v-for="item in items"
                 :key="item.id"
                 :title="item.name"
-                :to="{ path: pathPrefix + item.name }"
+                :click="$router.push({ path: pathPrefix + item.name })"
               ></v-list-item>
             </v-list>
           </v-card>
@@ -27,12 +27,11 @@ const props = defineProps({
     type: String,
     default: "untitled"
   },
-  pathPrefix: {
-    type: String, // pls include / and all of these
-    required: true
-  },
   items: {
     required: true
+  },
+  onClick: {
+    required: true // "$router.push({ path: pathPrefix + item.name })"
   }
 })
 

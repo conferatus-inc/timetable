@@ -64,7 +64,6 @@
   })
 
   import { ref } from 'vue'
-  import router from '@/router';
 
   const arr2D = ref('')
   const items = props.items

@@ -17,7 +17,6 @@
 </template>
 
 <script setup>
-// todo все перенести в компонент
   import MyErrorContainer from '@/components/MyErrorContainer.vue'
   import ItemsList from '@/components/ItemsList.vue';
 
