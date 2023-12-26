@@ -1,8 +1,7 @@
 package org.conferatus.timetable.backend.control;
 
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
+import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgorithmStatus;
 import org.conferatus.timetable.backend.control.dto.LessonDTO;
 import org.conferatus.timetable.backend.control.dto.TimeListDTO;
 import org.conferatus.timetable.backend.exception.ServerException;
@@ -16,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/timetable")
 public class TimeTableController {
     private final TimeTableService timeTableService;
     private final ScheduleService scheduleService;
+
 
     private static void throwServerExceptionIfBothParametersAreNull(String name, Long id) {
         if (name == null && id == null) {
@@ -39,6 +41,17 @@ public class TimeTableController {
     public ResponseEntity<List<TimeListDTO>> chooseGeneratedTimetable(@RequestParam Long generatedTimetableId) {
         return ResponseEntity.ok(null);
     }
+
+    @GetMapping("generate/state")
+    public ResponseEntity<AlgorithmStatus> getTaskState(@RequestParam(required = false) Long taskId) {
+        return ResponseEntity.ok(new AlgorithmStatus());
+    }
+
+    @GetMapping("generate/result")
+    public ResponseEntity<?> getTaskResult(@RequestParam(required = false) Long taskId) {
+        return ResponseEntity.ok(new AlgorithmStatus());
+    }
+
 
     @GetMapping("/lessons/by_group")
     public ResponseEntity<TimeListDTO> getGroupLessons(
