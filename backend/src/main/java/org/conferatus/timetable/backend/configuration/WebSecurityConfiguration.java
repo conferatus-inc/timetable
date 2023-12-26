@@ -32,7 +32,7 @@ public class WebSecurityConfiguration implements WebMvcConfigurer
 //                    authorizeRequests(
 //                    value
 //            ).antMatchers("/**").permitAll();
-        http.addFilterBefore(new CustomAuthorizationFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new CustomAuthorizationFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
     }
