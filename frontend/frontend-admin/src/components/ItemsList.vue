@@ -5,13 +5,15 @@
         <v-col>
           <h2 class='ma-2'>{{ title }}</h2>
           <v-card class='ma-2' max-width='300'>
-            <v-list lines='one'>
+            <v-list 
+            lines='one'>
               <v-list-subheader>Выберите из списка</v-list-subheader>
               <v-list-item
                 v-for="item in items"
                 :key="item.id"
                 :title="item.name"
-                :click="$router.push({ path: pathPrefix + item.name })"
+                :active="item.id === selectedItem"
+                @click="aclick(item.id)"
               ></v-list-item>
             </v-list>
           </v-card>
@@ -22,6 +24,10 @@
 </template>
 
 <script setup>
+import { showAlert } from '@/store/globalAlert';
+import { ref } from 'vue';
+
+const selectedItem = ref(-1)
 const props = defineProps({
   title: {
     type: String,
@@ -30,9 +36,12 @@ const props = defineProps({
   items: {
     required: true
   },
-  onClick: {
-    required: true // "$router.push({ path: pathPrefix + item.name })"
-  }
 })
 
+const emit = defineEmits(['choose'])
+
+function aclick(id) {
+  selectedItem.value = id
+  emit('choose', id)
+}
 </script>

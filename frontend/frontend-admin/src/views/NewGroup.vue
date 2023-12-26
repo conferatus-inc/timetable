@@ -46,6 +46,19 @@ function postNewGroup() {
     .then(response => {
       if (response.status == 200) {
         showAlert("Группа добавлена!")
+        const groupId = response.data.id
+
+        http.post("api/v1/admin/semesterplans/groups?id=1&group_id=" + groupId)
+          .then(response2 => {
+            if (response2.status == 200) {
+              showAlert("Группа добавлена!")
+            } else {
+              showAlert(response2.statusText)
+            }
+          }).catch(function (error) {
+            showAlert("Произошла ошибка: " + error)
+          })
+
       } else {
         showAlert(response.statusText)
       }

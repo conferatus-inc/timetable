@@ -3,13 +3,13 @@
   <v-container>
     <v-row>
       <v-col>
-        <h2 class="ma-2">Добавить группу</h2>
+        <h2 class="ma-2">Добавить предмет</h2>
         <div>
           <v-text-field
             label="Название"
             :rules="rules"
             hide-details="auto"
-            v-model="name"
+            v-model="subjectName"
             single-line
           ></v-text-field>
         </div>
@@ -45,7 +45,7 @@
         class="ma-2"
         :to="{path: '/'}"
         @click="postNewSubject()"
-        :disabled="name.length < 3"
+        :disabled="subjectName.length < 3"
         :rules="rules"
         >
           Создать
@@ -65,7 +65,6 @@ const rules = [
   value => (value.length >= 3) || 'Требуется как минимум 3 символа',
 ]
 
-const name = ref('')
 const times = ref(1)
 const subjectName = ref('')
 const subjectType = ref('PRACTICAL')
