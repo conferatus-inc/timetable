@@ -1,6 +1,7 @@
 package org.conferatus.timetable.backend.control.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.conferatus.timetable.backend.model.entity.Lesson;
 
 import java.util.List;
 
@@ -13,6 +14,18 @@ public record LessonDTO(
         @JsonProperty("time_index") int timeNumber
 
 ) {
+    public LessonDTO(Lesson lesson) {
+        this(lesson.getId(),
+                new SimpleTeacher(lesson.getTeacher()),
+                new AudienceDTO(lesson.getAudience()),
+                lesson.getGroups()
+                        .stream()
+                        .map(StudyGroupResponseDTO::new)
+                        .toList(),
+                lesson.getWeekDay(),
+                lesson.getNumberOfTime()
+        );
+    }
 
 
 //    public LessonDTO(LessonWithTime lessonWithTime) {

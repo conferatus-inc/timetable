@@ -57,8 +57,12 @@ public class TimeTableController {
             List<Nasrano>>
     getTaskResult(@RequestParam(required = false) Long taskId) {
         List<AlgoSchedule> aboba = algoService.getLastResult().getResult().join();
-        List<Nasrano>
-                nasranos = new ArrayList<>();
+        List<Nasrano> nasranos = new ArrayList<>();
+        for (int i = 0; i < aboba.size(); i++) {
+            var algoSchedule = aboba.get(i);
+            nasranos.add(dtoConverter.convert(algoSchedule, i));
+        }
+
         return ResponseEntity.ok(nasranos);
     }
 

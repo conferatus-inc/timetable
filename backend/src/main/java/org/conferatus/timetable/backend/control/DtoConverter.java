@@ -3,12 +3,10 @@ package org.conferatus.timetable.backend.control;
 import lombok.AllArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgoSchedule;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
-import org.conferatus.timetable.backend.control.dto.AudienceDTO;
-import org.conferatus.timetable.backend.control.dto.LessonDTO;
-import org.conferatus.timetable.backend.control.dto.SimpleTeacher;
+import org.conferatus.timetable.backend.control.dto.*;
 import org.conferatus.timetable.backend.control.dto.TableNasrano.Nasrano;
-import org.conferatus.timetable.backend.control.dto.TimeListDTO;
 import org.conferatus.timetable.backend.model.TableTime;
+import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
 import org.conferatus.timetable.backend.model.repos.SubjectTeacherRepository;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
@@ -27,6 +25,7 @@ public class DtoConverter {
     private final SubjectTeacherService subjectTeacherService;
     private final SubjectPlanService subjectPlanService;
     private final SubjectTeacherRepository teacherRepository;
+    private final StudyGroupRepository groupRepository;
 
     public Nasrano convert(AlgoSchedule algoSchedule, long id) {
         TimeListDTO timeListDTO;
@@ -35,16 +34,24 @@ public class DtoConverter {
         for (LessonWithTime lessonWithTime : algoSchedule.allLessons()) {
             var subject = lessonWithTime.lessonGene().subject();
             var teacher = lessonWithTime.teacher();
+            List<StudyGroupResponseDTO> studyGroupResponseDTOS = lessonWithTime.groups().stream().map(
+                    groupEvolve -> new StudyGroupResponseDTO(groupEvolve.id(),
+                            groupRepository.findStudyGroupById(groupEvolve.id()).get().getName())
+            ).toList();
+
+
             LessonDTO lessonDTO = new LessonDTO(
                     subject.id(),
                     new SimpleTeacher(teacher.id(), teacherRepository.getById(teacher.id()).teacher().getName()),
                     new AudienceDTO(lessonWithTime.audience().id(),
                             audienceService.getAudience(lessonWithTime.audience().id()).getName(),
                             lessonWithTime.audience().auditoryType()),
-                    null,
+                    studyGroupResponseDTOS
+                    ,
                     TableTime.getDaysAmount(),
                     TableTime.getCellsAmount()
             );
+            cells.add(lessonDTO);
         }
         timeListDTO = new TimeListDTO(id,
                 List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),

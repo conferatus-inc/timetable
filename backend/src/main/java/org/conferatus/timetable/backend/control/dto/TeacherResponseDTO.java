@@ -1,10 +1,11 @@
 package org.conferatus.timetable.backend.control.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.conferatus.timetable.backend.model.entity.Lesson;
+import org.conferatus.timetable.backend.model.entity.Teacher;
+
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.conferatus.timetable.backend.model.entity.Teacher;
 
 public record TeacherResponseDTO(
         @JsonProperty("id") Long id,
@@ -17,7 +18,7 @@ public record TeacherResponseDTO(
                 teacher.getId(),
                 teacher.getName(),
 //                teacher.getPossibleSubjects().stream().map(SubjectPlanDTO::new).collect(Collectors.toList()),
-                teacher.getLessons().stream().map(LessonDTO::new).collect(Collectors.toList())
+                teacher.getLessons().stream().map((Lesson id1) -> new LessonDTO(id1)).collect(Collectors.toList())
         );
     }
 }
