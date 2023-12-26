@@ -1,8 +1,8 @@
 package org.conferatus.timetable.backend.control.dto;
 
-import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
-
 import java.util.List;
+
+import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
 
 public record TableNasrano(
         List<Nasrano> nasranos
@@ -10,7 +10,7 @@ public record TableNasrano(
 
 
     public record Nasrano(
-            TimeListDTO timeListDTOs,
+            TimeListDTO timeListDTO,
             PenaltyChecker.CheckResult penalties
     ) {
 
