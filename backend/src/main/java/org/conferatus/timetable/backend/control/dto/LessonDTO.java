@@ -3,10 +3,11 @@ package org.conferatus.timetable.backend.control.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
 import org.conferatus.timetable.backend.model.entity.Lesson;
 
 public record LessonDTO(
-        Long id,
+        String id,
         SimpleTeacher teacher,
         AudienceDTO auditory,
         List<StudyGroupResponseDTO> groups,
@@ -15,7 +16,7 @@ public record LessonDTO(
 
 ) {
     public LessonDTO(Lesson lesson) {
-        this(lesson.getId(),
+        this(String.valueOf(lesson.getId()),
                 new SimpleTeacher(lesson.getTeacher()),
                 new AudienceDTO(lesson.getAudience()),
                 lesson.getGroups()
@@ -24,6 +25,19 @@ public record LessonDTO(
                         .toList(),
                 lesson.getWeekDay(),
                 lesson.getNumberOfTime()
+        );
+    }
+
+    public LessonDTO(LessonWithTime lessonWithTime) {
+        this(
+                lessonWithTime.lessonGene().subject().id(),
+                new SimpleTeacher(lessonWithTime.teacher()),
+                new AudienceDTO(lessonWithTime.audience()),
+                lessonWithTime.groups().stream().map(
+                        StudyGroupResponseDTO::new
+                ).toList(),
+                0,
+                0
         );
     }
 }

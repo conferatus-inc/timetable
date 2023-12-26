@@ -5,7 +5,7 @@ import java.util.Map;
 public record SubjectEvolve(String id,
                             int seminarAmount,
                             int lectureAmount,
-                            Map<String, TeacherEvolve> teacherToGroup,
+                            Map<String, TeacherEvolve> groupNameToTeacher,
                             TeacherEvolve lectureTeacherEvolve,
                             int subId) {
     public SubjectEvolve(String id,
@@ -17,7 +17,7 @@ public record SubjectEvolve(String id,
     }
 
     public SubjectEvolve withSubId(int subId) {
-        return new SubjectEvolve(id, seminarAmount, lectureAmount, teacherToGroup, lectureTeacherEvolve, subId);
+        return new SubjectEvolve(id, seminarAmount, lectureAmount, groupNameToTeacher, lectureTeacherEvolve, subId);
     }
 
     @Override

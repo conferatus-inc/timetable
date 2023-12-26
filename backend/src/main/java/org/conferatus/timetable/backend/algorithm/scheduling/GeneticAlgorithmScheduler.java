@@ -1,6 +1,21 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-import io.jenetics.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.random.RandomGenerator;
+
+import io.jenetics.Chromosome;
+import io.jenetics.Genotype;
+import io.jenetics.IntegerChromosome;
+import io.jenetics.IntegerGene;
+import io.jenetics.Mutator;
+import io.jenetics.MutatorResult;
+import io.jenetics.Phenotype;
 import io.jenetics.engine.Engine;
 import io.jenetics.engine.EvolutionStart;
 import io.jenetics.internal.math.Probabilities;
@@ -10,11 +25,6 @@ import lombok.NoArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
 import org.conferatus.timetable.backend.model.AudienceType;
 import org.conferatus.timetable.backend.model.TableTime;
-
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.random.RandomGenerator;
 
 
 @NoArgsConstructor
@@ -297,7 +307,7 @@ public class GeneticAlgorithmScheduler {
                 for (GroupEvolve groupEvolve : studyPlanEvolve.groupEvolves()) {
                     for (int subId = 0; subId < subjectEvolve.seminarAmount(); subId++) {
                         LessonGene lessonGene = new LessonGene(groupEvolve,
-                                subjectEvolve.teacherToGroup().get(groupEvolve.id()),
+                                subjectEvolve.groupNameToTeacher().get(groupEvolve.id()),
                                 subjectEvolve.withSubId(subId));
                         for (GroupEvolve group : lessonGene.groups()) {
                             if (!groupToIndexes.containsKey(group)) {

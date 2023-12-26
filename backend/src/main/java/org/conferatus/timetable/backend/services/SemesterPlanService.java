@@ -135,4 +135,9 @@ public class SemesterPlanService {
         subjectPlan.teachers().remove(subjectTeacher);
         return semesterPlanRepository.save(semesterPlan);
     }
+
+    public List<SubjectPlan> getAllSubjectPlans(Long semesterId) {
+        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
+        return semesterPlan.subjectPlans();
+    }
 }

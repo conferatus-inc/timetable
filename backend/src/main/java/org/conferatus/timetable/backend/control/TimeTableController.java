@@ -1,11 +1,16 @@
 package org.conferatus.timetable.backend.control;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgorithmStatus;
 import org.conferatus.timetable.backend.control.dto.LessonDTO;
 import org.conferatus.timetable.backend.control.dto.TimeListDTO;
+import org.conferatus.timetable.backend.control.dto.TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Lesson;
+import org.conferatus.timetable.backend.services.ScheduleAlgorithmService;
 import org.conferatus.timetable.backend.services.ScheduleService;
 import org.conferatus.timetable.backend.services.TimeTableService;
 import org.springframework.http.HttpStatus;
@@ -15,14 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/timetable")
 public class TimeTableController {
     private final TimeTableService timeTableService;
     private final ScheduleService scheduleService;
+    private final ScheduleAlgorithmService algoService;
 
 
     private static void throwServerExceptionIfBothParametersAreNull(String name, Long id) {
@@ -32,9 +36,9 @@ public class TimeTableController {
     }
 
     @GetMapping("/generate")
-    public ResponseEntity<List<List<TimeListDTO>>> generateTimetable(@RequestParam Long semesterId) {
-//        scheduleService.generate(semesterId);
-        return ResponseEntity.ok(null);
+    public ResponseEntity<Long> generateTimetable(@RequestParam Long semesterId) {
+        var task = scheduleService.generate(semesterId);
+        return ResponseEntity.ok(task.id());
     }
 
     @GetMapping("generate/choose")
@@ -44,12 +48,18 @@ public class TimeTableController {
 
     @GetMapping("generate/state")
     public ResponseEntity<AlgorithmStatus> getTaskState(@RequestParam(required = false) Long taskId) {
-        return ResponseEntity.ok(new AlgorithmStatus());
+        return ResponseEntity.ok(algoService.getLastResult());
     }
 
     @GetMapping("generate/result")
-    public ResponseEntity<?> getTaskResult(@RequestParam(required = false) Long taskId) {
-        return ResponseEntity.ok(new AlgorithmStatus());
+    public ResponseEntity<
+            List<TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto.Nasrano>>
+    getTaskResult(@RequestParam(required = false) Long taskId) {
+        List<GeneticAlgorithmScheduler.AlgoSchedule> aboba = algoService.getLastResult().getResult().join();
+        List<TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto.Nasrano>
+                nasranos = TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto
+                .sratVechno(aboba).nasranos();
+        return ResponseEntity.ok(nasranos);
     }
 
 

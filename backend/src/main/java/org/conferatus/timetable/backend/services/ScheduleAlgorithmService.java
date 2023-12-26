@@ -58,7 +58,7 @@ public class ScheduleAlgorithmService {
         taskIdToStatus.remove(taskId);
     }
 
-    record StatusId(long id, AlgorithmStatus status) {
+    public record StatusId(long id, AlgorithmStatus status) {
     }
 
     public AlgorithmStatus getLastResult() {
