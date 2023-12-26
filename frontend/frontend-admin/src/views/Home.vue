@@ -54,6 +54,30 @@
         </v-card>
 
         <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/link-teacher-subject'}"
+        >
+          Добавить предмет к преподавателю
+        </v-btn>
+        </v-card>
+
+        <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/generate-table'}"
+        >
+          Сгенерировать расписание
+        </v-btn>
+        </v-card>
+
+        <v-spacer></v-spacer>
       </v-col>
     </v-row>
   </v-container>

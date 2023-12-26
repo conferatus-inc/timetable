@@ -29,10 +29,10 @@
                       <v-card-item density='compact'>
                         <v-card-title>{{ item.subject }}&nbsp</v-card-title>
                         <v-card-subtitle>
-                          <router-link class="act" :to="'/teacher/' + item.teacher">{{ item.teacher }}</router-link>&nbsp
+                          {{ item.teacher }}&nbsp
                         </v-card-subtitle>
                         <v-card-text>
-                          <router-link class="act" :to="'/audience/' + item.audience">{{ item.audience }}</router-link>&nbsp
+                          {{ item.audience }}&nbsp
                         </v-card-text>
                       </v-card-item>
                     </v-card>
@@ -68,12 +68,13 @@
   const arr2D = ref('')
   const items = props.items
 
-  arr2D.value = Array(items.days).fill(null).map(() => Array(items.lessonsPerDay).fill(
+
+  arr2D.value = Array(6).fill(null).map(() => Array(6).fill(
     {subject : ' ', teacher : ' ', audience : ' ', group : ' '}
   ))
 
-  items.cells.forEach(cell => arr2D.value[cell.day][cell.lesson] = 
-    {subject : cell.subject.name, teacher : cell.teacher.name, audience : cell.audience.name, group : cell.group.name })
+  items.timeListDTO.cells.forEach(cell => arr2D.value[cell.day_index][cell.time_index] = 
+    {subject : cell.name, teacher : cell.teacher.name, audience : cell.audience.name, group : "no grp" })//cell.group.name })
     
 </script>
 

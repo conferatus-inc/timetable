@@ -42,6 +42,18 @@ const routes = [
         component: () => import('@/views/NewSubject.vue'),
       },
 
+      {
+        path: '/link-teacher-subject',
+        name: 'Link teacher subject',
+        component: () => import('@/views/LinkTeacherSubject.vue'),
+      },
+
+      {
+        path: '/generate-table',
+        name: 'Generate table',
+        component: () => import('@/views/GenerateTable.vue'),
+      },
+
       // else
       { 
         path: '/:pathMatch(.*)*', 
