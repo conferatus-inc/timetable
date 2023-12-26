@@ -2,16 +2,16 @@ package org.conferatus.timetable.backend.algorithm.scheduling;
 
 import java.util.Map;
 
-public record SubjectEvolve(String id,
+public record SubjectEvolve(Long id,
                             int seminarAmount,
                             int lectureAmount,
-                            Map<String, TeacherEvolve> groupNameToTeacher,
+                            Map<Long, TeacherEvolve> groupNameToTeacher,
                             TeacherEvolve lectureTeacherEvolve,
                             int subId) {
-    public SubjectEvolve(String id,
+    public SubjectEvolve(Long id,
                          int seminarAmount,
                          int lectureAmount,
-                         Map<String, TeacherEvolve> teacherToGroup,
+                         Map<Long, TeacherEvolve> teacherToGroup,
                          TeacherEvolve lectureTeacherEvolve) {
         this(id, seminarAmount, lectureAmount, teacherToGroup, lectureTeacherEvolve, 0);
     }
@@ -22,6 +22,6 @@ public record SubjectEvolve(String id,
 
     @Override
     public String toString() {
-        return id;
+        return String.valueOf(id);
     }
 }

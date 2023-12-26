@@ -2,7 +2,6 @@ package org.conferatus.timetable.backend.control.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.conferatus.timetable.backend.algorithm.scheduling.GroupEvolve;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
 
 public record StudyGroupResponseDTO(
@@ -16,10 +15,4 @@ public record StudyGroupResponseDTO(
                 group.getName());
     }
 
-    public StudyGroupResponseDTO(GroupEvolve group) {
-        this(
-                group.id(),
-                group.id()
-        );
-    }
 }

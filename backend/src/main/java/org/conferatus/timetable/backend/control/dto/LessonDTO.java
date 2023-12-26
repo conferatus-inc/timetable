@@ -1,13 +1,11 @@
 package org.conferatus.timetable.backend.control.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
-import org.conferatus.timetable.backend.model.entity.Lesson;
-
 public record LessonDTO(
-        String id,
+        Long id,
         SimpleTeacher teacher,
         AudienceDTO auditory,
         List<StudyGroupResponseDTO> groups,
@@ -15,29 +13,18 @@ public record LessonDTO(
         @JsonProperty("time_index") int timeNumber
 
 ) {
-    public LessonDTO(Lesson lesson) {
-        this(String.valueOf(lesson.getId()),
-                new SimpleTeacher(lesson.getTeacher()),
-                new AudienceDTO(lesson.getAudience()),
-                lesson.getGroups()
-                        .stream()
-                        .map(StudyGroupResponseDTO::new)
-                        .toList(),
-                lesson.getWeekDay(),
-                lesson.getNumberOfTime()
-        );
-    }
 
-    public LessonDTO(LessonWithTime lessonWithTime) {
-        this(
-                lessonWithTime.lessonGene().subject().id(),
-                new SimpleTeacher(lessonWithTime.teacher()),
-                new AudienceDTO(lessonWithTime.audience()),
-                lessonWithTime.groups().stream().map(
-                        StudyGroupResponseDTO::new
-                ).toList(),
-                lessonWithTime.time().day(),
-                lessonWithTime.time().cellNumber()
-        );
-    }
+
+//    public LessonDTO(LessonWithTime lessonWithTime) {
+//        this(
+//                lessonWithTime.lessonGene().subject().id(),
+//                new SimpleTeacher(lessonWithTime.teacher()),
+//                new AudienceDTO(lessonWithTime.audience()),
+//                lessonWithTime.groups().stream().map(
+//                        StudyGroupResponseDTO::new
+//                ).toList(),
+//                lessonWithTime.time().day(),
+//                lessonWithTime.time().cellNumber()
+//        );
+//    }
 }

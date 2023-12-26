@@ -1,13 +1,10 @@
 package org.conferatus.timetable.backend.control;
 
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
-import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
+import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgoSchedule;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgorithmStatus;
-import org.conferatus.timetable.backend.control.dto.LessonDTO;
+import org.conferatus.timetable.backend.control.dto.TableNasrano.Nasrano;
 import org.conferatus.timetable.backend.control.dto.TimeListDTO;
-import org.conferatus.timetable.backend.control.dto.TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Lesson;
 import org.conferatus.timetable.backend.services.ScheduleAlgorithmService;
@@ -20,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/timetable")
@@ -27,6 +27,7 @@ public class TimeTableController {
     private final TimeTableService timeTableService;
     private final ScheduleService scheduleService;
     private final ScheduleAlgorithmService algoService;
+    private final DtoConverter dtoConverter;
 
 
     private static void throwServerExceptionIfBothParametersAreNull(String name, Long id) {
@@ -53,12 +54,11 @@ public class TimeTableController {
 
     @GetMapping("generate/result")
     public ResponseEntity<
-            List<TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto.Nasrano>>
+            List<Nasrano>>
     getTaskResult(@RequestParam(required = false) Long taskId) {
-        List<GeneticAlgorithmScheduler.AlgoSchedule> aboba = algoService.getLastResult().getResult().join();
-        List<TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto.Nasrano>
-                nasranos = TimeTableGeneratedResultCompletedFutureFinishedGeneratingAsynchronousWithWrongPenaltiesDto
-                .sratVechno(aboba).nasranos();
+        List<AlgoSchedule> aboba = algoService.getLastResult().getResult().join();
+        List<Nasrano>
+                nasranos = new ArrayList<>();
         return ResponseEntity.ok(nasranos);
     }
 
@@ -73,9 +73,7 @@ public class TimeTableController {
                 ? timeTableService.getLessonsByGroup(name)
                 : timeTableService.getLessonsByGroup(id);
         return ResponseEntity.ok(
-                new TimeListDTO(1L, List.of("Monday", "Tuesday"), 2, 5,
-                        lessons.stream().map(LessonDTO::new).toList())
-        );
+                null);
     }
 
     @GetMapping("/lessons/by_teacher")
@@ -86,9 +84,7 @@ public class TimeTableController {
                 ? timeTableService.getLessonsByTeacher(name)
                 : timeTableService.getLessonsByTeacher(id);
         return ResponseEntity.ok(
-                new TimeListDTO(1L, List.of("Monday", "Tuesday"), 2, 5,
-                        lessons.stream().map(LessonDTO::new).toList())
-        );
+                null);
     }
 
     @GetMapping("/lessons/by_audience")
@@ -99,8 +95,6 @@ public class TimeTableController {
                 ? timeTableService.getLessonsByAuditory(name)
                 : timeTableService.getLessonsByAuditory(id);
         return ResponseEntity.ok(
-                new TimeListDTO(1L, List.of("Monday", "Tuesday"), 2, 5,
-                        lessons.stream().map(LessonDTO::new).toList())
-        );
+                null);
     }
 }

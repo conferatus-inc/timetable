@@ -1,9 +1,9 @@
 package org.conferatus.timetable.backend.algorithm.constraints;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.conferatus.timetable.backend.algorithm.scheduling.GroupEvolve;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.conferatus.timetable.backend.algorithm.constraints.CalculateResult.ok;
 import static org.conferatus.timetable.backend.algorithm.constraints.CalculateResult.problem;
@@ -60,7 +60,7 @@ public enum PenaltyEnum {
             (data) -> {
                 LessonWithTime lesson = data.currentLesson();
                 var otherLessons = data.getOtherLessons(lesson);
-                AtomicReference<GroupEvolve> groupEvolve = new AtomicReference<>(new GroupEvolve((String) null));
+                AtomicReference<GroupEvolve> groupEvolve = new AtomicReference<>(new GroupEvolve((Long) null));
                 AtomicReference<LessonWithTime> lessonRef = new AtomicReference<>(null);
                 if (
 //                        !lesson.audience().auditoryType().equals(AudienceType.LECTURE) &&

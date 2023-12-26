@@ -2,16 +2,16 @@ package org.conferatus.timetable.backend.algorithm.scheduling;
 
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
 
-public record GroupEvolve(String id) {
+public record GroupEvolve(Long id) {
 
     public GroupEvolve(StudyGroup group) {
         this(
-                group.getName()
+                group.getId()
         );
     }
 
     @Override
     public String toString() {
-        return id;
+        return String.valueOf(id);
     }
 }
