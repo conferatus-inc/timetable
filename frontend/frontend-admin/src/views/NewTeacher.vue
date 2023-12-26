@@ -18,8 +18,9 @@
         variant="flat" 
         class="ma-2"
         :to="{path: '/'}"
-        @click="showAlert('Преподаватель успешно добавлен')"
-        :disabled="name.length < 1"
+        @click="postNewTeacher()"
+        :disabled="name.length < 3"
+        :rules="rules"
         >
           Создать
         </v-btn>
@@ -34,12 +35,24 @@ import { ref } from 'vue'
 import { showAlert } from '@/store/globalAlert.js'
 
 const rules = [
-  value => !!value || 'Required',
-  value => (value.length >= 3) || 'Min 3 characters',
+  value => !!value || 'Это поле обязательно',
+  value => (value.length >= 3) || 'Требуется как минимум 3 символа',
 ]
 
 const name = ref('')
 
-// showAlert("asdfsdf")
+function postNewTeacher() {
+  http.post("/api/v1/admin/group/", {
+    name: name.value
+  }).then(response => {
+    if (response.status == 200) {
+      showAlert("Преподаватель успешно добавлен!")
+    } else {
+      showAlert(response.status + " " + response.statusText)
+    }
+  }).catch(function (error) {
+    showAlert("Произошла ошибка: " + error)
+  })
+}
 
 </script>

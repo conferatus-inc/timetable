@@ -6,5 +6,5 @@ export const alertText = ref('')
 export function showAlert(text) {
     alertEnabled.value = true
     alertText.value = text
-    setTimeout(() => alertEnabled.value = false, 2000)
+    setTimeout(() => alertEnabled.value = false, 1200)
 }

@@ -5,14 +5,14 @@
       <v-col>
         <h2 class="ma-2">Добро пожаловать!</h2>
 
-        <v-card class="ma-2" width=500>
+        <v-card class="ma-2">
           <v-card-text>Добро пожаловать в Timetable. Сами вы его выбрали или его выбрали за вас, это лучший проект из оставшихся. Я такого высокого мнения о Timetable, что решил разместить свой список продуктов здесь, в Grocery Senpai, столь заботливо предоставленной Conferatus Team. Я горжусь тем, что называю Timetable своим домом. Итак, собираетесь ли вы остаться здесь, или же вас ждут неизвестные дали, добро пожаловать в Timetable. Здесь безопасно.</v-card-text>
         </v-card>
         
 
         <v-spacer></v-spacer>
 
-        <v-card class="ma-2" width=500>
+        <v-card class="ma-2">
         <v-btn 
         variant="flat" 
         class="ma-2"
@@ -24,7 +24,7 @@
 
         <v-spacer></v-spacer>
 
-        <v-card class="ma-2" width=500>
+        <v-card class="ma-2">
           <v-btn 
           variant="flat" 
           class="ma-2"
@@ -36,7 +36,7 @@
         
         <v-spacer></v-spacer>
 
-        <v-card class="ma-2" width=500>
+        <v-card class="ma-2">
         <v-btn 
         variant="flat" 
         class="ma-2"
