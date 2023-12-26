@@ -3,10 +3,10 @@
   <v-container>
     <v-row>
       <v-col>
-        <h2 class="ma-2">Добавить преподавателя</h2>
+        <h2 class="ma-2">Добавить группу</h2>
         <div>
           <v-text-field
-            label="ФИО"
+            label="Название"
             :rules="rules"
             hide-details="auto"
             v-model="name"
@@ -18,7 +18,7 @@
         variant="flat" 
         class="ma-2"
         :to="{path: '/'}"
-        @click="postNewTeacher()"
+        @click="postNewGroup()"
         :disabled="name.length < 3"
         :rules="rules"
         >
@@ -41,11 +41,11 @@ const rules = [
 
 const name = ref('')
 
-function postNewTeacher() {
-  http.post("api/v1/admin/teacher?name=" + name.value)
+function postNewGroup() {
+  http.post("api/v1/admin/group?name=" + name.value)
     .then(response => {
       if (response.status == 200) {
-        showAlert("Преподаватель добавлен!")
+        showAlert("Группа добавлена!")
       } else {
         showAlert(response.statusText)
       }

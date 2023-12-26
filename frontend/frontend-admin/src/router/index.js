@@ -24,6 +24,24 @@ const routes = [
         component: () => import('@/views/NewTeacher.vue'),
       },
 
+      {
+        path: '/new-group',
+        name: 'New group',
+        component: () => import('@/views/NewGroup.vue'),
+      },
+
+      {
+        path: '/new-audience',
+        name: 'New audience',
+        component: () => import('@/views/NewAudience.vue'),
+      },
+
+      {
+        path: '/new-subject',
+        name: 'New subject',
+        component: () => import('@/views/NewSubject.vue'),
+      },
+
       // else
       { 
         path: '/:pathMatch(.*)*', 

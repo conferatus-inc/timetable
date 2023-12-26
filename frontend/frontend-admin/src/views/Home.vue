@@ -18,6 +18,42 @@
         </v-card>
 
         <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/new-group'}"
+        >
+          Добавить группу
+        </v-btn>
+        </v-card>
+
+        <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/new-audience'}"
+        >
+          Добавить аудиторию
+        </v-btn>
+        </v-card>
+
+        <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/new-subject'}"
+        >
+          Добавить предмет
+        </v-btn>
+        </v-card>
+
+        <v-spacer></v-spacer>
       </v-col>
     </v-row>
   </v-container>
