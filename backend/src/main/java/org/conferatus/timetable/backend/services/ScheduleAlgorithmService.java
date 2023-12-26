@@ -1,5 +1,13 @@
 package org.conferatus.timetable.backend.services;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyEnum;
 import org.conferatus.timetable.backend.algorithm.scheduling.AudienceEvolve;
@@ -8,14 +16,6 @@ import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmSch
 import org.conferatus.timetable.backend.algorithm.scheduling.StudyPlanEvolve;
 import org.conferatus.timetable.backend.model.TableTime;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ScheduleAlgorithmService {
@@ -43,7 +43,7 @@ public class ScheduleAlgorithmService {
         return status;
     }
 
-    private StatusId createTaskSchedule(List<StudyPlanEvolve> studyPlans,
+    public StatusId createTaskSchedule(List<StudyPlanEvolve> studyPlans,
                                         List<AudienceEvolve> audiences) {
         var statusWithId = new StatusId(counter.incrementAndGet(), createAlgorithmSchedule(studyPlans, audiences));
         taskIdToStatus.put(statusWithId.id, statusWithId.status);

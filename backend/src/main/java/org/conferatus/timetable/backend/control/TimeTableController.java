@@ -7,6 +7,7 @@ import org.conferatus.timetable.backend.control.dto.LessonDTO;
 import org.conferatus.timetable.backend.control.dto.TimeListDTO;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Lesson;
+import org.conferatus.timetable.backend.services.ScheduleService;
 import org.conferatus.timetable.backend.services.TimeTableService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/admin/timetable")
 public class TimeTableController {
     private final TimeTableService timeTableService;
+    private final ScheduleService scheduleService;
 
     private static void throwServerExceptionIfBothParametersAreNull(String name, Long id) {
         if (name == null && id == null) {
@@ -29,6 +31,7 @@ public class TimeTableController {
 
     @GetMapping("/generate")
     public ResponseEntity<List<List<TimeListDTO>>> generateTimetable(@RequestParam Long semesterId) {
+//        scheduleService.generate(semesterId);
         return ResponseEntity.ok(null);
     }
 

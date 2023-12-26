@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SemesterPlanController {
     private final SemesterPlanService semesterPlanService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<SemesterPlanDTO> getSemesterPlan(@RequestParam("id") Long id) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.getSemesterPlan(id)));
     }
@@ -32,12 +32,12 @@ public class SemesterPlanController {
                 .map(SemesterPlanDTO::new).toList());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<SemesterPlanDTO> addSemesterPlan(@RequestParam("name") String semesterPlanName) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSemesterPlan(semesterPlanName)));
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<SemesterPlanDTO> deleteSemesterPlan(@RequestParam("id") Long id) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSemesterPlan(id)));
     }

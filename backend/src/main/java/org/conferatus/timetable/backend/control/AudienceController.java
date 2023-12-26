@@ -45,14 +45,14 @@ public class AudienceController {
         return ResponseEntity.ok(new AudienceDTO(audienceService.addAudience(name, audienceType)));
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<String> updateAudience(@RequestParam("current") String previousAudienceName,
                                                  @RequestParam("new") String newAudienceName) {
         audienceService.updateAudience(previousAudienceName, newAudienceName);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<String> deleteAudience(@RequestParam("name") String audienceName) {
         audienceService.deleteAudienceOrThrow(audienceName);
         return ResponseEntity.ok().build();

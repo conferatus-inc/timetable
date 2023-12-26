@@ -36,12 +36,12 @@ public class TeacherController {
                 .map(TeacherResponseDTO::new).toList());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<TeacherResponseDTO> addTeacher(@RequestParam("name") String teacherName) {
         return ResponseEntity.ok(new TeacherResponseDTO(teacherService.addTeacher(teacherName)));
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<String> updateTeacher(@RequestParam("current") String previousTeacherName,
                                                 @RequestParam("new") String newTeacherName) {
         teacherService.updateTeacher(previousTeacherName, newTeacherName);
@@ -49,7 +49,7 @@ public class TeacherController {
 
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<String> deleteTeacher(@RequestParam("name") String teacherName) {
         teacherService.deleteTeacherOrThrow(teacherName);
         return ResponseEntity.ok().build();

@@ -36,12 +36,12 @@ public class StudyGroupController {
                 .map(StudyGroupResponseDTO::new).toList());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<StudyGroupResponseDTO> addGroup(@RequestParam("name") String groupName) {
         return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.addGroup(groupName)));
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<String> updateGroup(@RequestParam("current") String previousGroupName,
                                               @RequestParam("new") String newGroupName) {
         studyGroupService.updateGroup(previousGroupName, newGroupName);
@@ -49,7 +49,7 @@ public class StudyGroupController {
 
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<String> deleteGroup(@RequestParam("name") String groupName) {
         studyGroupService.deleteGroupOrThrow(groupName);
         return ResponseEntity.ok().build();
