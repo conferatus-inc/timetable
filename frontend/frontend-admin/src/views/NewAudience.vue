@@ -1,24 +1,36 @@
 <template>
-  <!-- <HelloWorld /> -->
   <v-container>
     <v-row>
       <v-col>
-        <h2 class="ma-2">Добавить преподавателя</h2>
+        <h2 class="ma-2">Добавить аудиторию</h2>
         <div>
           <v-text-field
-            label="ФИО"
+            label="Название"
             :rules="rules"
             hide-details="auto"
             v-model="name"
           ></v-text-field>
         </div>
         <v-spacer></v-spacer>
-        
+
+        <v-text>
+          Тип аудитории:
+        </v-text>
+        <v-radio-group v-model="audienceType">
+          <v-radio
+          v-for="(label, key) in audienceTypes"
+          :key="key"
+          :label="label"
+          :value="key">
+          </v-radio>
+        </v-radio-group>
+        <v-spacer></v-spacer>
+
         <v-btn 
         variant="flat" 
         class="ma-2"
         :to="{path: '/'}"
-        @click="postNewTeacher()"
+        @click="postNewAudience()"
         :disabled="name.length < 3"
         :rules="rules"
         >
@@ -39,13 +51,21 @@ const rules = [
   value => (value.length >= 3) || 'Требуется как минимум 3 символа',
 ]
 
-const name = ref('')
+const audienceTypes = {
+  "LECTURE": "Лекционная",
+  "TERMINAL": "Терминальная",
+  "PRACTICAL": "Семинарская",
+  "LABORATORY": "Лаборантская"
+}
 
-function postNewTeacher() {
-  http.post("api/v1/admin/teacher?name=" + name.value)
+const name = ref('')
+const audienceType = ref('LECTURE')
+
+function postNewAudience() {
+  http.post("api/v1/admin/audience?name=" + name.value + "&audience_type=" + audienceType.value)
     .then(response => {
       if (response.status == 200) {
-        showAlert("Преподаватель добавлен!")
+        showAlert("Аудитория добавлена!")
       } else {
         showAlert(response.statusText)
       }
@@ -53,5 +73,4 @@ function postNewTeacher() {
       showAlert("Произошла ошибка: " + error)
     })
 }
-
 </script>
