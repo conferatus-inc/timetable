@@ -102,4 +102,10 @@ public class SemesterPlanController {
     ) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.linkGroup(semesterId, groupId)));
     }
+
+    @GetMapping("/subject/all")
+    public ResponseEntity<List<SubjectPlanDTO>> getAllSubjectPlans(@RequestParam("id") Long semesterId) {
+        return ResponseEntity.ok(semesterPlanService.getAllSubjectPlans(semesterId)
+                .stream().map(SubjectPlanDTO::new).toList());
+    }
 }
