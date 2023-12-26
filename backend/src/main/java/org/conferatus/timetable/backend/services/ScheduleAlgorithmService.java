@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ScheduleAlgorithmService {
@@ -23,7 +24,7 @@ public class ScheduleAlgorithmService {
                     .toList()).build();
 
     private final Executor executor;
-    private long counter = 0;
+    private final AtomicLong counter = new AtomicLong(0);
 
     private final Map<Long, AlgorithmStatus> taskIdToStatus;
 
@@ -34,14 +35,33 @@ public class ScheduleAlgorithmService {
         TableTime.setDaysAmount(6);
     }
 
-    private StatusId algorithmCreateSchedule(List<StudyPlanEvolve> studyPlans,
-                                             List<AudienceEvolve> audiences) {
+    private AlgorithmStatus createAlgorithmSchedule(List<StudyPlanEvolve> studyPlans,
+                                                    List<AudienceEvolve> audiences) {
         GeneticAlgorithmScheduler geneticAlgorithmScheduler = new GeneticAlgorithmScheduler();
         geneticAlgorithmScheduler.setPenalties(penaltyChecker);
-        executor.execute(() -> geneticAlgorithmScheduler.algorithm(studyPlans, audiences));
-        return new StatusId(counter++, geneticAlgorithmScheduler.algorithmStatus);
+        var status = geneticAlgorithmScheduler.asyncStart(studyPlans, audiences, executor);
+        return status;
+    }
+
+    private StatusId createTaskSchedule(List<StudyPlanEvolve> studyPlans,
+                                        List<AudienceEvolve> audiences) {
+        var statusWithId = new StatusId(counter.incrementAndGet(), createAlgorithmSchedule(studyPlans, audiences));
+        taskIdToStatus.put(statusWithId.id, statusWithId.status);
+        return statusWithId;
+    }
+
+    public AlgorithmStatus getTaskStatus(Long taskId) {
+        return taskIdToStatus.get(taskId);
+    }
+
+    public void completeTask(Long taskId) {
+        taskIdToStatus.remove(taskId);
     }
 
     record StatusId(long id, AlgorithmStatus status) {
+    }
+
+    public AlgorithmStatus getLastResult() {
+        return taskIdToStatus.get(counter.get());
     }
 }

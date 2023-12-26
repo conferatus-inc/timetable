@@ -13,6 +13,7 @@ import org.conferatus.timetable.backend.model.TableTime;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.random.RandomGenerator;
 
 
@@ -178,6 +179,12 @@ public class GeneticAlgorithmScheduler {
     }
 
     public final AlgorithmStatus algorithmStatus = new AlgorithmStatus();
+
+    public AlgorithmStatus asyncStart(List<StudyPlanEvolve> studyPlanEvolves,
+                                      List<AudienceEvolve> audiences, Executor executor) {
+        executor.execute(() -> this.algorithm(studyPlanEvolves, audiences));
+        return algorithmStatus;
+    }
 
     /**
      * @param studyPlanEvolves

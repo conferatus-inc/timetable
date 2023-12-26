@@ -8,7 +8,7 @@ import org.conferatus.timetable.backend.model.AudienceType;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AlgSimulation {
@@ -98,10 +98,9 @@ public class AlgSimulation {
         }
         Instant instant = Instant.now();
         System.out.println("Start");
-        Executor executor = Executors.newFixedThreadPool(4);
-        var th = new Thread(() -> geneticAlgorithmScheduler.algorithm(plansList, audienceEvolves));
-        th.start();
-        geneticAlgorithmScheduler.algorithmStatus.getResult()
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        var algorithmStatus = geneticAlgorithmScheduler.asyncStart(plansList, audienceEvolves, service);
+        algorithmStatus.getResult()
                 .thenAccept(results -> {
                     Instant after = Instant.now();
                     System.out.println((double) (Date.from(after).getTime() - Date.from(instant).getTime()) / 1000);
@@ -151,7 +150,6 @@ public class AlgSimulation {
             }
             Thread.sleep(50);
         }
-        th.join();
-
+        service.shutdown();
     }
 }
