@@ -7,6 +7,7 @@ import java.util.List;
 
 public record LessonDTO(
         Long id,
+        String name,
         SimpleTeacher teacher,
         AudienceDTO auditory,
         List<StudyGroupResponseDTO> groups,
@@ -16,6 +17,7 @@ public record LessonDTO(
 ) {
     public LessonDTO(Lesson lesson) {
         this(lesson.getId(),
+                "",
                 new SimpleTeacher(lesson.getTeacher()),
                 new AudienceDTO(lesson.getAudience()),
                 lesson.getGroups()

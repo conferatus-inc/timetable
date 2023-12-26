@@ -1,25 +1,22 @@
 package org.conferatus.timetable.backend.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgoSchedule;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
-import org.conferatus.timetable.backend.control.dto.AudienceDTO;
-import org.conferatus.timetable.backend.control.dto.LessonDTO;
-import org.conferatus.timetable.backend.control.dto.SimpleTeacher;
-import org.conferatus.timetable.backend.control.dto.StudyGroupResponseDTO;
+import org.conferatus.timetable.backend.control.dto.*;
 import org.conferatus.timetable.backend.control.dto.TableNasrano.Nasrano;
-import org.conferatus.timetable.backend.control.dto.TimeListDTO;
 import org.conferatus.timetable.backend.model.TableTime;
 import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
+import org.conferatus.timetable.backend.model.repos.SubjectPlanRepository;
 import org.conferatus.timetable.backend.model.repos.SubjectTeacherRepository;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.conferatus.timetable.backend.services.SubjectPlanService;
 import org.conferatus.timetable.backend.services.SubjectTeacherService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +27,7 @@ public class DtoConverter {
     private final SubjectPlanService subjectPlanService;
     private final SubjectTeacherRepository teacherRepository;
     private final StudyGroupRepository groupRepository;
+    private final SubjectPlanRepository subjectPlanRepository;
 
     public Nasrano convert(AlgoSchedule algoSchedule, long id) {
         TimeListDTO timeListDTO;
@@ -46,6 +44,7 @@ public class DtoConverter {
 
             LessonDTO lessonDTO = new LessonDTO(
                     subject.id(),
+                    subjectPlanRepository.getById(subject.id()).name(),
                     new SimpleTeacher(teacher.id(), teacherRepository.getById(teacher.id()).teacher().getName()),
                     new AudienceDTO(lessonWithTime.audience().id(),
                             audienceService.getAudience(lessonWithTime.audience().id()).getName(),
