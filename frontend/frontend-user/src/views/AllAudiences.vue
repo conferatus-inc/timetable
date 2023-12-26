@@ -28,7 +28,7 @@
   const state = ref('loading')
   const errorMessage = ref('')
 
-  http.get('/audience')
+  http.get('/api/v1/admin/audience/all')
   .then(response => {
       items.value = response.data
       state.value = 'loaded'

@@ -28,7 +28,7 @@
   const state = ref('loading')
   const errorMessage = ref('')
 
-  http.get('/group')
+  http.get('/api/v1/admin/group/all')
   .then(response => {
       items.value = response.data
       state.value = 'loaded'
