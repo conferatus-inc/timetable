@@ -13,12 +13,6 @@ import org.springframework.stereotype.Service;
 public class SubjectTeacherService {
     private final SubjectTeacherRepository subjectTeacherRepository;
 
-    public SubjectTeacher getSubjectTeacherByIdOrThrow(Long id) {
-        return subjectTeacherRepository.findSubjectPlanById(id)
-                .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
-                        "SubjectTeacher with id " + id + " does not exist"));
-    }
-
     private SubjectTeacher getSubjectTeacherByNameOrThrow(String name) {
         return subjectTeacherRepository.findSubjectTeacherByTeacherName(name)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
@@ -34,6 +28,9 @@ public class SubjectTeacherService {
 
     public SubjectTeacher addSubjectTeacher(Teacher teacher, Long possibleTimes) {
         SubjectTeacher subjectTeacher = new SubjectTeacher().teacher(teacher).possibleTimes(possibleTimes);
-        return subjectTeacherRepository.save(subjectTeacher);
+        if (subjectTeacherRepository.findSubjectTeachersByTeacher(teacher).isEmpty()) {
+            subjectTeacherRepository.save(subjectTeacher);
+        }
+        return subjectTeacher;
     }
 }

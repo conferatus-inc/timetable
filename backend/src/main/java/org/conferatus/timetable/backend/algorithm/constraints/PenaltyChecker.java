@@ -1,10 +1,21 @@
 package org.conferatus.timetable.backend.algorithm.constraints;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
 
-import java.util.*;
-
+@Getter
+@Setter
 public class PenaltyChecker {
     private final List<Penalty> penalties;
 
@@ -17,6 +28,8 @@ public class PenaltyChecker {
         this.penalties = penalties;
     }
 
+    @Getter
+    @Setter
     public static final class CheckResult {
         final Map<Penalty, PenaltyResult> penaltyToError;
         double total;

@@ -36,8 +36,8 @@ public record LessonDTO(
                 lessonWithTime.groups().stream().map(
                         StudyGroupResponseDTO::new
                 ).toList(),
-                0,
-                0
+                lessonWithTime.time().day(),
+                lessonWithTime.time().cellNumber()
         );
     }
 }
