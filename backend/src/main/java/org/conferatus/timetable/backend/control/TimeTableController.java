@@ -27,6 +27,16 @@ public class TimeTableController {
         }
     }
 
+    @GetMapping("/generate")
+    public ResponseEntity<List<List<TimeListDTO>>> generateTimetable(@RequestParam Long semesterId) {
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("generate/choose")
+    public ResponseEntity<List<TimeListDTO>> chooseGeneratedTimetable(@RequestParam Long generatedTimetableId) {
+        return ResponseEntity.ok(null);
+    }
+
     @GetMapping("/lessons/by_group")
     public ResponseEntity<TimeListDTO> getGroupLessons(
             @RequestParam(value = "name", required = false) String name,
@@ -37,7 +47,7 @@ public class TimeTableController {
                 ? timeTableService.getLessonsByGroup(name)
                 : timeTableService.getLessonsByGroup(id);
         return ResponseEntity.ok(
-                new TimeListDTO(List.of("Monday", "Tuesday"), 2, 5,
+                new TimeListDTO(1L, List.of("Monday", "Tuesday"), 2, 5,
                         lessons.stream().map(LessonDTO::new).toList())
         );
     }
@@ -50,7 +60,7 @@ public class TimeTableController {
                 ? timeTableService.getLessonsByTeacher(name)
                 : timeTableService.getLessonsByTeacher(id);
         return ResponseEntity.ok(
-                new TimeListDTO(List.of("Monday", "Tuesday"), 2, 5,
+                new TimeListDTO(1L, List.of("Monday", "Tuesday"), 2, 5,
                         lessons.stream().map(LessonDTO::new).toList())
         );
     }
@@ -63,7 +73,7 @@ public class TimeTableController {
                 ? timeTableService.getLessonsByAuditory(name)
                 : timeTableService.getLessonsByAuditory(id);
         return ResponseEntity.ok(
-                new TimeListDTO(List.of("Monday", "Tuesday"), 2, 5,
+                new TimeListDTO(1L, List.of("Monday", "Tuesday"), 2, 5,
                         lessons.stream().map(LessonDTO::new).toList())
         );
     }
