@@ -69,12 +69,13 @@
   const arr2D = ref('')
   const items = props.items
 
-  arr2D.value = Array(items.days).fill(null).map(() => Array(items.lessonsPerDay).fill(
+
+  arr2D.value = Array(6).fill(null).map(() => Array(6).fill(
     {subject : ' ', teacher : ' ', audience : ' ', group : ' '}
   ))
 
-  items.cells.forEach(cell => arr2D.value[cell.day][cell.lesson] = 
-    {subject : cell.subject.name, teacher : cell.teacher.name, audience : cell.audience.name, group : cell.group.name })
+  items.cells.forEach(cell => arr2D.value[cell.day_index][cell.time_index] = 
+    {subject : cell.name, teacher : cell.teacher.name, audience : cell.auditory.name, group : "no grp" })//cell.group.name })
     
 </script>
 

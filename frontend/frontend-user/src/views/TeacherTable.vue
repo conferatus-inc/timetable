@@ -33,7 +33,7 @@
   const name = ref(router.currentRoute._value.params.id)
 
   // http.get('/table/by-teacher-id/' + route.params.id)
-  http.get('/table/by-teacher/' + name.value)
+  http.get('/api/v1/admin/timetable/lessons/by_teacher?name=' + name.value)
   .then(response => {
       items.value = response.data
       state.value = 'loaded'
