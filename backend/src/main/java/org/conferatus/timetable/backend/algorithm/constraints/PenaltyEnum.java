@@ -20,7 +20,7 @@ public enum PenaltyEnum {
                 LessonWithTime lesson = data.currentLesson();
                 if (!lesson.audience().auditoryType()
                         .equals(lesson.teacher().teacherType())) {
-                    return problem(-40.0, "Teacher and audience has different types "
+                    return problem(-100., "Teacher and audience has different types "
                             + lesson.teacher() + " " + lesson.audience());
                 }
                 return ok();
@@ -36,7 +36,7 @@ public enum PenaltyEnum {
                         .anyMatch(lessonWithTime ->
                                 lessonWithTime.audience().id()
                                         .equals(lesson.audience().id()))) {
-                    return problem(-40.0, "Problem with audience " + lesson.audience());
+                    return problem(-100., "Problem with audience " + lesson.audience());
                 }
                 return ok();
             },
@@ -50,7 +50,7 @@ public enum PenaltyEnum {
                         .anyMatch(lessonWithTime ->
                                 lessonWithTime.teacher().id()
                                         .equals(lesson.teacher().id()))) {
-                    return problem(-40., "Teacher teach in on cell " + lesson.teacher());
+                    return problem(-100., "Teacher teach in on cell " + lesson.teacher());
                 }
                 return ok();
             },
@@ -62,29 +62,41 @@ public enum PenaltyEnum {
                 var otherLessons = data.getOtherLessons(lesson);
                 AtomicReference<GroupEvolve> groupEvolve = new AtomicReference<>(new GroupEvolve((Long) null));
                 AtomicReference<LessonWithTime> lessonRef = new AtomicReference<>(null);
-                if (
-//                        !lesson.audience().auditoryType().equals(AudienceType.LECTURE) &&
-
-                        otherLessons.stream()
-                                .anyMatch(lessonWithTime ->
-                                        {
-                                            for (GroupEvolve group : lessonWithTime.groups()) {
-                                                if (lesson.groups().contains(group)) {
-                                                    groupEvolve.set(group);
-                                                    lessonRef.set(lessonWithTime);
-                                                    return true;
-                                                }
-                                            }
-                                            return false;
+                if (otherLessons.stream()
+                        .anyMatch(lessonWithTime ->
+                                {
+                                    for (GroupEvolve group : lessonWithTime.groups()) {
+                                        if (lesson.groups().contains(group)) {
+                                            groupEvolve.set(group);
+                                            lessonRef.set(lessonWithTime);
+                                            return true;
                                         }
-                                )) {
-                    return problem(-40.,
+                                    }
+                                    return false;
+                                }
+                        )) {
+                    return problem(-100.,
                             "Lesson " + lesson + " problem with groups " + groupEvolve.get()
                                     + " to lesson " + lessonRef.get());
                 }
                 return ok();
             },
             true
+    ),
+    WorkingTime(
+            data -> {
+                LessonWithTime lesson = data.currentLesson();
+                var otherLessons = data.getOtherLessons(lesson);
+                var time = lesson.time();
+                if (time.cellNumber() == 1 || time.cellNumber() > 4) {
+                    return problem(-0.5, "The student will not like the time " + lesson);
+                }
+                if (time.day() >= 6) {
+                    return problem(-0.5, "It's saturday, bro " + lesson);
+                }
+                return ok();
+            }
+            , false
     ),
 //    GroupsHasOneLessonInTimeCell(,true),
     ;

@@ -2,10 +2,12 @@ package org.conferatus.timetable.backend.services;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.*;
+import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.AudienceType;
 import org.conferatus.timetable.backend.model.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SemesterPlan;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -33,6 +35,10 @@ public class ScheduleService {
                         AudienceType.LECTURE));
             } else {
                 Map<Long, TeacherEvolve> groupNameToTeacher = new HashMap<>();
+                if (subjectPlan.teachers().isEmpty()) {
+                    throw new ServerException(HttpStatus.BAD_REQUEST,
+                            "There is no teachers for subject: " + subjectPlan);
+                }
                 for (int i = 0; i < groupEvolves.size(); i++) {
                     groupNameToTeacher.put(groupEvolves.get(i).id(),
                             new TeacherEvolve(subjectPlan.teachers().get(i % subjectPlan.teachers().size()),
