@@ -98,7 +98,17 @@ public enum PenaltyEnum {
             }
             , false
     ),
-//    GroupsHasOneLessonInTimeCell(,true),
+//    FakePenalty(
+//            data -> {
+//                LessonWithTime lesson = data.currentLesson();
+//                if (lesson.teacher().teacherType().equals(AudienceType.LECTURE)) {
+//                    return problem(-0.05, "Student don't like lecture " + lesson);
+//                }
+//                return ok();
+//            }
+//            , false
+//    ),
+
     ;
     final PenaltyFunction penaltyFunction;
     final boolean isHard;
