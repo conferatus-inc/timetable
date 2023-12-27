@@ -35,11 +35,12 @@ public class ScheduleService {
                         AudienceType.LECTURE));
             } else {
                 Map<Long, TeacherEvolve> groupNameToTeacher = new HashMap<>();
-                if (subjectPlan.teachers().isEmpty()) {
-                    throw new ServerException(HttpStatus.BAD_REQUEST,
-                            "There is no teachers for subject: " + subjectPlan);
-                }
+
                 for (int i = 0; i < groupEvolves.size(); i++) {
+                    if (subjectPlan.teachers().isEmpty()) {
+                        throw new ServerException(HttpStatus.BAD_REQUEST,
+                                "There is no teachers for subject: " + subjectPlan);
+                    }
                     groupNameToTeacher.put(groupEvolves.get(i).id(),
                             new TeacherEvolve(subjectPlan.teachers().get(i % subjectPlan.teachers().size()),
                                     AudienceType.PRACTICAL)
