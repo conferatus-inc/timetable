@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,9 +16,9 @@ import java.util.List;
 @Setter
 public class StudyPlan {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToMany
-    @JoinColumn
-    List<SemesterPlan> semesterPlans;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "semesterplan_id")
+    private List<SemesterPlan> semesterPlans = new ArrayList<>();
 }

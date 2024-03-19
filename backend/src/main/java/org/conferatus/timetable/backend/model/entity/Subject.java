@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,13 +14,21 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "subject")
 public class Subject {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-    String name;
     //todo: maybe extended
     @ManyToMany
-    @JoinTable
-    List<Teacher> possibleTeacher;
+    @JoinTable(
+            name = "subject_teacher",
+            joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    )
+    List<Teacher> possibleTeacher = new ArrayList<>();
+    String name;
+    @OneToMany
+    @JoinColumn(name = "lesson_id")
+    List<Lesson> lessons = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 }

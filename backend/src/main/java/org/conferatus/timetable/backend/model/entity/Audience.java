@@ -2,8 +2,8 @@ package org.conferatus.timetable.backend.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.conferatus.timetable.backend.model.AudienceType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,12 +12,15 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class Teacher {
-    @OneToMany
-    @JoinColumn(name = "lesson_id")
-    List<Lesson> lessons = new ArrayList<>();
-    private String name;
+public class Audience {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private AudienceType audienceType;
+    private String name;
+    @OneToMany
+    @JoinColumn(name = "lesson_id")
+    private List<Lesson> lessons;
+
+
 }

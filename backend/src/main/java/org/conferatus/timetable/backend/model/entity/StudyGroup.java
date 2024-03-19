@@ -11,13 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "studygroup")
 @Builder
-public class Teacher {
-    @OneToMany
-    @JoinColumn(name = "lesson_id")
+public class StudyGroup {
+    @ManyToMany(mappedBy = "groups", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     List<Lesson> lessons = new ArrayList<>();
-    private String name;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String name;
+
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,14 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "semesterplan")
 public class SemesterPlan {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "subject_id")
+    private List<Subject> subjects = new ArrayList<>();
     //todo: ? manytomany
     //@JoinTable
-    private List<Subject> subjects;
 }
