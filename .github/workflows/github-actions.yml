@@ -15,19 +15,19 @@ jobs:
         run: pwd
 
       - name: Update db url
-        run: sed -i 's/<cluster_link>/${{ secrets.CLUSTER_LINK }}/' src/main/resources/application.properties
+        run: sed -i 's/<cluster_link>/${{ secrets.CLUSTER_LINK }}/' backend/src/main/resources/application.properties
 
       - name: Update db port
-        run: sed -i 's/<port>/${{ secrets.PORT }}/' src/main/resources/application.properties
+        run: sed -i 's/<port>/${{ secrets.PORT }}/' backend/src/main/resources/application.properties
 
       - name: Update db name
-        run: sed -i 's/<db>/${{ secrets.DB }}/' src/main/resources/application.properties
+        run: sed -i 's/<db>/${{ secrets.DB }}/' backend/src/main/resources/application.properties
 
       - name: Update db username
-        run: sed -i 's/<username>/${{ secrets.USERNAME }}/' src/main/resources/application.properties
+        run: sed -i 's/<username>/${{ secrets.USERNAME }}/' backend/src/main/resources/application.properties
 
       - name: Update db password
-        run: sed -i 's/<password>/${{ secrets.PASSWORD }}/' src/main/resources/application.properties
+        run: sed -i 's/<password>/${{ secrets.PASSWORD }}/' backend/src/main/resources/application.properties
 
       - name: build
 
