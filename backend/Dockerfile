@@ -5,7 +5,7 @@ RUN gradle bootJar --no-daemon
 
 FROM ubuntu:20.04
 
-EXPOSE 8080
+EXPOSE 8090
 
 RUN apt-get update && apt-get install -y openjdk-17-jdk
 
