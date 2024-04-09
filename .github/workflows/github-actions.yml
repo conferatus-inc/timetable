@@ -11,6 +11,9 @@ jobs:
       - name: directory tree
         run: tree
 
+      - name: aboba
+        run: pwd
+
       - name: Update db url
         run: sed -i 's/<cluster_link>/${{ secrets.CLUSTER_LINK }}/' src/main/resources/application.properties
 
