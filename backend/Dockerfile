@@ -3,7 +3,7 @@ COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle bootJar --no-daemon
 
-FROM openjdk:17-oracle
+FROM amazoncorretto:17
 
 EXPOSE 8090
 
