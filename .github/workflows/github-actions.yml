@@ -35,7 +35,6 @@ jobs:
         run: |
           cd ./backend;
           ls -al;
-#          docker ps;
           docker build -t timetable_backend:latest .;
           docker image ls;
           docker save -o /tmp/timetable_backend.tar timetable_backend:latest;
