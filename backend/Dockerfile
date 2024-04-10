@@ -3,11 +3,9 @@ COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle bootJar --no-daemon
 
-FROM ubuntu:20.04
+FROM openjdk:17-oracle
 
 EXPOSE 8090
-
-RUN apt-get update && apt-get install -y openjdk-17-jdk
 
 RUN mkdir /app
 
