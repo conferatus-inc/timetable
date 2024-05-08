@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,16 +20,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Teacher {
+public class University {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
 
-    @ManyToOne
-    private University university;
+    @OneToMany
+    private List<StudyGroup> studyGroups = new ArrayList<>();
 
     @OneToMany
-    private List<TeacherWish> teacherWishes = new ArrayList<>();
+    private List<Teacher> teachers = new ArrayList<>();
+
+    @OneToMany
+    private List<Audience> audiences = new ArrayList<>();
+
+    @OneToMany
+    private List<Schedule> schedules = new ArrayList<>();
 }

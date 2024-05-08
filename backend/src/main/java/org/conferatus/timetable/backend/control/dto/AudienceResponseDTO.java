@@ -1,7 +1,7 @@
 package org.conferatus.timetable.backend.control.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.conferatus.timetable.backend.model.AudienceType;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.entity.Audience;
 
 public record AudienceResponseDTO(

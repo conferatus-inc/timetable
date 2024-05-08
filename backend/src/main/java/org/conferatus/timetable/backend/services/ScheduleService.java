@@ -3,8 +3,8 @@ package org.conferatus.timetable.backend.services;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.*;
 import org.conferatus.timetable.backend.exception.ServerException;
-import org.conferatus.timetable.backend.model.AudienceType;
-import org.conferatus.timetable.backend.model.SubjectType;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
+import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SemesterPlan;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
 import org.springframework.http.HttpStatus;
@@ -26,13 +26,17 @@ public class ScheduleService {
         List<GroupEvolve> groupEvolves = sp.studyGroups().stream().map(GroupEvolve::new).toList();
         List<SubjectEvolve> subjectEvolves = new ArrayList<>();
 
+        // FIXME
         for (SubjectPlan subjectPlan : sp.subjectPlans()) {
             SubjectEvolve subjectEvolve;
             if (Objects.requireNonNull(subjectPlan.subjectType()) == SubjectType.LECTURE) {
                 subjectEvolve = new SubjectEvolve(subjectPlan.id(),
                         0, 1,
-                        Map.of(), new TeacherEvolve(subjectPlan.teachers().get(0),
-                        AudienceType.LECTURE));
+                        Map.of(),
+                        new TeacherEvolve(
+                                subjectPlan.teachers().get(0),
+                                AudienceType.LECTURE
+                        ));
             } else {
                 Map<Long, TeacherEvolve> groupNameToTeacher = new HashMap<>();
 
@@ -47,7 +51,7 @@ public class ScheduleService {
                     );
                 }
                 subjectEvolve = new SubjectEvolve(subjectPlan.id(),
-                        Math.toIntExact(subjectPlan.times()), 0,
+                        Math.toIntExact(subjectPlan.timesPerWeek()), 0,
                         groupNameToTeacher, null);
             }
             subjectEvolves.add(subjectEvolve);

@@ -5,14 +5,12 @@ import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmSch
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
 import org.conferatus.timetable.backend.control.dto.*;
 import org.conferatus.timetable.backend.control.dto.TableNasrano.Nasrano;
-import org.conferatus.timetable.backend.model.TableTime;
+import org.conferatus.timetable.backend.model.enums.TableTime;
 import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
 import org.conferatus.timetable.backend.model.repos.SubjectPlanRepository;
-import org.conferatus.timetable.backend.model.repos.SubjectTeacherRepository;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.conferatus.timetable.backend.services.SubjectPlanService;
-import org.conferatus.timetable.backend.services.SubjectTeacherService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,9 +21,7 @@ import java.util.List;
 public class DtoConverter {
     private final SemesterPlanService semesterPlanService;
     private final AudienceService audienceService;
-    private final SubjectTeacherService subjectTeacherService;
     private final SubjectPlanService subjectPlanService;
-    private final SubjectTeacherRepository teacherRepository;
     private final StudyGroupRepository groupRepository;
     private final SubjectPlanRepository subjectPlanRepository;
 
@@ -42,19 +38,20 @@ public class DtoConverter {
             ).toList();
 
 
-            LessonDTO lessonDTO = new LessonDTO(
-                    subject.id(),
-                    subjectPlanRepository.getById(subject.id()).name(),
-                    new SimpleTeacher(teacher.id(), teacherRepository.getById(teacher.id()).teacher().getName()),
-                    new AudienceDTO(lessonWithTime.audience().id(),
-                            audienceService.getAudience(lessonWithTime.audience().id()).getName(),
-                            lessonWithTime.audience().auditoryType()),
-                    studyGroupResponseDTOS
-                    ,
-                    lessonWithTime.time().day(),
-                    lessonWithTime.time().cellNumber()
-            );
-            cells.add(lessonDTO);
+            // FIXME
+//            LessonDTO lessonDTO = new LessonDTO(
+//                    subject.id(),
+//                    subjectPlanRepository.getById(subject.id()).name(),
+//                    new SimpleTeacher(teacher.id(), teacherRepository.getById(teacher.id()).teacher().getName()),
+//                    new AudienceDTO(lessonWithTime.audience().id(),
+//                            audienceService.getAudience(lessonWithTime.audience().id()).getName(),
+//                            lessonWithTime.audience().auditoryType()),
+//                    studyGroupResponseDTOS
+//                    ,
+//                    lessonWithTime.time().day(),
+//                    lessonWithTime.time().cellNumber()
+//            );
+//            cells.add(lessonDTO);
         }
         timeListDTO = new TimeListDTO(id,
                 List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),

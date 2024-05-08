@@ -12,7 +12,7 @@ import org.conferatus.timetable.backend.control.dto.StudyGroupResponseDTO;
 import org.conferatus.timetable.backend.control.dto.TableNasrano.Nasrano;
 import org.conferatus.timetable.backend.control.dto.TimeListDTO;
 import org.conferatus.timetable.backend.exception.ServerException;
-import org.conferatus.timetable.backend.model.TableTime;
+import org.conferatus.timetable.backend.model.enums.TableTime;
 import org.conferatus.timetable.backend.services.ScheduleAlgorithmService;
 import org.conferatus.timetable.backend.services.ScheduleService;
 import org.conferatus.timetable.backend.services.TimeTableService;

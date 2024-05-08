@@ -23,8 +23,8 @@ import io.jenetics.util.Factory;
 import io.jenetics.util.ISeq;
 import lombok.NoArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
-import org.conferatus.timetable.backend.model.AudienceType;
-import org.conferatus.timetable.backend.model.TableTime;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
+import org.conferatus.timetable.backend.model.enums.TableTime;
 
 
 @NoArgsConstructor
@@ -329,6 +329,7 @@ public class GeneticAlgorithmScheduler {
                 AudienceTimeCell cell = new AudienceTimeCell(auditory, i);
                 audienceToIndex.put(cell, lastIndex++);
                 cells.add(cell);
+                // FIXME
                 if (!audienceMap.containsKey(cell.audience().auditoryType())) {
                     audienceMap.put(cell.audience().auditoryType(), new ArrayList<>());
                 }
@@ -413,14 +414,17 @@ public class GeneticAlgorithmScheduler {
             AudienceTimeCell audienceTimeCell = cells.get(gene.intValue());
 
 
-            List<AudienceTimeCell> possibleAudiences = audienceMap.get(lesson.teacher().teacherType());
+            // FIXME
+//            List<AudienceTimeCell> possibleAudiences = audienceMap.get(lesson.teacher().teacherType());
 
 
-            int randomCellIndex = random.nextInt(0, possibleAudiences.size());
+//            int randomCellIndex = random.nextInt(0, possibleAudiences.size());
 
-            var cell = audienceToIndex.get(possibleAudiences.get(randomCellIndex));
+//            var cell = audienceToIndex.get(possibleAudiences.get(randomCellIndex));
 
-            return gene.newInstance(cell);
+//            return gene.newInstance(cell);
+
+            return null;
         }
     }
 }

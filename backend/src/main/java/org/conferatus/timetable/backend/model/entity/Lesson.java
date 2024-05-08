@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 
@@ -14,31 +15,22 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "lesson_group",
-            joinColumns = @JoinColumn(name = "lesson_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "studygroup_id", referencedColumnName = "id")
-    )
-    private List<StudyGroup> groups;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
-    //    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "subject_id")
-//    private Subject subject;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auditory_id")
-    private Audience audience;
 
-    private int numberOfTime; //time
-    private int weekDay; //day of the week
+    private DayOfWeek dayOfWeek;
 
-//    //todo: maybe list<plans> or plan
+    @Column(columnDefinition = "INT(11) CHECK lesson_number >= 1 AND your_integer_column <= 7")
+    private long lessonNumber;
+
+    @OneToOne
+    Audience audience;
+
+    @OneToOne
+    Teacher teacher;
+
+    @OneToOne
+    StudyGroup group;
 }

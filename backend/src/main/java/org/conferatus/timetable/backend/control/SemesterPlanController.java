@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.SemesterPlanDTO;
 import org.conferatus.timetable.backend.control.dto.SubjectPlanDTO;
-import org.conferatus.timetable.backend.model.SubjectType;
+import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

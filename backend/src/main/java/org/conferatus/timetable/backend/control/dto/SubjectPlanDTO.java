@@ -2,7 +2,8 @@ package org.conferatus.timetable.backend.control.dto;
 
 import java.util.List;
 
-import org.conferatus.timetable.backend.model.SubjectType;
+import org.conferatus.timetable.backend.model.entity.Teacher;
+import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
 
 public record SubjectPlanDTO(
@@ -10,15 +11,15 @@ public record SubjectPlanDTO(
         Long times,
         String name,
         SubjectType subjectType,
-        List<SimpleSubjectTeacher> teachers
+        Teacher teacher
 ) {
     public SubjectPlanDTO(SubjectPlan subjectPlan) {
         this(
                 subjectPlan.id(),
-                subjectPlan.times(),
+                subjectPlan.timesPerWeek(),
                 subjectPlan.name(),
                 subjectPlan.subjectType(),
-                subjectPlan.teachers().stream().map(SimpleSubjectTeacher::new).toList()
+                subjectPlan.teacher()
         );
     }
 }

@@ -1,20 +1,20 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-import org.conferatus.timetable.backend.model.AudienceType;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.entity.Audience;
 
 public record AudienceEvolve(Long id,
-                             AudienceType auditoryType) {
+                             long audienceGroupCapacity) {
 
     public AudienceEvolve(Audience audience) {
         this(
                 audience.getId(),
-                audience.getAudienceType()
+                audience.getAudienceGroupCapacity()
         );
     }
 
     @Override
     public String toString() {
-        return id + ":" + auditoryType.name().substring(0, 2);
+        return id + ":" + audienceGroupCapacity;
     }
 }

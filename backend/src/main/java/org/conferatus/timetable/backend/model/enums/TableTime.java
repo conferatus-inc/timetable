@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.model;
+package org.conferatus.timetable.backend.model.enums;
 
 public record TableTime(int day, int cellNumber) {
     public int toIndex() {

@@ -32,9 +32,9 @@ public class SemesterPlan {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "subject_plan_id")
-    List<SubjectPlan> subjectPlans = new ArrayList<>();
+    private List<SubjectPlan> subjectPlans = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "study_group_id")
-    List<StudyGroup> studyGroups = new ArrayList<>();
-    private String name;
+    private List<StudyGroup> studyGroups = new ArrayList<>();
 }

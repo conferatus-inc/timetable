@@ -1,15 +1,13 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.DayOfWeek;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,16 +20,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Teacher {
+public class TeacherWish {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
-
     @ManyToOne
-    private University university;
+    private Teacher teacher;
 
-    @OneToMany
-    private List<TeacherWish> teacherWishes = new ArrayList<>();
+    private DayOfWeek dayOfWeek;
+
+    @Column(columnDefinition = "INT(11) CHECK lesson_number >= 1 AND your_integer_column <= 7")
+    private long lessonNumber;
+
+    @Column(columnDefinition = "INT(11) CHECK priority >= -10 AND your_integer_column <= 10")
+    private long priority;
 }

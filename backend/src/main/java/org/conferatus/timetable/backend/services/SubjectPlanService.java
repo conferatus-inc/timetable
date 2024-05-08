@@ -2,7 +2,7 @@ package org.conferatus.timetable.backend.services;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
-import org.conferatus.timetable.backend.model.SubjectType;
+import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
 import org.conferatus.timetable.backend.model.repos.SubjectPlanRepository;
 import org.springframework.http.HttpStatus;
@@ -46,7 +46,7 @@ public class SubjectPlanService {
     ) {
         return subjectPlanRepository.save(
                 new SubjectPlan().name(subjectName).subjectType(subjectType)
-                        .times(times)
+                        .timesPerWeek(times)
         );
     }
 }

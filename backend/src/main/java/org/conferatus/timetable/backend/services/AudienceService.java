@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
-import org.conferatus.timetable.backend.model.AudienceType;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.entity.Audience;
 import org.conferatus.timetable.backend.model.repos.AudienceRepository;
 import org.springframework.http.HttpStatus;

@@ -7,14 +7,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.conferatus.timetable.backend.model.SubjectType;
+import org.conferatus.timetable.backend.model.enums.SubjectType;
 
 @Entity
 @Getter
@@ -25,11 +25,14 @@ import org.conferatus.timetable.backend.model.SubjectType;
 public class SubjectPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    Long times;
-    @OneToMany
-    @JoinColumn(name = "subject_teacher_id")
-    List<SubjectTeacher> teachers = new ArrayList<>();
+    private Long id;
     private String name;
     private SubjectType subjectType;
+    private Long timesPerWeek;
+
+    @OneToOne
+    private Teacher teacher;
+
+    @OneToMany
+    private List<StudyGroup> groups = new ArrayList<>();
 }

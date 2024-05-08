@@ -1,6 +1,6 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-import org.conferatus.timetable.backend.model.TableTime;
+import org.conferatus.timetable.backend.model.enums.TableTime;
 
 import java.util.Objects;
 

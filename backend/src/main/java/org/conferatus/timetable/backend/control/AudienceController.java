@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.control.dto.AudienceDTO;
-import org.conferatus.timetable.backend.model.AudienceType;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

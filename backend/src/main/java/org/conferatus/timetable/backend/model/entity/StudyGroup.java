@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +31,6 @@ public class StudyGroup {
     private Long id;
     private String name;
 
-    @Builder.Default
-    @ManyToMany(mappedBy = "groups", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    List<Lesson> lessons = new ArrayList<>();
-
+    @ManyToOne
+    private University university;
 }

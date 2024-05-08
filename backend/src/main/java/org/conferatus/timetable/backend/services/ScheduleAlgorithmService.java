@@ -6,7 +6,7 @@ import org.conferatus.timetable.backend.algorithm.scheduling.AudienceEvolve;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgorithmStatus;
 import org.conferatus.timetable.backend.algorithm.scheduling.StudyPlanEvolve;
-import org.conferatus.timetable.backend.model.TableTime;
+import org.conferatus.timetable.backend.model.enums.TableTime;
 import org.conferatus.timetable.backend.util.ThreadPoolProvider;
 import org.springframework.stereotype.Service;
 
