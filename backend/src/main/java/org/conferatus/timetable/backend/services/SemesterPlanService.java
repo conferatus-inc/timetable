@@ -6,11 +6,11 @@ import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
+import org.conferatus.timetable.backend.model.entity.Teacher;
 import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SemesterPlan;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
-import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.repos.SemesterPlanRepository;
+import org.conferatus.timetable.backend.repository.SemesterPlanRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -63,10 +63,10 @@ public class SemesterPlanService {
 //    }
 
     private void notExistsByNameOrThrow(String name) {
-        semesterPlanRepository.findSemesterPlanByName(name).ifPresent(semesterPlan -> {
-            throw new ServerException(HttpStatus.BAD_REQUEST,
-                    "SemesterPlan with name " + name + " already exists");
-        });
+//        semesterPlanRepository.findSemesterPlanByName(name).ifPresent(semesterPlan -> {
+//            throw new ServerException(HttpStatus.BAD_REQUEST,
+//                    "SemesterPlan with name " + name + " already exists");
+//        });
     }
 
     public SemesterPlan getSemesterPlan(Long id) {
@@ -77,11 +77,12 @@ public class SemesterPlanService {
         return semesterPlanRepository.findAll();
     }
 
-//    public SemesterPlan addSemesterPlan(String semesterPlanName) {
-//        notExistsByNameOrThrow(semesterPlanName);
-//        return semesterPlanRepository.save(new SemesterPlan().name(semesterPlanName)
-//                .subjectPlans(Collections.emptyList()));
-//    }
+    public SemesterPlan addSemesterPlan(String semesterPlanName) {
+        notExistsByNameOrThrow(semesterPlanName);
+        return semesterPlanRepository.save(
+                new SemesterPlan()
+                        .subjectPlans(Collections.emptyList()));
+    }
 
     public SemesterPlan addSubjectPlan(Long semesterId, Long times, String subjectName, SubjectType subjectType) {
         SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
@@ -96,14 +97,15 @@ public class SemesterPlanService {
         return getSubjectPlanInSemesterPlanByIdOrThrow(getSemesterPlanByIdOrThrow(semesterId), subjectId);
     }
 
-//    public SemesterPlan addSubjectTeacher(Long semesterId, Long subjectId, Long teacherId, Long possibleTimes) {
-//        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
-//        SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
+    public SemesterPlan addSubjectTeacher(Long semesterId, Long subjectId, Long teacherId, Long possibleTimes) {
+        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
+        SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
+        // FIXME
 //        subjectTeacherNotExistsInSubjectPlanOrThrow(subjectPlan, teacherId);
 //        Teacher teacher = teacherService.getTeacher(teacherId);
 //        subjectPlan.teachers().add(subjectTeacherService.addSubjectTeacher(teacher, possibleTimes));
-//        return semesterPlanRepository.save(semesterPlan);
-//    }
+        return semesterPlanRepository.save(semesterPlan);
+    }
 
     public SemesterPlan linkGroup(Long semesterId, Long groupId) {
         SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
@@ -126,13 +128,14 @@ public class SemesterPlanService {
         return semesterPlanRepository.save(semesterPlan);
     }
 
-//    public SemesterPlan deleteSubjectTeacher(Long semesterId, Long subjectId, Long teacherId) {
-//        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
-//        SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
+    public SemesterPlan deleteSubjectTeacher(Long semesterId, Long subjectId, Long teacherId) {
+        SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);
+        SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
+        // FIXME
 //        SubjectTeacher subjectTeacher = getSubjectTeacherInSubjectPlanOrThrow(subjectPlan, teacherId);
 //        subjectPlan.teachers().remove(subjectTeacher);
-//        return semesterPlanRepository.save(semesterPlan);
-//    }
+        return semesterPlanRepository.save(semesterPlan);
+    }
 
     public List<SubjectPlan> getAllSubjectPlans(Long semesterId) {
         SemesterPlan semesterPlan = getSemesterPlanByIdOrThrow(semesterId);

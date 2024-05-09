@@ -1,6 +1,5 @@
-package org.conferatus.timetable.backend.control.dto;
+package org.conferatus.timetable.backend.dto;
 
-import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.entity.Audience;
 
 public record AudienceDTO(

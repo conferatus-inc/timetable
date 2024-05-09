@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.control.dto;
+package org.conferatus.timetable.backend.dto;
 
 import org.conferatus.timetable.backend.model.entity.Teacher;
 

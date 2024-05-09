@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
-import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
+import org.conferatus.timetable.backend.repository.StudyGroupRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +43,9 @@ public class StudyGroupService {
 
     public StudyGroup addGroup(String groupName) {
         notExistsByNameOrThrow(groupName);
-        return studyGroupRepository.save(StudyGroup.builder().name(groupName).build());
+        var group = new StudyGroup();
+        group.setName(groupName);
+        return studyGroupRepository.save(group);
     }
 
     public StudyGroup updateGroup(String previousGroupName, String newGroupName) {

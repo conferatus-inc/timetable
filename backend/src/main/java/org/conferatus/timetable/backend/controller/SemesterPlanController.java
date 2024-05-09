@@ -1,10 +1,10 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.timetable.backend.controller;
 
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.conferatus.timetable.backend.control.dto.SemesterPlanDTO;
-import org.conferatus.timetable.backend.control.dto.SubjectPlanDTO;
+import org.conferatus.timetable.backend.dto.SemesterPlanDTO;
+import org.conferatus.timetable.backend.dto.SubjectPlanDTO;
 import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.springframework.http.ResponseEntity;

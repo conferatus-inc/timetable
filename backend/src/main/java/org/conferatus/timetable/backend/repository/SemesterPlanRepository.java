@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.model.repos;
+package org.conferatus.timetable.backend.repository;
 
 import java.util.Optional;
 
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface SemesterPlanRepository extends JpaRepository<SemesterPlan, Long> {
     Optional<SemesterPlan> findSemesterPlanById(Long id);
 
-    Optional<SemesterPlan> findSemesterPlanByName(String name);
+//    Optional<SemesterPlan> findSemesterPlanByName(String name);
 }

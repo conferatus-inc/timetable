@@ -21,7 +21,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,4 +33,7 @@ public class Teacher {
 
     @OneToMany
     private List<TeacherWish> teacherWishes = new ArrayList<>();
+
+    @OneToMany
+    private List<Lesson> lessons = new ArrayList<>();
 }

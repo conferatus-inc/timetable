@@ -1,40 +1,34 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.conferatus.timetable.backend.model.enums.RoleName;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class University {
+public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoleName name;
 
-    @OneToMany
-    private List<StudyGroup> studyGroups = new ArrayList<>();
-
-    @OneToMany
-    private List<Teacher> teachers = new ArrayList<>();
-
-    @OneToMany
-    private List<Audience> audiences = new ArrayList<>();
-
-    @OneToMany
-    private List<Schedule> schedules = new ArrayList<>();
+    @Override
+    public String getAuthority() {
+        return name.name();
+    }
 }

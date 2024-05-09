@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.timetable.backend.controller;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.conferatus.timetable.backend.services.SomeService;

@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.timetable.backend.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgoSchedule;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgorithmStatus;
-import org.conferatus.timetable.backend.control.dto.LessonDTO;
-import org.conferatus.timetable.backend.control.dto.StudyGroupResponseDTO;
-import org.conferatus.timetable.backend.control.dto.TableNasrano.Nasrano;
-import org.conferatus.timetable.backend.control.dto.TimeListDTO;
+import org.conferatus.timetable.backend.dto.LessonDTO;
+import org.conferatus.timetable.backend.dto.StudyGroupResponseDTO;
+import org.conferatus.timetable.backend.dto.TableNasrano.Nasrano;
+import org.conferatus.timetable.backend.dto.TimeListDTO;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.enums.TableTime;
 import org.conferatus.timetable.backend.services.ScheduleAlgorithmService;
@@ -95,19 +95,20 @@ public class TimeTableController {
                 TableTime.getCellsAmount(),
                 new ArrayList<>()
         );
-        for (LessonDTO lessonDTO : currentSchedule.timeListDTO().cells()) {
-            for (StudyGroupResponseDTO group : lessonDTO.groups()) {
-                if (id != null) {
-                    if (Objects.equals(group.id(), id)) {
-                        res.cells().add(lessonDTO);
-                    }
-                } else {
-                    if (group.name().equals(name)) {
-                        res.cells().add(lessonDTO);
-                    }
-                }
-            }
-        }
+        // FIXME
+//        for (LessonDTO lessonDTO : currentSchedule.timeListDTO().cells()) {
+//            for (StudyGroupResponseDTO group : lessonDTO.groups()) {
+//                if (id != null) {
+//                    if (Objects.equals(group.id(), id)) {
+//                        res.cells().add(lessonDTO);
+//                    }
+//                } else {
+//                    if (group.name().equals(name)) {
+//                        res.cells().add(lessonDTO);
+//                    }
+//                }
+//            }
+//        }
         return ResponseEntity.ok(res);
     }
 

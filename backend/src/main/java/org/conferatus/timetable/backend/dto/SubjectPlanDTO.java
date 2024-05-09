@@ -1,6 +1,4 @@
-package org.conferatus.timetable.backend.control.dto;
-
-import java.util.List;
+package org.conferatus.timetable.backend.dto;
 
 import org.conferatus.timetable.backend.model.entity.Teacher;
 import org.conferatus.timetable.backend.model.enums.SubjectType;

@@ -1,13 +1,15 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,22 +21,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class University {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
+    private String username;
+    private String accessToken;
+    private String refreshToken;
 
-    @OneToMany
-    private List<StudyGroup> studyGroups = new ArrayList<>();
+    @ManyToMany
+    private Set<Role> roles = new HashSet<>();
 
-    @OneToMany
-    private List<Teacher> teachers = new ArrayList<>();
-
-    @OneToMany
-    private List<Audience> audiences = new ArrayList<>();
-
-    @OneToMany
-    private List<Schedule> schedules = new ArrayList<>();
+    @ManyToOne
+    private University university;
 }

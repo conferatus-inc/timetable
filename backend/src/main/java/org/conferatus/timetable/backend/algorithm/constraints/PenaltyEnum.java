@@ -17,12 +17,13 @@ import static org.conferatus.timetable.backend.algorithm.constraints.CalculateRe
 public enum PenaltyEnum {
     TeacherAndAudienceType(
             (data) -> {
-                LessonWithTime lesson = data.currentLesson();
-                if (!lesson.audience().auditoryType()
-                        .equals(lesson.teacher().teacherType())) {
-                    return problem(-100., "Teacher and audience has different types "
-                            + lesson.teacher() + " " + lesson.audience());
-                }
+                // FIXME
+//                LessonWithTime lesson = data.currentLesson();
+//                if (!lesson.audience().auditoryType()
+//                        .equals(lesson.teacher().teacherType())) {
+//                    return problem(-100., "Teacher and audience has different types "
+//                            + lesson.teacher() + " " + lesson.audience());
+//                }
                 return ok();
             },
             true

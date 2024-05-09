@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "studygroup")
-@Builder
 public class StudyGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,4 +33,7 @@ public class StudyGroup {
 
     @ManyToOne
     private University university;
+
+    @OneToMany
+    private List<Lesson> lessons = new ArrayList<>();
 }

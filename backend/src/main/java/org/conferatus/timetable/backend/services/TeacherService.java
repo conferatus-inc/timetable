@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.repos.TeacherRepository;
+import org.conferatus.timetable.backend.repository.TeacherRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +48,9 @@ public class TeacherService {
 
     public Teacher addTeacher(String teacherName) {
         notExistsByNameOrThrow(teacherName);
-        return teacherRepository.save(Teacher.builder().name(teacherName).build());
+        var teacher = new Teacher();
+        teacher.setName(teacherName);
+        return teacherRepository.save(teacher);
     }
 
 

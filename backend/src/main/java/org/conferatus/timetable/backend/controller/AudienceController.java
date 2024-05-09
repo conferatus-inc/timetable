@@ -1,9 +1,9 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.timetable.backend.controller;
 
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.conferatus.timetable.backend.control.dto.AudienceDTO;
+import org.conferatus.timetable.backend.dto.AudienceDTO;
 import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.springframework.http.ResponseEntity;
