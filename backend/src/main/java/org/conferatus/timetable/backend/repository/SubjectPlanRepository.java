@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.model.repos;
+package org.conferatus.timetable.backend.repository;
 
 import java.util.Optional;
 

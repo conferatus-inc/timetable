@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.entity.Audience;
-import org.conferatus.timetable.backend.model.repos.AudienceRepository;
+import org.conferatus.timetable.backend.repository.AudienceRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +48,10 @@ public class AudienceService {
 
     public Audience addAudience(String audienceName, AudienceType audienceType) {
         notExistsByNameOrThrow(audienceName);
-        return audienceRepository.save(Audience.builder().name(audienceName).audienceType(audienceType).build());
+        var auidence = new Audience();
+        auidence.setName(audienceName);
+        auidence.setAudienceType(audienceType);
+        return audienceRepository.save(auidence);
     }
 
     public Audience updateAudience(String previousAudienceName, String newAudienceName) {

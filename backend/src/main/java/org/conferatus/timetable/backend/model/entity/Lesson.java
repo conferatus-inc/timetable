@@ -22,15 +22,14 @@ public class Lesson {
 
     private DayOfWeek dayOfWeek;
 
-    @Column(columnDefinition = "INT(11) CHECK lesson_number >= 1 AND your_integer_column <= 7")
     private long lessonNumber;
 
-    @OneToOne
+    @ManyToOne
     Audience audience;
 
-    @OneToOne
+    @ManyToOne
     Teacher teacher;
 
-    @OneToOne
+    @ManyToOne
     StudyGroup group;
 }

@@ -11,10 +11,10 @@ import org.conferatus.timetable.backend.model.entity.Audience;
 import org.conferatus.timetable.backend.model.entity.Lesson;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
 import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.repos.AudienceRepository;
-import org.conferatus.timetable.backend.model.repos.LessonRepository;
-import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
-import org.conferatus.timetable.backend.model.repos.TeacherRepository;
+import org.conferatus.timetable.backend.repository.AudienceRepository;
+import org.conferatus.timetable.backend.repository.LessonRepository;
+import org.conferatus.timetable.backend.repository.StudyGroupRepository;
+import org.conferatus.timetable.backend.repository.TeacherRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -98,10 +98,11 @@ public class TimeTableService {
         days.forEach((s -> {
             table.put(s, new HashMap<>());
         }));
-        lessons.forEach((lesson -> {
-            var day = days.get(lesson.getWeekDay());
-            table.get(day).put(lesson.getNumberOfTime(), lesson);
-        }));
+        // FIXME
+//        lessons.forEach((lesson -> {
+//            var day = days.get(lesson.getWeekDay());
+//            table.get(day).put(lesson.getNumberOfTime(), lesson);
+//        }));
         return table;
     }
 

@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.timetable.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;

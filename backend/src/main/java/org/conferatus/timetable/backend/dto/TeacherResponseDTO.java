@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.control.dto;
+package org.conferatus.timetable.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.conferatus.timetable.backend.model.entity.Lesson;
@@ -18,7 +18,7 @@ public record TeacherResponseDTO(
                 teacher.getId(),
                 teacher.getName(),
 //                teacher.getPossibleSubjects().stream().map(SubjectPlanDTO::new).collect(Collectors.toList()),
-                teacher.getLessons().stream().map((Lesson id1) -> new LessonDTO(id1)).collect(Collectors.toList())
+                teacher.getLessons().stream().map(LessonDTO::new).collect(Collectors.toList())
         );
     }
 }

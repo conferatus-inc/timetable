@@ -1,9 +1,9 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.timetable.backend.controller;
 
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.conferatus.timetable.backend.control.dto.StudyGroupResponseDTO;
+import org.conferatus.timetable.backend.dto.StudyGroupResponseDTO;
 import org.conferatus.timetable.backend.services.StudyGroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
-import org.conferatus.timetable.backend.model.repos.SubjectPlanRepository;
+import org.conferatus.timetable.backend.repository.SubjectPlanRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

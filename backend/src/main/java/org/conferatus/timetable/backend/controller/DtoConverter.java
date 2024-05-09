@@ -1,13 +1,15 @@
-package org.conferatus.timetable.backend.control;
+package org.conferatus.timetable.backend.controller;
 
 import lombok.AllArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgoSchedule;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
-import org.conferatus.timetable.backend.control.dto.*;
-import org.conferatus.timetable.backend.control.dto.TableNasrano.Nasrano;
+import org.conferatus.timetable.backend.dto.LessonDTO;
+import org.conferatus.timetable.backend.dto.StudyGroupResponseDTO;
+import org.conferatus.timetable.backend.dto.TableNasrano.Nasrano;
+import org.conferatus.timetable.backend.dto.TimeListDTO;
 import org.conferatus.timetable.backend.model.enums.TableTime;
-import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
-import org.conferatus.timetable.backend.model.repos.SubjectPlanRepository;
+import org.conferatus.timetable.backend.repository.StudyGroupRepository;
+import org.conferatus.timetable.backend.repository.SubjectPlanRepository;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.conferatus.timetable.backend.services.SubjectPlanService;
@@ -29,13 +31,14 @@ public class DtoConverter {
         TimeListDTO timeListDTO;
 
         List<LessonDTO> cells = new ArrayList<>();
-        for (LessonWithTime lessonWithTime : algoSchedule.allLessons()) {
-            var subject = lessonWithTime.lessonGene().subject();
-            var teacher = lessonWithTime.teacher();
-            List<StudyGroupResponseDTO> studyGroupResponseDTOS = lessonWithTime.groups().stream().map(
-                    groupEvolve -> new StudyGroupResponseDTO(groupEvolve.id(),
-                            groupRepository.findStudyGroupById(groupEvolve.id()).get().getName())
-            ).toList();
+        // FIXME
+//        for (LessonWithTime lessonWithTime : algoSchedule.allLessons()) {
+//            var subject = lessonWithTime.lessonGene().subject();
+//            var teacher = lessonWithTime.teacher();
+//            List<StudyGroupResponseDTO> studyGroupResponseDTOS = lessonWithTime.groups().stream().map(
+//                    groupEvolve -> new StudyGroupResponseDTO(groupEvolve.id(),
+//                            groupRepository.findStudyGroupById(groupEvolve.id()).get().getName())
+//            ).toList();
 
 
             // FIXME
@@ -52,7 +55,7 @@ public class DtoConverter {
 //                    lessonWithTime.time().cellNumber()
 //            );
 //            cells.add(lessonDTO);
-        }
+//        }
         timeListDTO = new TimeListDTO(id,
                 List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
                 TableTime.getDaysAmount(),

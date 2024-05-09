@@ -324,19 +324,20 @@ public class GeneticAlgorithmScheduler {
         });
         int times = TableTime.getDaysAmount() * TableTime.getCellsAmount();
         int lastIndex = 0;
-        for (AudienceEvolve auditory : audiences) {
-            for (int i = 0; i < times; i++) {
-                AudienceTimeCell cell = new AudienceTimeCell(auditory, i);
-                audienceToIndex.put(cell, lastIndex++);
-                cells.add(cell);
-                // FIXME
-                if (!audienceMap.containsKey(cell.audience().auditoryType())) {
-                    audienceMap.put(cell.audience().auditoryType(), new ArrayList<>());
-                }
-                audienceMap.get(cell.audience().auditoryType()).add(cell);
-
-            }
-        }
+        // FIXME
+//        for (AudienceEvolve auditory : audiences) {
+//            for (int i = 0; i < times; i++) {
+//                AudienceTimeCell cell = new AudienceTimeCell(auditory, i);
+//                audienceToIndex.put(cell, lastIndex++);
+//                cells.add(cell);
+//                // FIXME
+//                if (!audienceMap.containsKey(cell.audience().auditoryType())) {
+//                    audienceMap.put(cell.audience().auditoryType(), new ArrayList<>());
+//                }
+//                audienceMap.get(cell.audience().auditoryType()).add(cell);
+//
+//            }
+//        }
     }
 
     private Double fitness(Genotype<IntegerGene> gt) {

@@ -20,36 +20,37 @@ public class AlgSimulation {
         int audiencesAmount = 400;
         int lectureAmount = 30;
 
-        List<AudienceEvolve> audienceEvolves = new ArrayList<>(audiencesAmount + lectureAmount);
-        for (long i = 1; i <= audiencesAmount; i++) {
-            audienceEvolves.add(new AudienceEvolve(i, AudienceType.PRACTICAL));
-        }
-        for (long i = 1; i <= lectureAmount; i++) {
-            audienceEvolves.add(new AudienceEvolve(i, AudienceType.LECTURE));
-        }
-
-        int groups = 16;
-        int studyPlans = 3;
-
-        int subjectsPerPlan = 7;
-        Map<Long, List<GroupEvolve>> planNumberToGroups = new HashMap<>();
-        Map<Long, List<SubjectEvolve>> planToSubjects = new HashMap<>();
-        Map<Long, List<TeacherEvolve>> planToLectureTeachers = new HashMap<>();
-        Map<Long, List<TeacherEvolve>> planToSeminarTeachers = new HashMap<>();
-        for (long i = 1; i <= studyPlans; i++) {
-            planNumberToGroups.put(i, new ArrayList<>(groups / studyPlans));
-            planToSubjects.put(i, new ArrayList<>(subjectsPerPlan));
-            planToLectureTeachers.put(i, new ArrayList<>());
-            planToSeminarTeachers.put(i, new ArrayList<>());
-        }
-
-
-        for (long i = 1; i <= groups; i++) {
-            long studyPlan = i % studyPlans + 1;
-            var list = planNumberToGroups.get(studyPlan);
-            var group = new GroupEvolve(i);
-            list.add(group);
-        }
+        // FIXME
+//        List<AudienceEvolve> audienceEvolves = new ArrayList<>(audiencesAmount + lectureAmount);
+//        for (long i = 1; i <= audiencesAmount; i++) {
+//            audienceEvolves.add(new AudienceEvolve(i, AudienceType.PRACTICAL));
+//        }
+//        for (long i = 1; i <= lectureAmount; i++) {
+//            audienceEvolves.add(new AudienceEvolve(i, AudienceType.LECTURE));
+//        }
+//
+//        int groups = 16;
+//        int studyPlans = 3;
+//
+//        int subjectsPerPlan = 7;
+//        Map<Long, List<GroupEvolve>> planNumberToGroups = new HashMap<>();
+//        Map<Long, List<SubjectEvolve>> planToSubjects = new HashMap<>();
+//        Map<Long, List<TeacherEvolve>> planToLectureTeachers = new HashMap<>();
+//        Map<Long, List<TeacherEvolve>> planToSeminarTeachers = new HashMap<>();
+//        for (long i = 1; i <= studyPlans; i++) {
+//            planNumberToGroups.put(i, new ArrayList<>(groups / studyPlans));
+//            planToSubjects.put(i, new ArrayList<>(subjectsPerPlan));
+//            planToLectureTeachers.put(i, new ArrayList<>());
+//            planToSeminarTeachers.put(i, new ArrayList<>());
+//        }
+//
+//
+//        for (long i = 1; i <= groups; i++) {
+//            long studyPlan = i % studyPlans + 1;
+//            var list = planNumberToGroups.get(studyPlan);
+//            var group = new GroupEvolve(i);
+//            list.add(group);
+//        }
 
         // FIXME
 //        int teachersAmount = 4800;

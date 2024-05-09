@@ -19,7 +19,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 public class TeacherWish {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,9 +29,7 @@ public class TeacherWish {
 
     private DayOfWeek dayOfWeek;
 
-    @Column(columnDefinition = "INT(11) CHECK lesson_number >= 1 AND your_integer_column <= 7")
     private long lessonNumber;
 
-    @Column(columnDefinition = "INT(11) CHECK priority >= -10 AND your_integer_column <= 10")
     private long priority;
 }
