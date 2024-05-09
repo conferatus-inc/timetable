@@ -1,5 +1,9 @@
 package org.conferatus.timetable.backend.configuration;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +15,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.exception.ServerExceptions;
+import org.conferatus.timetable.backend.model.entity.University;
+import org.conferatus.timetable.backend.model.entity.User;
+import org.conferatus.timetable.backend.model.enums.RoleName;
+import org.conferatus.timetable.backend.repository.RoleRepository;
 import org.conferatus.timetable.backend.services.AuthService;
+import org.conferatus.timetable.backend.services.UniversityService;
 import org.conferatus.timetable.backend.util.JwtUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,10 +30,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -32,6 +37,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final AuthService accountService;
     private final JwtUtils jwtUtils;
+    private final UniversityService universityService;
+    private final RoleRepository roleRepository;
 
     @Override
     protected void doFilterInternal(
@@ -102,6 +109,12 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     var authenticationToken =
                             new UsernamePasswordAuthenticationToken(user, authorities, authorities);
 
+                    if (accountService.notAdminAuth(request.getServletPath())) {
+                        authUniversity(request, user);
+                    } else {
+                        authAdmin(List.of(roles));
+                    }
+
                     var copy = SecurityContextHolder.getContext();
                     copy.setAuthentication(authenticationToken);
                     SecurityContextHolder.setContext(copy);
@@ -144,6 +157,34 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                         ServerExceptions.NO_ACCESS_TOKEN.getAnswer()
                 );
             }
+        }
+    }
+
+    private void authAdmin(List<String> roles) {
+        if (!roles.contains(RoleName.ROLE_ADMIN.name())) {
+            ServerExceptions.UNAUTHORIZED
+                    .moreInfo("Only ADMIN can access this endpoint").throwException();
+        }
+    }
+
+    private void authUniversity(HttpServletRequest request, User user) {
+        if (request.getHeader("university_id") == null) {
+            ServerExceptions.INVALID_PARAMETER
+                    .moreInfo("Header 'university_id' is not specified").throwException();
+        }
+        var universityId = Long.parseLong(request.getHeader("university_id"));
+        University university = universityService.findById(universityId);
+        if (university == null) {
+            ServerExceptions.NOT_FOUND_EXCEPTION
+                    .moreInfo("Cannot find specified university").throwException();
+        }
+        if (user.getUniversity() == null) {
+            ServerExceptions.NOT_FOUND_EXCEPTION
+                    .moreInfo("This user doesn't connected to any university").throwException();
+        }
+        if (user.getUniversity().id() != universityId) {
+            ServerExceptions.INVALID_PARAMETER
+                    .moreInfo("This user cannot access specified university").throwException();
         }
     }
 }

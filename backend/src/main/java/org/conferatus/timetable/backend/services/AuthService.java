@@ -1,7 +1,6 @@
 package org.conferatus.timetable.backend.services;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.transaction.Transactional;
@@ -30,8 +29,20 @@ public class AuthService {
 
     private static final Set<String> notAuthURLs = Set.of(LOGIN_URL, REFRESH_URL);
 
+    public static final String UNIVERSITY_URL = "/api/v1/admin/universities";
+    public static final String UNIVERSITY_URL_LINK = "/api/v1/admin/universities/link";
+
+    private static final Set<String> adminURLs = Set.of(
+            UNIVERSITY_URL,
+            UNIVERSITY_URL_LINK
+    );
+
     public boolean notNeedAuth(String url) {
         return notAuthURLs.contains(url);
+    }
+
+    public boolean notAdminAuth(String url) {
+        return !adminURLs.contains(url);
     }
 
     public UserLoginDto login(
@@ -86,6 +97,10 @@ public class AuthService {
             ServerExceptions.USER_NOT_FOUND.moreInfo("User $username not found").throwException();
         }
         return user;
+    }
+
+    public User getUser(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     private User findUser(String username) {
