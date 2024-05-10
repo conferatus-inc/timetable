@@ -7,8 +7,8 @@ import org.conferatus.timetable.backend.services.UniversityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,8 +24,8 @@ public class UniversityController {
 
     @PostMapping("/link")
     public ResponseEntity<User> linkUserToUniversity(
-            @RequestHeader("university_id") Long universityId,
-            @RequestBody Long userId
+            @RequestParam Long universityId,
+            @RequestParam Long userId
     ) {
         return ResponseEntity.ok(universityService.linkUserToUniversity(universityId, userId));
     }

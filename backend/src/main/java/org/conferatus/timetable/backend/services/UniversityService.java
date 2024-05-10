@@ -28,6 +28,10 @@ public class UniversityService {
             ServerExceptions.NOT_FOUND_EXCEPTION.moreInfo("User with id" + userId + "is not found").throwException();
         }
         var university = universityRepository.findById(universityId).orElse(null);
+        if (university == null) {
+            ServerExceptions.NOT_FOUND_EXCEPTION
+                    .moreInfo("University with id" + universityId + "is not found").throwException();
+        }
         user.setUniversity(university);
         return userRepository.save(user);
     }

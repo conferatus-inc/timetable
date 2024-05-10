@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.exception.ServerExceptions;
-import org.conferatus.timetable.backend.model.entity.University;
-import org.conferatus.timetable.backend.model.entity.User;
 import org.conferatus.timetable.backend.model.enums.RoleName;
 import org.conferatus.timetable.backend.repository.RoleRepository;
 import org.conferatus.timetable.backend.services.AuthService;
@@ -109,9 +107,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     var authenticationToken =
                             new UsernamePasswordAuthenticationToken(user, authorities, authorities);
 
-                    if (accountService.notAdminAuth(request.getServletPath())) {
-                        authUniversity(request, user);
-                    } else {
+                    if (!accountService.notAdminAuth(request.getServletPath())) {
                         authAdmin(List.of(roles));
                     }
 
@@ -164,27 +160,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         if (!roles.contains(RoleName.ROLE_ADMIN.name())) {
             ServerExceptions.UNAUTHORIZED
                     .moreInfo("Only ADMIN can access this endpoint").throwException();
-        }
-    }
-
-    private void authUniversity(HttpServletRequest request, User user) {
-        if (request.getHeader("university_id") == null) {
-            ServerExceptions.INVALID_PARAMETER
-                    .moreInfo("Header 'university_id' is not specified").throwException();
-        }
-        var universityId = Long.parseLong(request.getHeader("university_id"));
-        University university = universityService.findById(universityId);
-        if (university == null) {
-            ServerExceptions.NOT_FOUND_EXCEPTION
-                    .moreInfo("Cannot find specified university").throwException();
-        }
-        if (user.getUniversity() == null) {
-            ServerExceptions.NOT_FOUND_EXCEPTION
-                    .moreInfo("This user doesn't connected to any university").throwException();
-        }
-        if (user.getUniversity().id() != universityId) {
-            ServerExceptions.INVALID_PARAMETER
-                    .moreInfo("This user cannot access specified university").throwException();
         }
     }
 }
