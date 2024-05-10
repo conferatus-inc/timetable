@@ -33,6 +33,11 @@ public class UniversityService {
                     .moreInfo("University with id" + universityId + "is not found").throwException();
         }
         user.setUniversity(university);
+        System.out.println(user);
         return userRepository.save(user);
+    }
+
+    public University updateUniversity(University university) {
+        return universityRepository.save(university);
     }
 }

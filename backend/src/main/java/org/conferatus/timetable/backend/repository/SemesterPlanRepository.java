@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface SemesterPlanRepository extends JpaRepository<SemesterPlan, Long> {
     Optional<SemesterPlan> findSemesterPlanById(Long id);
 
-//    Optional<SemesterPlan> findSemesterPlanByName(String name);
+    Optional<SemesterPlan> findSemesterPlanBySemesterName(String semesterName);
 }

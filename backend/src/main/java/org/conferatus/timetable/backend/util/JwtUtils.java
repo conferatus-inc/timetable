@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 public class JwtUtils {
     private final AuthService accountService;
 
-    private static final Long accessTokenLifetime = (long) (5 * 60 * 1000);
-    private static final Long refreshTokenLifetime = (long) (500 * 60 * 1000);
+    private static final Long accessTokenLifetime = (long) (5000 * 60 * 1000);
+    private static final Long refreshTokenLifetime = (long) (5000 * 60 * 1000);
 
     @Value("${security.secret}")
     private String secret = null;

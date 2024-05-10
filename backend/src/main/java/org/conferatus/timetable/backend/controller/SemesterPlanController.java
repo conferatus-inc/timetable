@@ -5,9 +5,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.dto.SemesterPlanDTO;
 import org.conferatus.timetable.backend.dto.SubjectPlanDTO;
-import org.conferatus.timetable.backend.model.enums.SubjectType;
+import org.conferatus.timetable.backend.model.entity.User;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,14 +29,20 @@ public class SemesterPlanController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<SemesterPlanDTO>> getAllSemesterPlans() {
-        return ResponseEntity.ok(semesterPlanService.getAllSemesterPlans().stream()
+    public ResponseEntity<List<SemesterPlanDTO>> getAllSemesterPlans(
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(semesterPlanService.getAllSemesterPlans(user.getUniversity()).stream()
                 .map(SemesterPlanDTO::new).toList());
     }
 
     @PostMapping
-    public ResponseEntity<SemesterPlanDTO> addSemesterPlan(@RequestParam("name") String semesterPlanName) {
-        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSemesterPlan(semesterPlanName)));
+    public ResponseEntity<SemesterPlanDTO> addSemesterPlan(
+            @AuthenticationPrincipal User user,
+            @RequestParam("name") String semesterPlanName
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(
+                semesterPlanService.addSemesterPlan(user.getUniversity(), semesterPlanName)));
     }
 
     @DeleteMapping
@@ -44,13 +52,14 @@ public class SemesterPlanController {
 
     @PostMapping("/subject")
     public ResponseEntity<SemesterPlanDTO> addSubjectPlan(
+            @AuthenticationPrincipal User user,
             @RequestParam("id") Long semesterId,
             @RequestParam("times") Long times,
             @RequestParam("subject_name") String subjectName,
-            @RequestParam("subject_type") SubjectType subjectType
+            @RequestParam("subject_type") AudienceType subjectType
     ) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSubjectPlan(
-                semesterId, times, subjectName, subjectType
+                user.getUniversity(), semesterId, times, subjectName, subjectType
         )));
     }
 
@@ -68,11 +77,10 @@ public class SemesterPlanController {
     public ResponseEntity<SemesterPlanDTO> addSubjectTeacher(
             @RequestParam("id") Long semesterId,
             @RequestParam("subject_id") Long subjectId,
-            @RequestParam("teacher_id") Long teacherId,
-            @RequestParam("possibleTimes") Long possibleTimes
+            @RequestParam("teacher_id") Long teacherId
     ) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSubjectTeacher(
-                semesterId, subjectId, teacherId, possibleTimes
+                semesterId, subjectId, teacherId
         )));
     }
 

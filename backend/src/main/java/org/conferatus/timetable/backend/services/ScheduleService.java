@@ -1,16 +1,13 @@
 package org.conferatus.timetable.backend.services;
 
-import lombok.RequiredArgsConstructor;
-import org.conferatus.timetable.backend.algorithm.scheduling.*;
-import org.conferatus.timetable.backend.exception.ServerException;
-import org.conferatus.timetable.backend.model.enums.AudienceType;
-import org.conferatus.timetable.backend.model.enums.SubjectType;
-import org.conferatus.timetable.backend.model.entity.SemesterPlan;
-import org.conferatus.timetable.backend.model.entity.SubjectPlan;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import lombok.RequiredArgsConstructor;
+import org.conferatus.timetable.backend.algorithm.scheduling.GroupEvolve;
+import org.conferatus.timetable.backend.algorithm.scheduling.SubjectEvolve;
+import org.conferatus.timetable.backend.model.entity.SemesterPlan;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -56,13 +53,14 @@ public class ScheduleService {
 //            }
 //            subjectEvolves.add(subjectEvolve);
 //        }
-        List<StudyPlanEvolve> studyPlanEvolves = List.of(new StudyPlanEvolve(subjectEvolves, groupEvolves));
-
-        List<AudienceEvolve> mappedAudiences = audienceService.getAllAudiences()
-                .stream().map(AudienceEvolve::new).toList();
-        var task = algoService.createTaskSchedule(studyPlanEvolves, mappedAudiences);
-
-        return task;
+//        List<StudyPlanEvolve> studyPlanEvolves = List.of(new StudyPlanEvolve(subjectEvolves, groupEvolves));
+//
+//        List<AudienceEvolve> mappedAudiences = audienceService.getAllAudiences()
+//                .stream().map(AudienceEvolve::new).toList();
+//        var task = algoService.createTaskSchedule(studyPlanEvolves, mappedAudiences);
+//
+//        return task;
+        return null;
 //        task.status().getResult().join();
 
 //        algoService.getLastResult();

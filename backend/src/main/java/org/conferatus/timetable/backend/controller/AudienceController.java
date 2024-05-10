@@ -4,9 +4,11 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.dto.AudienceDTO;
+import org.conferatus.timetable.backend.model.entity.User;
 import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.services.AudienceService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +24,9 @@ public class AudienceController {
     private final AudienceService audienceService;
 
     @GetMapping("/by-id")
-    public ResponseEntity<AudienceDTO> getAudienceById(@RequestParam("id") Long id) {
+    public ResponseEntity<AudienceDTO> getAudienceById(
+            @AuthenticationPrincipal User user,
+            @RequestParam("id") Long id) {
         return ResponseEntity.ok(new AudienceDTO(audienceService.getAudience(id)));
     }
 
@@ -32,17 +36,24 @@ public class AudienceController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AudienceDTO>> getAllAudiences() {
-        return ResponseEntity.ok(audienceService.getAllAudiences().stream()
+    public ResponseEntity<List<AudienceDTO>> getAllAudiences(
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(audienceService.getAllAudiences(user.getUniversity()).stream()
                 .map(AudienceDTO::new).toList());
     }
 
     @PostMapping
     public ResponseEntity<AudienceDTO> addAudience(
+            @AuthenticationPrincipal User user,
             @RequestParam("name") String name,
-            @RequestParam("audience_type") AudienceType audienceType
+            @RequestParam("audience_type") AudienceType audienceType,
+            @RequestParam("audience_group_capacity") Long audienceGroupCapacity
+
     ) {
-        return ResponseEntity.ok(new AudienceDTO(audienceService.addAudience(name, audienceType)));
+        return ResponseEntity.ok(new AudienceDTO(
+                audienceService.addAudience(user.getUniversity(), name, audienceType, audienceGroupCapacity)
+        ));
     }
 
     @PutMapping

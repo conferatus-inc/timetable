@@ -1,11 +1,13 @@
 package org.conferatus.timetable.backend.services;
 
 import java.util.List;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
-import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.entity.Audience;
+import org.conferatus.timetable.backend.model.entity.University;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.repository.AudienceRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AudienceService {
     private final AudienceRepository audienceRepository;
+    private final UniversityService universityService;
 
     private Audience getAudienceByIdOrThrow(Long id) {
         return audienceRepository.findAudienceById(id)
@@ -42,16 +45,23 @@ public class AudienceService {
         return getAudienceByNameOrThrow(name);
     }
 
-    public List<Audience> getAllAudiences() {
-        return audienceRepository.findAll();
+    public List<Audience> getAllAudiences(University university) {
+        return audienceRepository.findAll().stream()
+                .filter(it -> Objects.equals(it.getUniversity().id(), university.id())).toList();
     }
 
-    public Audience addAudience(String audienceName, AudienceType audienceType) {
+    public Audience addAudience(University university, String audienceName, AudienceType audienceType,
+                                Long audienceGroupCapacity) {
         notExistsByNameOrThrow(audienceName);
         var auidence = new Audience();
         auidence.setName(audienceName);
         auidence.setAudienceType(audienceType);
-        return audienceRepository.save(auidence);
+        auidence.setUniversity(university);
+        auidence.setAudienceGroupCapacity(audienceGroupCapacity);
+        university.audiences().add(auidence);
+        var result = audienceRepository.save(auidence);
+        universityService.updateUniversity(university);
+        return result;
     }
 
     public Audience updateAudience(String previousAudienceName, String newAudienceName) {

@@ -1,14 +1,14 @@
 package org.conferatus.timetable.backend.dto;
 
-import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.enums.SubjectType;
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
+import org.conferatus.timetable.backend.model.entity.Teacher;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 
 public record SubjectPlanDTO(
         Long id,
         Long times,
         String name,
-        SubjectType subjectType,
+        AudienceType subjectType,
         Teacher teacher
 ) {
     public SubjectPlanDTO(SubjectPlan subjectPlan) {

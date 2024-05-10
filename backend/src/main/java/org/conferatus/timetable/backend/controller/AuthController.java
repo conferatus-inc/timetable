@@ -2,10 +2,8 @@ package org.conferatus.timetable.backend.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -13,11 +11,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.conferatus.timetable.backend.exception.ServerExceptions;
 import org.conferatus.timetable.backend.model.entity.Role;
-import org.conferatus.timetable.backend.model.entity.User;
 import org.conferatus.timetable.backend.model.enums.RoleName;
 import org.conferatus.timetable.backend.services.AuthService;
 import org.conferatus.timetable.backend.util.JwtUtils;
@@ -35,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/accounts")
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class AuthController {
     private final AuthService accountService;
     private final JwtUtils jwtUtils;
@@ -54,7 +53,8 @@ public class AuthController {
                         "refresh_token", tokens.refreshToken(),
                         "roles", user.getRoles().stream().map(Role::getName).toList(),
                         "username", user.getUsername(),
-                        "login", yResponse.login()
+                        "login", yResponse.login(),
+                        "id", user.getId()
                 )
         );
     }
@@ -99,7 +99,8 @@ public class AuthController {
                                 "access_token", tokens.accessToken(),
                                 "refresh_token", tokens.refreshToken(),
                                 "roles", user.getRoles().stream().map(Role::getName).toList(),
-                                "username", user.getUsername()
+                                "username", user.getUsername(),
+                                "id", user.getId()
                         )
                 );
             } catch (IOException e) {
