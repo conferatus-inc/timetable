@@ -96,19 +96,19 @@ public class TimeTableController {
                 new ArrayList<>()
         );
         // FIXME
-//        for (LessonDTO lessonDTO : currentSchedule.timeListDTO().cells()) {
-//            for (StudyGroupResponseDTO group : lessonDTO.groups()) {
-//                if (id != null) {
-//                    if (Objects.equals(group.id(), id)) {
-//                        res.cells().add(lessonDTO);
-//                    }
-//                } else {
-//                    if (group.name().equals(name)) {
-//                        res.cells().add(lessonDTO);
-//                    }
-//                }
-//            }
-//        }
+        for (LessonDTO lessonDTO : currentSchedule.timeListDTO().cells()) {
+            for (StudyGroupResponseDTO group : lessonDTO.groups()) {
+                if (id != null) {
+                    if (Objects.equals(group.id(), id)) {
+                        res.cells().add(lessonDTO);
+                    }
+                } else {
+                    if (group.name().equals(name)) {
+                        res.cells().add(lessonDTO);
+                    }
+                }
+            }
+        }
         return ResponseEntity.ok(res);
     }
 

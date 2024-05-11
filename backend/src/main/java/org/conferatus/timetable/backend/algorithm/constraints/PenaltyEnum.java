@@ -1,9 +1,9 @@
 package org.conferatus.timetable.backend.algorithm.constraints;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.conferatus.timetable.backend.algorithm.scheduling.GroupEvolve;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.conferatus.timetable.backend.algorithm.constraints.CalculateResult.ok;
 import static org.conferatus.timetable.backend.algorithm.constraints.CalculateResult.problem;
@@ -17,9 +17,9 @@ import static org.conferatus.timetable.backend.algorithm.constraints.CalculateRe
 public enum PenaltyEnum {
     TeacherAndAudienceType(
             (data) -> {
-                // FIXME
+                // FIXME видимо просто удалить эти строчки, препод же привязывается сразу в предмету
 //                LessonWithTime lesson = data.currentLesson();
-//                if (!lesson.audience().auditoryType()
+//                if (!lesson.audience().audienceGroupCapacity()
 //                        .equals(lesson.teacher().teacherType())) {
 //                    return problem(-100., "Teacher and audience has different types "
 //                            + lesson.teacher() + " " + lesson.audience());
