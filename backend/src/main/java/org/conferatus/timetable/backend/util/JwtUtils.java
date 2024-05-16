@@ -19,8 +19,8 @@ public class JwtUtils {
     private static final Long accessTokenLifetime = (long) (5000 * 60 * 1000);
     private static final Long refreshTokenLifetime = (long) (5000 * 60 * 1000);
 
-    @Value("${security.secret}")
-    private String secret = "aboba";
+    @Value("${security.secret:aboba}")
+    private String secret;
 
     public Tokens createTokens(User user) {
         var username = user.getUsername();
