@@ -1,25 +1,14 @@
 package org.conferatus.timetable.backend.algorithm.experementations;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.conferatus.timetable.backend.algorithm.constraints.Penalty;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyEnum;
-import org.conferatus.timetable.backend.algorithm.scheduling.AudienceEvolve;
-import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
-import org.conferatus.timetable.backend.algorithm.scheduling.GroupEvolve;
-import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
-import org.conferatus.timetable.backend.algorithm.scheduling.StudyPlanEvolve;
-import org.conferatus.timetable.backend.algorithm.scheduling.SubjectEvolve;
-import org.conferatus.timetable.backend.algorithm.scheduling.TeacherEvolve;
+import org.conferatus.timetable.backend.algorithm.scheduling.*;
+
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AlgSimulation {
     public static void main(String[] args) throws InterruptedException {
@@ -67,14 +56,14 @@ public class AlgSimulation {
         int lectureTeachersAmount = 1600;
         for (long i = 1; i <= teachersAmount; i++) {
             long studyPlan = i % studyPlans + 1;
-            TeacherEvolve teacherEvolve = new TeacherEvolve(i, 1/*AudienceType.PRACTICAL*/);
+            TeacherEvolve teacherEvolve = new TeacherEvolve(i/*AudienceType.PRACTICAL*/);
             planToSeminarTeachers.get(studyPlan).add(teacherEvolve);
 
         }
 
         for (long i = 1; i <= lectureTeachersAmount; i++) {
             long studyPlan = i % studyPlans + 1;
-            TeacherEvolve teacherEvolve = new TeacherEvolve(i, 16/*AudienceType.LECTURE*/);
+            TeacherEvolve teacherEvolve = new TeacherEvolve(i/*AudienceType.LECTURE*/);
             planToLectureTeachers.get(studyPlan).add(teacherEvolve);
         }
 

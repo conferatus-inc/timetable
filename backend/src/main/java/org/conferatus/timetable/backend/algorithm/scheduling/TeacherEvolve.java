@@ -1,16 +1,23 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
+import java.util.Objects;
 
-import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.enums.AudienceType;
-
-public record TeacherEvolve(Long id, long audienceGroupCapacity) {
-    public TeacherEvolve(Teacher teacher, long audienceGroupCapacity) {
-        this(teacher.getId(), audienceGroupCapacity);
+public record TeacherEvolve(Long id) {
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 
     @Override
-    public String toString() {
-        return id + ":" + audienceGroupCapacity;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TeacherEvolve that = (TeacherEvolve) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
