@@ -8,7 +8,6 @@ import io.jenetics.util.Factory;
 import io.jenetics.util.ISeq;
 import lombok.NoArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
-import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.enums.TableTime;
 
 import java.util.*;
@@ -20,8 +19,7 @@ import java.util.random.RandomGenerator;
 @NoArgsConstructor
 public class GeneticAlgorithmScheduler {
     ArrayList<AudienceTimeCell> cells = new ArrayList<>();
-    Map<AudienceType, List<AudienceTimeCell>> audienceMap = new HashMap<>();
-    TreeSet<AudienceTimeCell> audienceTree = new TreeSet<>(AudienceTimeCell::compareTo);
+    TreeSet<AudienceTimeCell> audienceTreeByCapacity = new TreeSet<>(AudienceTimeCell::compareTo);
     Map<AudienceTimeCell, Integer> audienceToIndex = new HashMap<>();
     ArrayList<LessonGene> lessonGenes = new ArrayList<>();
     private int satisfiedScheduleAmount = 3;
@@ -37,7 +35,7 @@ public class GeneticAlgorithmScheduler {
         this.penaltyChecker = penaltyChecker;
     }
 
-    public static final class DataForConstraint {
+    public static class DataForConstraint {
         private final List<LessonWithTime> allLessons;
         private final LessonWithTime currentLesson;
         private final List<List<List<LessonWithTime>>> timeTable;
@@ -298,14 +296,6 @@ public class GeneticAlgorithmScheduler {
 
                 subjectEvolve.teacherToGroups().forEach((teacherEvolve, groupEvolves) -> {
                     LessonGene lessonGene = new LessonGene(groupEvolves, teacherEvolve, subjectEvolve);
-
-                    lessonGenes.add(lessonGene);
-                });
-                for (GroupEvolve groupEvolve : studyPlanEvolve.groupEvolves()) {
-                    var les = new LessonGene(groupEvolve);
-                    LessonGene lessonGene = new LessonGene(groupEvolve,
-                            subjectEvolve.groupNameToTeacher().get(groupEvolve.id()),
-                            subjectEvolve.withSubId(subId));
                     for (GroupEvolve group : lessonGene.groups()) {
                         if (!groupToIndexes.containsKey(group)) {
                             groupToIndexes.put(group, new ArrayList<>());
@@ -313,8 +303,7 @@ public class GeneticAlgorithmScheduler {
                         groupToIndexes.get(group).add(lessonGenes.size());
                     }
                     lessonGenes.add(lessonGene);
-
-                }
+                });
             }
         });
         int times = TableTime.getDaysAmount() * TableTime.getCellsAmount();
@@ -326,11 +315,7 @@ public class GeneticAlgorithmScheduler {
                 audienceToIndex.put(cell, lastIndex++);
                 cells.add(cell);
                 // FIXME
-                if (!audienceMap.containsKey(cell.audience().auditoryType())) {
-                    audienceMap.put(cell.audience().auditoryType(), new ArrayList<>());
-                }
-                audienceMap.get(cell.audience().auditoryType()).add(cell);
-
+                audienceTreeByCapacity.add(cell);
             }
         }
     }
@@ -409,18 +394,14 @@ public class GeneticAlgorithmScheduler {
             LessonGene lesson = lessonGenes.get(index);
             AudienceTimeCell audienceTimeCell = cells.get(gene.intValue());
 
-
-            // FIXME
-            List<AudienceTimeCell> possibleAudiences = audienceMap.get(lesson.teacher().teacherType());
-
+            List<AudienceTimeCell> possibleAudiences = audienceTreeByCapacity.tailSet(audienceTimeCell).stream().toList();
 
             int randomCellIndex = random.nextInt(0, possibleAudiences.size());
+            //add not full random - random in time or random in audience. Maybe with small diff in time.
 
             var cell = audienceToIndex.get(possibleAudiences.get(randomCellIndex));
 
             return gene.newInstance(cell);
-
-            return null;
         }
     }
 }

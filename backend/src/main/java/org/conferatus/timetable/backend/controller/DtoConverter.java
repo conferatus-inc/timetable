@@ -57,7 +57,7 @@ public class DtoConverter {
                     new AudienceDTO(
                             lessonWithTime.audience().id(),
                             audienceService.getAudience(lessonWithTime.audience().id()).getName(),
-                            lessonWithTime.audience().audienceGroupCapacity()
+                            lessonWithTime.audience().groupCapacity()
                     ),
                     studyGroupResponseDTOS,
                     DayOfWeek.of(lessonWithTime.time().day()),

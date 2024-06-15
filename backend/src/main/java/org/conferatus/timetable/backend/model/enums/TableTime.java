@@ -2,7 +2,7 @@ package org.conferatus.timetable.backend.model.enums;
 
 import java.util.Objects;
 
-public record TableTime(int day, int cellNumber) implements Comparable<TableTime> {
+public record TableTime(int day, int cellNumber){
     public int toIndex() {
         return day * cellsAmount + cellNumber;
     }
@@ -48,8 +48,4 @@ public record TableTime(int day, int cellNumber) implements Comparable<TableTime
         return Objects.hash(day, cellNumber);
     }
 
-    @Override
-    public int compareTo(TableTime o) {
-        return Integer.compare(this.toIndex(), o.toIndex());
-    }
 }

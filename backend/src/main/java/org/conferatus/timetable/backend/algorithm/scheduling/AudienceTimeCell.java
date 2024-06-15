@@ -22,8 +22,14 @@ public record AudienceTimeCell(AudienceEvolve audience, TableTime time) implemen
         return Objects.hash(audience, time);
     }
 
+    /**
+     * Compare by audienceCapacity
+     *
+     * @param o the object to be compared.
+     * @return compared int depends on audience groupCapacity
+     */
     @Override
     public int compareTo(AudienceTimeCell o) {
-        return time.compareTo(o.time);
+        return audience.compareTo(o.audience);
     }
 }
