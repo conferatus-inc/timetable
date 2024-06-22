@@ -4,7 +4,7 @@ import org.conferatus.timetable.backend.model.enums.TableTime;
 
 import java.util.Objects;
 
-public record AudienceTimeCell(AudienceEvolve audience, TableTime time) {
+public record AudienceTimeCell(AudienceEvolve audience, TableTime time) implements Comparable<AudienceTimeCell> {
     public AudienceTimeCell(AudienceEvolve audience, int timeIndex) {
         this(audience, new TableTime(timeIndex));
     }
@@ -20,5 +20,16 @@ public record AudienceTimeCell(AudienceEvolve audience, TableTime time) {
     @Override
     public int hashCode() {
         return Objects.hash(audience, time);
+    }
+
+    /**
+     * Compare by audienceCapacity
+     *
+     * @param o the object to be compared.
+     * @return compared int depends on audience groupCapacity
+     */
+    @Override
+    public int compareTo(AudienceTimeCell o) {
+        return audience.compareTo(o.audience);
     }
 }

@@ -1,21 +1,6 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.random.RandomGenerator;
-
-import io.jenetics.Chromosome;
-import io.jenetics.Genotype;
-import io.jenetics.IntegerChromosome;
-import io.jenetics.IntegerGene;
-import io.jenetics.Mutator;
-import io.jenetics.MutatorResult;
-import io.jenetics.Phenotype;
+import io.jenetics.*;
 import io.jenetics.engine.Engine;
 import io.jenetics.engine.EvolutionStart;
 import io.jenetics.internal.math.Probabilities;
@@ -23,14 +8,18 @@ import io.jenetics.util.Factory;
 import io.jenetics.util.ISeq;
 import lombok.NoArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.constraints.PenaltyChecker;
-import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.model.enums.TableTime;
+
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.random.RandomGenerator;
 
 
 @NoArgsConstructor
 public class GeneticAlgorithmScheduler {
     ArrayList<AudienceTimeCell> cells = new ArrayList<>();
-    Map<AudienceType, List<AudienceTimeCell>> audienceMap = new HashMap<>();
+    TreeSet<AudienceTimeCell> audienceTreeByCapacity = new TreeSet<>(AudienceTimeCell::compareTo);
     Map<AudienceTimeCell, Integer> audienceToIndex = new HashMap<>();
     ArrayList<LessonGene> lessonGenes = new ArrayList<>();
     private int satisfiedScheduleAmount = 3;
@@ -46,7 +35,7 @@ public class GeneticAlgorithmScheduler {
         this.penaltyChecker = penaltyChecker;
     }
 
-    public static final class DataForConstraint {
+    public static class DataForConstraint {
         private final List<LessonWithTime> allLessons;
         private final LessonWithTime currentLesson;
         private final List<List<List<LessonWithTime>>> timeTable;
@@ -292,52 +281,43 @@ public class GeneticAlgorithmScheduler {
     private void prepareData(List<StudyPlanEvolve> studyPlanEvolves, List<AudienceEvolve> audiences) {
         studyPlanEvolves.forEach(studyPlanEvolve -> {
             for (SubjectEvolve subjectEvolve : studyPlanEvolve.subjectEvolves()) {
-                if (subjectEvolve.lectureAmount() != 0) {
-                    LessonGene lessonGene = new LessonGene(new ArrayList<>(studyPlanEvolve.groupEvolves()), subjectEvolve.lectureTeacherEvolve(), subjectEvolve);
+//                if (subjectEvolve.lectureAmount() != 0) {
+//                    LessonGene lessonGene = new LessonGene(new ArrayList<>(studyPlanEvolve.groupEvolves()), subjectEvolve.lectureTeacherEvolve(), subjectEvolve);
+//
+//                    for (GroupEvolve group : lessonGene.groups()) {
+//                        if (!groupToIndexes.containsKey(group)) {
+//                            groupToIndexes.put(group, new ArrayList<>());
+//                        }
+//                        groupToIndexes.get(group).add(lessonGenes.size());
+//                    }
+//ц
+//                    lessonGenes.add(lessonGene);
+//                }
 
+                subjectEvolve.teacherToGroups().forEach((teacherEvolve, groupEvolves) -> {
+                    LessonGene lessonGene = new LessonGene(groupEvolves, teacherEvolve, subjectEvolve);
                     for (GroupEvolve group : lessonGene.groups()) {
                         if (!groupToIndexes.containsKey(group)) {
                             groupToIndexes.put(group, new ArrayList<>());
                         }
                         groupToIndexes.get(group).add(lessonGenes.size());
                     }
-
                     lessonGenes.add(lessonGene);
-                }
-                for (GroupEvolve groupEvolve : studyPlanEvolve.groupEvolves()) {
-                    for (int subId = 0; subId < subjectEvolve.seminarAmount(); subId++) {
-                        LessonGene lessonGene = new LessonGene(groupEvolve,
-                                subjectEvolve.groupNameToTeacher().get(groupEvolve.id()),
-                                subjectEvolve.withSubId(subId));
-                        for (GroupEvolve group : lessonGene.groups()) {
-                            if (!groupToIndexes.containsKey(group)) {
-                                groupToIndexes.put(group, new ArrayList<>());
-                            }
-                            groupToIndexes.get(group).add(lessonGenes.size());
-                        }
-                        lessonGenes.add(lessonGene);
-
-
-                    }
-                }
+                });
             }
         });
         int times = TableTime.getDaysAmount() * TableTime.getCellsAmount();
         int lastIndex = 0;
         // FIXME
-//        for (AudienceEvolve auditory : audiences) {
-//            for (int i = 0; i < times; i++) {
-//                AudienceTimeCell cell = new AudienceTimeCell(auditory, i);
-//                audienceToIndex.put(cell, lastIndex++);
-//                cells.add(cell);
-//                // FIXME
-//                if (!audienceMap.containsKey(cell.audience().auditoryType())) {
-//                    audienceMap.put(cell.audience().auditoryType(), new ArrayList<>());
-//                }
-//                audienceMap.get(cell.audience().auditoryType()).add(cell);
-//
-//            }
-//        }
+        for (AudienceEvolve auditory : audiences) {
+            for (int i = 0; i < times; i++) {
+                AudienceTimeCell cell = new AudienceTimeCell(auditory, i);
+                audienceToIndex.put(cell, lastIndex++);
+                cells.add(cell);
+                // FIXME
+                audienceTreeByCapacity.add(cell);
+            }
+        }
     }
 
     private Double fitness(Genotype<IntegerGene> gt) {
@@ -414,18 +394,14 @@ public class GeneticAlgorithmScheduler {
             LessonGene lesson = lessonGenes.get(index);
             AudienceTimeCell audienceTimeCell = cells.get(gene.intValue());
 
+            List<AudienceTimeCell> possibleAudiences = audienceTreeByCapacity.tailSet(audienceTimeCell).stream().toList();
 
-            // FIXME
-//            List<AudienceTimeCell> possibleAudiences = audienceMap.get(lesson.teacher().teacherType());
+            int randomCellIndex = random.nextInt(0, possibleAudiences.size());
+            //add not full random - random in time or random in audience. Maybe with small diff in time.
 
+            var cell = audienceToIndex.get(possibleAudiences.get(randomCellIndex));
 
-//            int randomCellIndex = random.nextInt(0, possibleAudiences.size());
-
-//            var cell = audienceToIndex.get(possibleAudiences.get(randomCellIndex));
-
-//            return gene.newInstance(cell);
-
-            return null;
+            return gene.newInstance(cell);
         }
     }
 }

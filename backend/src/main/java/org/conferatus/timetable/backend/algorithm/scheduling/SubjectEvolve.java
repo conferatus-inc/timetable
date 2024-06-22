@@ -1,24 +1,12 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
+import java.util.List;
 import java.util.Map;
 
 public record SubjectEvolve(Long id,
-                            int seminarAmount,
-                            int lectureAmount,
-                            Map<Long, TeacherEvolve> groupNameToTeacher,
+                            Map<TeacherEvolve, List<GroupEvolve>> teacherToGroups,
                             TeacherEvolve lectureTeacherEvolve,
                             int subId) {
-    public SubjectEvolve(Long id,
-                         int seminarAmount,
-                         int lectureAmount,
-                         Map<Long, TeacherEvolve> teacherToGroup,
-                         TeacherEvolve lectureTeacherEvolve) {
-        this(id, seminarAmount, lectureAmount, teacherToGroup, lectureTeacherEvolve, 0);
-    }
-
-    public SubjectEvolve withSubId(int subId) {
-        return new SubjectEvolve(id, seminarAmount, lectureAmount, groupNameToTeacher, lectureTeacherEvolve, subId);
-    }
 
     @Override
     public String toString() {

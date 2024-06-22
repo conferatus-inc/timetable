@@ -19,7 +19,7 @@ public enum PenaltyEnum {
             (data) -> {
                 // FIXME видимо просто удалить эти строчки, препод же привязывается сразу в предмету
 //                LessonWithTime lesson = data.currentLesson();
-//                if (!lesson.audience().audienceGroupCapacity()
+//                if (!lesson.audience().groupCapacity()
 //                        .equals(lesson.teacher().teacherType())) {
 //                    return problem(-100., "Teacher and audience has different types "
 //                            + lesson.teacher() + " " + lesson.audience());
@@ -98,6 +98,21 @@ public enum PenaltyEnum {
                 return ok();
             }
             , false
+    ),
+    AudienceFullness(
+            data -> {
+                double baseVal = 1;
+                LessonWithTime lesson = data.currentLesson();
+                double roomCapacity = lesson.cell().audience().groupCapacity();
+                double groupsAmount = lesson.groups().size();
+                double value = baseVal * 1 - groupsAmount/roomCapacity;
+                if  (value >= 0.666 * baseVal) {
+                    return problem(-value*2, "Audience is almost empty");
+                }
+                return ok(-value);
+            }
+            ,
+            false
     ),
 //    FakePenalty(
 //            data -> {

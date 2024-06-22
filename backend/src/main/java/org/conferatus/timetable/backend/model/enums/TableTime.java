@@ -1,6 +1,8 @@
 package org.conferatus.timetable.backend.model.enums;
 
-public record TableTime(int day, int cellNumber) {
+import java.util.Objects;
+
+public record TableTime(int day, int cellNumber){
     public int toIndex() {
         return day * cellsAmount + cellNumber;
     }
@@ -32,4 +34,18 @@ public record TableTime(int day, int cellNumber) {
     public String toString() {
         return day + "/" + cellNumber;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TableTime tableTime = (TableTime) o;
+        return day == tableTime.day && cellNumber == tableTime.cellNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(day, cellNumber);
+    }
+
 }
