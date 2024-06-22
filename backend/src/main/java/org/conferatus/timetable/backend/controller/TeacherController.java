@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +46,7 @@ public class TeacherController {
     @PostMapping("/wishes")
     public ResponseEntity<TeacherResponseDTO> addTeacherWish(
             @RequestParam("name") String teacherName,
-            @RequestParam("teacherWish") TeacherWishDto teacherWish
+            @RequestBody TeacherWishDto teacherWish
     ) {
         return ResponseEntity.ok(new TeacherResponseDTO(teacherService.addTeacherWish(teacherName, teacherWish)));
     }

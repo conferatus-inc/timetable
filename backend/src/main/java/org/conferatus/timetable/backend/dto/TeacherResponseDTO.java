@@ -11,7 +11,7 @@ public record TeacherResponseDTO(
         @JsonProperty("name") String name,
 //        List<SubjectPlanDTO> possibleSubjects,
         List<LessonDTO> lessons,
-        List<TeacherWishDto> teacherWishDtos
+        List<TeacherWishDto> teacherWishes
 ) {
     public TeacherResponseDTO(Teacher teacher) {
         this(
