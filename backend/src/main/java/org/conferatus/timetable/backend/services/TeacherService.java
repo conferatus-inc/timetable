@@ -77,6 +77,15 @@ public class TeacherService {
 
     public Teacher addTeacherWish(String teacherName, TeacherWishDto teacherWish) {
         var teacher = getTeacherByNameOrThrow(teacherName);
+        teacherWishRepository.findByTeacher_IdAndDayOfWeekAndLessonNumber(
+                teacher.getId(),
+                teacherWish.dayOfWeek(),
+                teacherWish.lessonNumber()
+        ).ifPresent(foundTeacherWith -> {
+            throw new ServerException(HttpStatus.BAD_REQUEST,
+                    String.format("TeacherWish for teacher %s for day %s and lesson %s already exists",
+                            teacherName, teacherWish.dayOfWeek(), teacherWish.lessonNumber()));
+        });
         var newTeacherWish = new TeacherWish();
         newTeacherWish.setTeacher(teacher);
         newTeacherWish.setPriority(teacherWish.priority());

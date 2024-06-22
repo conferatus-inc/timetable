@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,9 @@ import lombok.Setter;
 import org.conferatus.timetable.backend.dto.TeacherWishDto;
 
 @Entity
+@Table(name = "TeacherWish", uniqueConstraints = {
+        @UniqueConstraint(name = "uc_teacherwish_teacher_id", columnNames = {"teacher_id", "dayOfWeek", "lessonNumber"})
+})
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
