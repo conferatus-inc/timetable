@@ -55,10 +55,7 @@ public class AudienceService {
     }
 
     public Audience getAudience(User user, Long id) {
-        var audience = getAudienceByIdAndUserOrThrow(user, id);
-        if (!Objects.equals(audience.getUniversity().id(), user.getUniversity().id())) {
-
-        }
+        return getAudienceByIdAndUserOrThrow(user, id);
     }
 
     public Audience getAudience(User user, String name) {
