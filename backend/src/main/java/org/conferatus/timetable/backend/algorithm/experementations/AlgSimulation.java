@@ -78,9 +78,9 @@ public class AlgSimulation {
                 for (GroupEvolve plGroup : plGroups) {
                     teacherEvolveMap.put(plGroup.id(), seminarT.remove(seminarT.size() - 1));
                 }
-                SubjectEvolve subjectEvolve = new SubjectEvolve(plaNumber, 1,
-                        1, teacherEvolveMap, lectureT.remove(lectureT.size() - 1));
-                lsubjList.add(subjectEvolve);
+//                SubjectEvolve subjectEvolve = new SubjectEvolve(plaNumber, 1,
+//                        1, teacherEvolveMap, lectureT.remove(lectureT.size() - 1));
+                lsubjList.add(null); //fixme
             }
         });
         List<StudyPlanEvolve> plansList = new ArrayList<>();
