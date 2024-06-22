@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.dto.TeacherResponseDTO;
+import org.conferatus.timetable.backend.dto.TeacherWishDto;
 import org.conferatus.timetable.backend.services.TeacherService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +40,14 @@ public class TeacherController {
     @PostMapping
     public ResponseEntity<TeacherResponseDTO> addTeacher(@RequestParam("name") String teacherName) {
         return ResponseEntity.ok(new TeacherResponseDTO(teacherService.addTeacher(teacherName)));
+    }
+
+    @PostMapping("/wishes")
+    public ResponseEntity<TeacherResponseDTO> addTeacherWish(
+            @RequestParam("name") String teacherName,
+            @RequestParam("teacherWish") TeacherWishDto teacherWish
+    ) {
+        return ResponseEntity.ok(new TeacherResponseDTO(teacherService.addTeacherWish(teacherName, teacherWish)));
     }
 
     @PutMapping

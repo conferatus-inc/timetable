@@ -3,9 +3,12 @@ package org.conferatus.timetable.backend.services;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.conferatus.timetable.backend.dto.TeacherWishDto;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Teacher;
+import org.conferatus.timetable.backend.model.entity.TeacherWish;
 import org.conferatus.timetable.backend.repository.TeacherRepository;
+import org.conferatus.timetable.backend.repository.TeacherWishRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TeacherService {
     private final TeacherRepository teacherRepository;
+    private final TeacherWishRepository teacherWishRepository;
 
     public Teacher getTeacherByIdOrThrow(Long id) {
         return teacherRepository.findTeacherById(id)
@@ -69,5 +73,17 @@ public class TeacherService {
         var teacher = getTeacherByNameOrThrow(teacherName);
         teacherRepository.delete(teacher);
         return teacher;
+    }
+
+    public Teacher addTeacherWish(String teacherName, TeacherWishDto teacherWish) {
+        var teacher = getTeacherByNameOrThrow(teacherName);
+        var newTeacherWish = new TeacherWish();
+        newTeacherWish.setTeacher(teacher);
+        newTeacherWish.setPriority(teacherWish.priority());
+        newTeacherWish.setDayOfWeek(teacherWish.dayOfWeek());
+        newTeacherWish.setLessonNumber(teacherWish.lessonNumber());
+        newTeacherWish = teacherWishRepository.save(newTeacherWish);
+        teacher.getTeacherWishes().add(newTeacherWish);
+        return teacherRepository.save(teacher);
     }
 }
