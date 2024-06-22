@@ -27,12 +27,15 @@ public class AudienceController {
     public ResponseEntity<AudienceDTO> getAudienceById(
             @AuthenticationPrincipal User user,
             @RequestParam("id") Long id) {
-        return ResponseEntity.ok(new AudienceDTO(audienceService.getAudience(id)));
+        return ResponseEntity.ok(new AudienceDTO(audienceService.getAudience(user, id)));
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<AudienceDTO> getAudienceByName(@RequestParam("name") String name) {
-        return ResponseEntity.ok(new AudienceDTO(audienceService.getAudience(name)));
+    public ResponseEntity<AudienceDTO> getAudienceByName(
+            @AuthenticationPrincipal User user,
+            @RequestParam("name") String name
+    ) {
+        return ResponseEntity.ok(new AudienceDTO(audienceService.getAudience(user, name)));
     }
 
     @GetMapping("/all")
@@ -57,15 +60,21 @@ public class AudienceController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateAudience(@RequestParam("current") String previousAudienceName,
-                                                 @RequestParam("new") String newAudienceName) {
-        audienceService.updateAudience(previousAudienceName, newAudienceName);
+    public ResponseEntity<String> updateAudience(
+            @AuthenticationPrincipal User user,
+            @RequestParam("current") String previousAudienceName,
+            @RequestParam("new") String newAudienceName
+    ) {
+        audienceService.updateAudience(user, previousAudienceName, newAudienceName);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteAudience(@RequestParam("name") String audienceName) {
-        audienceService.deleteAudienceOrThrow(audienceName);
+    public ResponseEntity<String> deleteAudience(
+            @AuthenticationPrincipal User user,
+            @RequestParam("name") String audienceName
+    ) {
+        audienceService.deleteAudienceOrThrow(user, audienceName);
         return ResponseEntity.ok().build();
     }
 }

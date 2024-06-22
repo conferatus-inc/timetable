@@ -33,4 +33,8 @@ public class User {
 
     @ManyToOne
     private University university;
+
+    public boolean checkUniversityAccess(long id) {
+        return university.id() == id;
+    }
 }

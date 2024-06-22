@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Audience;
 import org.conferatus.timetable.backend.model.entity.University;
+import org.conferatus.timetable.backend.model.entity.User;
 import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.repository.AudienceRepository;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,32 @@ public class AudienceService {
     private final AudienceRepository audienceRepository;
     private final UniversityService universityService;
 
-    private Audience getAudienceByIdOrThrow(Long id) {
+    public Audience getAudienceByIdOrThrow(Long id) {
         return audienceRepository.findAudienceById(id)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Audience with id " + id + " does not exist"));
     }
 
-    private Audience getAudienceByNameOrThrow(String name) {
-        return audienceRepository.findAudienceByName(name)
-                .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
-                        "Audience with name " + name + " does not exist"));
+    private Audience getAudienceByIdAndUserOrThrow(User user, Long id) {
+        var audience = audienceRepository.findAudienceById(id);
+        if (audience.isEmpty() || !user.checkUniversityAccess(audience.get().getUniversity().id())) {
+            throw new ServerException(HttpStatus.NOT_FOUND,
+                    String.format("Audience with id %s does dont exist within university %s",
+                            id, user.getUniversity().id())
+            );
+        }
+        return audience.get();
+    }
+
+    private Audience getAudienceByNameAndUserOrThrow(User user, String name) {
+        var audience = audienceRepository.findAudienceByName(name);
+        if (audience.isEmpty() || !user.checkUniversityAccess(audience.get().getUniversity().id())) {
+            throw new ServerException(HttpStatus.NOT_FOUND,
+                    String.format("Audience with name %s does dont exist within university %s",
+                            name, user.getUniversity().id())
+            );
+        }
+        return audience.get();
     }
 
     private void notExistsByNameOrThrow(String name) {
@@ -37,12 +54,15 @@ public class AudienceService {
         });
     }
 
-    public Audience getAudience(Long id) {
-        return getAudienceByIdOrThrow(id);
+    public Audience getAudience(User user, Long id) {
+        var audience = getAudienceByIdAndUserOrThrow(user, id);
+        if (!Objects.equals(audience.getUniversity().id(), user.getUniversity().id())) {
+
+        }
     }
 
-    public Audience getAudience(String name) {
-        return getAudienceByNameOrThrow(name);
+    public Audience getAudience(User user, String name) {
+        return getAudienceByNameAndUserOrThrow(user, name);
     }
 
     public List<Audience> getAllAudiences(University university) {
@@ -64,8 +84,8 @@ public class AudienceService {
         return result;
     }
 
-    public Audience updateAudience(String previousAudienceName, String newAudienceName) {
-        var audience = getAudienceByNameOrThrow(previousAudienceName);
+    public Audience updateAudience(User user, String previousAudienceName, String newAudienceName) {
+        var audience = getAudienceByNameAndUserOrThrow(user, previousAudienceName);
         if (newAudienceName.equals(previousAudienceName)) {
             return audience;
         }
@@ -74,8 +94,8 @@ public class AudienceService {
         return audienceRepository.save(audience);
     }
 
-    public Audience deleteAudienceOrThrow(String audienceName) {
-        var audience = getAudienceByNameOrThrow(audienceName);
+    public Audience deleteAudienceOrThrow(User user, String audienceName) {
+        var audience = getAudienceByNameAndUserOrThrow(user, audienceName);
         audienceRepository.delete(audience);
         return audience;
     }

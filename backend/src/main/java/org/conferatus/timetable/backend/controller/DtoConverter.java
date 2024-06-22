@@ -56,7 +56,7 @@ public class DtoConverter {
                     ),
                     new AudienceDTO(
                             lessonWithTime.audience().id(),
-                            audienceService.getAudience(lessonWithTime.audience().id()).getName(),
+                            audienceService.getAudienceByIdOrThrow(lessonWithTime.audience().id()).getName(),
                             lessonWithTime.audience().audienceGroupCapacity()
                     ),
                     studyGroupResponseDTOS,
