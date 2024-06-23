@@ -23,13 +23,19 @@ public class StudyGroupController {
     private final StudyGroupService studyGroupService;
 
     @GetMapping("/by-id")
-    public ResponseEntity<StudyGroupResponseDTO> getGroupById(@RequestParam("id") Long id) {
-        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(id)));
+    public ResponseEntity<StudyGroupResponseDTO> getGroupById(
+            @AuthenticationPrincipal User user,
+            @RequestParam("id") Long id
+    ) {
+        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(user, id)));
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<StudyGroupResponseDTO> getGroupByName(@RequestParam("name") String name) {
-        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(name)));
+    public ResponseEntity<StudyGroupResponseDTO> getGroupByName(
+            @AuthenticationPrincipal User user,
+            @RequestParam("name") String name
+    ) {
+        return ResponseEntity.ok(new StudyGroupResponseDTO(studyGroupService.getGroup(user, name)));
     }
 
     @GetMapping("/all")
@@ -50,16 +56,22 @@ public class StudyGroupController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateGroup(@RequestParam("current") String previousGroupName,
-                                              @RequestParam("new") String newGroupName) {
-        studyGroupService.updateGroup(previousGroupName, newGroupName);
+    public ResponseEntity<String> updateGroup(
+            @AuthenticationPrincipal User user,
+            @RequestParam("current") String previousGroupName,
+            @RequestParam("new") String newGroupName
+    ) {
+        studyGroupService.updateGroup(user, previousGroupName, newGroupName);
         return ResponseEntity.ok().build();
 
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteGroup(@RequestParam("name") String groupName) {
-        studyGroupService.deleteGroupOrThrow(groupName);
+    public ResponseEntity<String> deleteGroup(
+            @AuthenticationPrincipal User user,
+            @RequestParam("name") String groupName
+    ) {
+        studyGroupService.deleteGroupOrThrow(user, groupName);
         return ResponseEntity.ok().build();
     }
 }
