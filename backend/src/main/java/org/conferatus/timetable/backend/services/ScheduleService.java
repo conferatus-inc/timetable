@@ -1,13 +1,16 @@
 package org.conferatus.timetable.backend.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
-import org.conferatus.timetable.backend.algorithm.scheduling.GroupEvolve;
-import org.conferatus.timetable.backend.algorithm.scheduling.SubjectEvolve;
-import org.conferatus.timetable.backend.model.entity.SemesterPlan;
+import org.conferatus.timetable.backend.algorithm.scheduling.*;
+import org.conferatus.timetable.backend.exception.ServerException;
+import org.conferatus.timetable.backend.model.entity.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -16,50 +19,41 @@ public class ScheduleService {
     private final AudienceService audienceService;
     private final SemesterPlanService semesterPlanService;
 
-    public ScheduleAlgorithmService.StatusId generate(SemesterPlan sp) {
+    public ScheduleAlgorithmService.StatusId generate(Long semesterId, User user) {
+        University university = user.getUniversity();
+        SemesterPlan sp = semesterPlanService.getSemesterPlan(user, semesterId);
+//        var semesterPlans = semesterPlanService.getSemesterPlan(semesterId);
+        if (!sp.university().id().equals(university.id())) {
+            throw new ServerException(HttpStatus.FORBIDDEN, "WRONG_UNIVERSITY_SEMESTER");
+        }
+
+
         List<GroupEvolve> groupEvolves = sp.studyGroups().stream().map(GroupEvolve::new).toList();
         List<SubjectEvolve> subjectEvolves = new ArrayList<>();
 
-        // FIXME
-//        for (SubjectPlan subjectPlan : sp.subjectPlans()) {
-//            SubjectEvolve subjectEvolve;
-//            if (Objects.requireNonNull(subjectPlan.subjectType()) == SubjectType.LECTURE) {
-//                subjectEvolve = new SubjectEvolve(subjectPlan.id(),
-//                        0, 1,
-//                        Map.of(),
-//                        new TeacherEvolve(
-//                                subjectPlan.teachers().get(0),
-//                                AudienceType.LECTURE
-//                        ));
-//            } else {
-//                Map<Long, TeacherEvolve> groupNameToTeacher = new HashMap<>();
-//
-//                for (int i = 0; i < groupEvolves.size(); i++) {
-//                    if (subjectPlan.teachers().isEmpty()) {
-//                        throw new ServerException(HttpStatus.BAD_REQUEST,
-//                                "There is no teachers for subject: " + subjectPlan);
-//                    }
-//                    groupNameToTeacher.put(groupEvolves.get(i).id(),
-//                            new TeacherEvolve(subjectPlan.teachers().get(i % subjectPlan.teachers().size()),
-//                                    AudienceType.PRACTICAL)
-//                    );
-//                }
-//                subjectEvolve = new SubjectEvolve(subjectPlan.id(),
-//                        Math.toIntExact(subjectPlan.timesPerWeek()), 0,
-//                        groupNameToTeacher, null);
-//            }
-//            subjectEvolves.add(subjectEvolve);
-//        }
-//        List<StudyPlanEvolve> studyPlanEvolves = List.of(new StudyPlanEvolve(subjectEvolves, groupEvolves));
-//
-//        List<AudienceEvolve> mappedAudiences = audienceService.getAllAudiences()
-//                .stream().map(AudienceEvolve::new).toList();
-//        var task = algoService.createTaskSchedule(studyPlanEvolves, mappedAudiences);
-//
-//        return task;
-        return null;
-//        task.status().getResult().join();
 
-//        algoService.getLastResult();
+        for (SubjectPlan subjectPlan : sp.subjectPlans()) {
+            SubjectEvolve subjectEvolve;
+            TeacherEvolve teacherEvolve = new TeacherEvolve(subjectPlan.teacher().getId());
+            Map<TeacherEvolve, List<GroupEvolve>> teacherToGroups = new HashMap<>();
+            teacherToGroups.put(teacherEvolve, new ArrayList<>());
+
+
+            for (StudyGroup studyGroup : subjectPlan.groups()) {
+                teacherToGroups.get(teacherEvolve).add(new GroupEvolve(studyGroup));
+            }
+            for (long i = 0L; i < subjectPlan.timesPerWeek(); i++) {
+                subjectEvolve = new SubjectEvolve(subjectPlan.id(),
+                        teacherToGroups,
+                        subjectPlan.subjectType().toString(),
+                        (int) i);
+                subjectEvolves.add(subjectEvolve);
+            }
+        }
+        List<StudyPlanEvolve> studyPlanEvolves = List.of(new StudyPlanEvolve(subjectEvolves, groupEvolves));
+
+        List<AudienceEvolve> mappedAudiences = audienceService.getAllAudiences(university)
+                .stream().map(AudienceEvolve::new).toList();
+        return algoService.createTaskSchedule(studyPlanEvolves, mappedAudiences, university);
     }
 }

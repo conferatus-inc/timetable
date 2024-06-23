@@ -1,18 +1,11 @@
 package org.conferatus.timetable.backend.converter;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgoSchedule;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
-import org.conferatus.timetable.backend.dto.AudienceDTO;
-import org.conferatus.timetable.backend.dto.LessonDTO;
-import org.conferatus.timetable.backend.dto.SimpleTeacher;
-import org.conferatus.timetable.backend.dto.StudyGroupResponseDTO;
+import org.conferatus.timetable.backend.dto.*;
 import org.conferatus.timetable.backend.dto.TableNasrano.Nasrano;
-import org.conferatus.timetable.backend.dto.TimeListDTO;
+import org.conferatus.timetable.backend.model.entity.Teacher;
 import org.conferatus.timetable.backend.model.enums.TableTime;
 import org.conferatus.timetable.backend.repository.StudyGroupRepository;
 import org.conferatus.timetable.backend.repository.SubjectPlanRepository;
@@ -21,6 +14,10 @@ import org.conferatus.timetable.backend.services.AudienceService;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.conferatus.timetable.backend.services.SubjectPlanService;
 import org.springframework.stereotype.Service;
+
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -36,24 +33,24 @@ public class DtoConverter {
         TimeListDTO timeListDTO;
 
         List<LessonDTO> cells = new ArrayList<>();
-        // FIXME
+
         for (LessonWithTime lessonWithTime : algoSchedule.allLessons()) {
             var subject = lessonWithTime.lessonGene().subject();
             var teacher = lessonWithTime.teacher();
             List<StudyGroupResponseDTO> studyGroupResponseDTOS = lessonWithTime.groups().stream().map(
-                    groupEvolve -> new StudyGroupResponseDTO(groupEvolve.id(),
-                            groupRepository.findStudyGroupById(groupEvolve.id()).get().getName())
+                    groupEvolve -> new StudyGroupResponseDTO(groupRepository.findStudyGroupById(groupEvolve.id()).get())
             ).toList();
 
 
             // FIXME
+            Teacher teacherEntity = teacherRepository.getById(teacher.id());
             LessonDTO lessonDTO = new LessonDTO(
                     subject.id(),
                     subjectPlanRepository.getById(subject.id()).name(),
                     new SimpleTeacher(
                             teacher.id(),
-                            teacherRepository.getById(teacher.id()).getName(),
-                            List.of()
+                            teacherEntity.getName(),
+                            teacherEntity.getTeacherWishes().stream().map(TeacherWishDto::new).toList()
                     ),
                     new AudienceDTO(
                             lessonWithTime.audience().id(),

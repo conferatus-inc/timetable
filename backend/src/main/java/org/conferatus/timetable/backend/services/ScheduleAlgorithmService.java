@@ -6,6 +6,7 @@ import org.conferatus.timetable.backend.algorithm.scheduling.AudienceEvolve;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgorithmStatus;
 import org.conferatus.timetable.backend.algorithm.scheduling.StudyPlanEvolve;
+import org.conferatus.timetable.backend.model.entity.University;
 import org.conferatus.timetable.backend.model.enums.TableTime;
 import org.conferatus.timetable.backend.util.ThreadPoolProvider;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class ScheduleAlgorithmService {
     private final AtomicLong counter = new AtomicLong(0);
 
     private final Map<Long, AlgorithmStatus> taskIdToStatus;
+    private final Map<Long, Long> lastUniversityTaskId = new HashMap<>();
 
     public ScheduleAlgorithmService(ThreadPoolProvider threadPoolProvider) {
         executor = threadPoolProvider.highPriority();
@@ -44,9 +46,11 @@ public class ScheduleAlgorithmService {
     }
 
     public StatusId createTaskSchedule(List<StudyPlanEvolve> studyPlans,
-                                        List<AudienceEvolve> audiences) {
+                                       List<AudienceEvolve> audiences,
+                                       University university) {
         var statusWithId = new StatusId(counter.incrementAndGet(), createAlgorithmSchedule(studyPlans, audiences));
         taskIdToStatus.put(statusWithId.id, statusWithId.status);
+        lastUniversityTaskId.put(university.id(), statusWithId.id);
         return statusWithId;
     }
 
@@ -61,7 +65,7 @@ public class ScheduleAlgorithmService {
     public record StatusId(long id, AlgorithmStatus status) {
     }
 
-    public AlgorithmStatus getLastResult() {
-        return taskIdToStatus.get(counter.get());
+    public AlgorithmStatus getLastResult(University university) {
+        return taskIdToStatus.get(lastUniversityTaskId.get(university.id()));
     }
 }
