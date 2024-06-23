@@ -52,7 +52,8 @@ public class DtoConverter {
                     subjectPlanRepository.getById(subject.id()).name(),
                     new SimpleTeacher(
                             teacher.id(),
-                            teacherRepository.getById(teacher.id()).getName()
+                            teacherRepository.getById(teacher.id()).getName(),
+                            List.of()
                     ),
                     new AudienceDTO(
                             lessonWithTime.audience().id(),
