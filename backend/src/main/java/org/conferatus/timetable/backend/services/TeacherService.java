@@ -49,6 +49,13 @@ public class TeacherService {
         }
     }
 
+    private void notExistsByNameOrThrow(String name) {
+        var teacher = teacherRepository.findTeacherByName(name);
+        if (teacher.isPresent()) {
+            throw new ServerException(HttpStatus.BAD_REQUEST,
+                    String.format("Teacher with name %s already exists", name));
+        }
+    }
 
     public Teacher getTeacher(User user, Long id) {
         return getTeacherByUserAndIdOrThrow(user, id);
@@ -64,7 +71,7 @@ public class TeacherService {
     }
 
     public Teacher addTeacher(User user, String teacherName) {
-        notExistsByNameOrThrow(user, teacherName);
+        notExistsByNameOrThrow(teacherName);
         var teacher = new Teacher();
         teacher.setName(teacherName);
         return teacherRepository.save(teacher);
