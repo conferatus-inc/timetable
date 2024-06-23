@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.conferatus.timetable.backend.dto.UserDto;
 
 @Entity
 @NoArgsConstructor
@@ -36,5 +37,13 @@ public class User {
 
     public boolean checkUniversityAccess(long id) {
         return university.id() == id;
+    }
+
+    public UserDto toUserDto() {
+        return new UserDto(
+                id,
+                username,
+                university.toUniversityDto()
+        );
     }
 }

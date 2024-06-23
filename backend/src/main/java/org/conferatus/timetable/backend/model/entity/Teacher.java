@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.conferatus.timetable.backend.dto.SimpleTeacher;
 
 @Entity
 @Table(name = "Teacher", uniqueConstraints = {
@@ -39,4 +40,10 @@ public class Teacher {
 
     @OneToMany
     private List<Lesson> lessons = new ArrayList<>();
+
+    public SimpleTeacher toSimpleTeacher() {
+        return new SimpleTeacher(
+                this
+        );
+    }
 }

@@ -1,7 +1,6 @@
 package org.conferatus.timetable.backend.dto;
 
 import org.conferatus.timetable.backend.model.entity.SubjectPlan;
-import org.conferatus.timetable.backend.model.entity.Teacher;
 import org.conferatus.timetable.backend.model.enums.AudienceType;
 
 public record SubjectPlanDTO(
@@ -9,7 +8,7 @@ public record SubjectPlanDTO(
         Long times,
         String name,
         AudienceType subjectType,
-        Teacher teacher
+        SimpleTeacher teacher
 ) {
     public SubjectPlanDTO(SubjectPlan subjectPlan) {
         this(
@@ -17,7 +16,7 @@ public record SubjectPlanDTO(
                 subjectPlan.timesPerWeek(),
                 subjectPlan.name(),
                 subjectPlan.subjectType(),
-                subjectPlan.teacher()
+                subjectPlan.teacher().toSimpleTeacher()
         );
     }
 }

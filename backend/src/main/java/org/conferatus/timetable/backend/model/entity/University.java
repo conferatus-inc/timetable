@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.conferatus.timetable.backend.dto.UniversityDto;
 
 @Entity
 @NoArgsConstructor
@@ -44,4 +45,11 @@ public class University {
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Schedule> schedules = new ArrayList<>();
+
+    public UniversityDto toUniversityDto() {
+        return new UniversityDto(
+                id,
+                name
+        );
+    }
 }
