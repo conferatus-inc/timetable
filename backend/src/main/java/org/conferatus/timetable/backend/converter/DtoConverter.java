@@ -1,4 +1,4 @@
-package org.conferatus.timetable.backend.controller;
+package org.conferatus.timetable.backend.converter;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;

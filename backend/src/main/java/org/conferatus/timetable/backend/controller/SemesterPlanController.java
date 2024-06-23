@@ -24,8 +24,11 @@ public class SemesterPlanController {
     private final SemesterPlanService semesterPlanService;
 
     @GetMapping
-    public ResponseEntity<SemesterPlanDTO> getSemesterPlan(@RequestParam("id") Long id) {
-        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.getSemesterPlan(id)));
+    public ResponseEntity<SemesterPlanDTO> getSemesterPlan(
+            @AuthenticationPrincipal User user,
+            @RequestParam("id") Long id
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.getSemesterPlan(user, id)));
     }
 
     @GetMapping("/all")
@@ -46,8 +49,11 @@ public class SemesterPlanController {
     }
 
     @DeleteMapping
-    public ResponseEntity<SemesterPlanDTO> deleteSemesterPlan(@RequestParam("id") Long id) {
-        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSemesterPlan(id)));
+    public ResponseEntity<SemesterPlanDTO> deleteSemesterPlan(
+            @AuthenticationPrincipal User user,
+            @RequestParam("id") Long id
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSemesterPlan(user, id)));
     }
 
     @PostMapping("/subject")
@@ -65,55 +71,62 @@ public class SemesterPlanController {
 
     @DeleteMapping("/subject")
     public ResponseEntity<SemesterPlanDTO> deleteSubjectPlan(
+            @AuthenticationPrincipal User user,
             @RequestParam("id") Long semesterId,
             @RequestParam("subjectId") Long subjectId
     ) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSubjectPlan(
-                semesterId, subjectId
+                user, semesterId, subjectId
         )));
     }
 
     @PostMapping("/subject/teacher")
     public ResponseEntity<SemesterPlanDTO> addSubjectTeacher(
+            @AuthenticationPrincipal User user,
             @RequestParam("id") Long semesterId,
             @RequestParam("subject_id") Long subjectId,
             @RequestParam("teacher_id") Long teacherId
     ) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSubjectTeacher(
-                semesterId, subjectId, teacherId
+                user, semesterId, subjectId, teacherId
         )));
     }
 
     @DeleteMapping("/subject/teacher")
     public ResponseEntity<SemesterPlanDTO> deleteSubjectTeacher(
+            @AuthenticationPrincipal User user,
             @RequestParam("id") Long semesterId,
-            @RequestParam("subject_id") Long subjectId,
-            @RequestParam("teacher_id") Long teacherId
+            @RequestParam("subject_id") Long subjectId
     ) {
         return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.deleteSubjectTeacher(
-                semesterId, subjectId, teacherId
+                user, semesterId, subjectId
         )));
     }
 
     @GetMapping("/subject")
     public ResponseEntity<SubjectPlanDTO> getSubjectPlan(
+            @AuthenticationPrincipal User user,
             @RequestParam("id") Long semesterId,
             @RequestParam("subjectId") Long subjectId
     ) {
-        return ResponseEntity.ok(new SubjectPlanDTO(semesterPlanService.getSubjectPlan(semesterId, subjectId)));
+        return ResponseEntity.ok(new SubjectPlanDTO(semesterPlanService.getSubjectPlan(user, semesterId, subjectId)));
     }
 
     @PostMapping("/groups")
     public ResponseEntity<SemesterPlanDTO> linkGroup(
+            @AuthenticationPrincipal User user,
             @RequestParam("id") Long semesterId,
             @RequestParam("group_id") Long groupId
     ) {
-        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.linkGroup(semesterId, groupId)));
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.linkGroup(user, semesterId, groupId)));
     }
 
     @GetMapping("/subject/all")
-    public ResponseEntity<List<SubjectPlanDTO>> getAllSubjectPlans(@RequestParam("id") Long semesterId) {
-        return ResponseEntity.ok(semesterPlanService.getAllSubjectPlans(semesterId)
+    public ResponseEntity<List<SubjectPlanDTO>> getAllSubjectPlans(
+            @AuthenticationPrincipal User user,
+            @RequestParam("id") Long semesterId
+    ) {
+        return ResponseEntity.ok(semesterPlanService.getAllSubjectPlans(user, semesterId)
                 .stream().map(SubjectPlanDTO::new).toList());
     }
 }

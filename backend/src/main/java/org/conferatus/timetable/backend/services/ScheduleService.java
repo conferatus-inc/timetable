@@ -17,7 +17,7 @@ public class ScheduleService {
     private final SemesterPlanService semesterPlanService;
 
     public ScheduleAlgorithmService.StatusId generate(Long semesterId) {
-        SemesterPlan sp = semesterPlanService.getSemesterPlan(semesterId);
+        SemesterPlan sp = semesterPlanService.getSemesterPlanByIdOrThrow(semesterId);
 
 
         List<GroupEvolve> groupEvolves = sp.studyGroups().stream().map(GroupEvolve::new).toList();

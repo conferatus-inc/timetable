@@ -7,6 +7,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgoSchedule;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler.AlgorithmStatus;
+import org.conferatus.timetable.backend.converter.DtoConverter;
 import org.conferatus.timetable.backend.dto.LessonDTO;
 import org.conferatus.timetable.backend.dto.StudyGroupResponseDTO;
 import org.conferatus.timetable.backend.dto.TableNasrano.Nasrano;
