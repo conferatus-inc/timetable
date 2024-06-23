@@ -7,10 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.conferatus.timetable.backend.dto.RoleDto;
 import org.conferatus.timetable.backend.model.enums.RoleName;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -30,5 +30,9 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return name.name();
+    }
+
+    public RoleDto toRoleDto() {
+        return new RoleDto(name);
     }
 }

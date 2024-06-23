@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.conferatus.timetable.backend.dto.LoginDto;
 import org.conferatus.timetable.backend.exception.ServerExceptions;
 import org.conferatus.timetable.backend.model.entity.Role;
 import org.conferatus.timetable.backend.model.enums.RoleName;
@@ -39,7 +40,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @GetMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(
+    public ResponseEntity<LoginDto> login(
             @RequestHeader(value = "Authorization") String token,
             @RequestHeader(value = "role") RoleName role
     ) {
@@ -48,13 +49,13 @@ public class AuthController {
         var user = userLoginDTO.getUser();
         var tokens = jwtUtils.createTokens(user);
         return ResponseEntity.ok(
-                Map.of(
-                        "access_token", tokens.accessToken(),
-                        "refresh_token", tokens.refreshToken(),
-                        "roles", user.getRoles().stream().map(Role::getName).toList(),
-                        "username", user.getUsername(),
-                        "login", yResponse.login(),
-                        "id", user.getId()
+                new LoginDto(
+                        user.getId(),
+                        user.getUsername(),
+                        yResponse.login(),
+                        tokens.accessToken(),
+                        tokens.refreshToken(),
+                        user.getRoles().stream().map(Role::toRoleDto).toList()
                 )
         );
     }
@@ -95,13 +96,21 @@ public class AuthController {
                 log.warn("User {} refresh own tokens", username);
                 new ObjectMapper().writeValue(
                         response.getOutputStream(),
-                        Map.of(
-                                "access_token", tokens.accessToken(),
-                                "refresh_token", tokens.refreshToken(),
-                                "roles", user.getRoles().stream().map(Role::getName).toList(),
-                                "username", user.getUsername(),
-                                "id", user.getId()
+                        new LoginDto(
+                                user.getId(),
+                                user.getUsername(),
+                                null,
+                                tokens.accessToken(),
+                                tokens.refreshToken(),
+                                user.getRoles().stream().map(Role::toRoleDto).toList()
                         )
+//                        Map.of(
+//                                "access_token", tokens.accessToken(),
+//                                "refresh_token", tokens.refreshToken(),
+//                                "roles", user.getRoles().stream().map(Role::getName).toList(),
+//                                "username", user.getUsername(),
+//                                "id", user.getId()
+//                        )
                 );
             } catch (IOException e) {
                 log.error("Error logging with {}", e.getMessage());
