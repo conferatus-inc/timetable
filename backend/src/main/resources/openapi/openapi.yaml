@@ -325,16 +325,26 @@ paths:
           content:
             '*/*':
               schema:
-                type: "string"
+                $ref: "#/components/schemas/LoginDto"
       tags:
         - auth
   /api/v1/accounts/token/refresh:
     post:
       summary: "POST api/v1/accounts/token/refresh"
       operationId: "refreshToken"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginDto"
       tags:
         - auth
 
@@ -1189,6 +1199,32 @@ components:
           type: "string"
         universityDto:
           $ref: "#/components/schemas/UniversityDto"
+    RoleDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+          enum:
+            - "ROLE_ADMIN"
+            - "ROLE_USER"
+    LoginDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        login:
+          type: "string"
+        accessToken:
+          type: "string"
+        refreshToken:
+          type: "string"
+        roles:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/RoleDto"
 
 tags:
   - name: auth
