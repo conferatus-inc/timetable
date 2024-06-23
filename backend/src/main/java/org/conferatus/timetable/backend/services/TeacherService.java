@@ -1,7 +1,6 @@
 package org.conferatus.timetable.backend.services;
 
 import java.util.List;
-import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.dto.TeacherWishDto;
@@ -61,7 +60,7 @@ public class TeacherService {
 
     public List<Teacher> getAllTeachers(University university) {
         return teacherRepository.findAll().stream()
-                .filter(it -> Objects.equals(it.getUniversity().id(), university.id())).toList();
+                .filter(it -> it.getUniversity() != null && it.getUniversity().id() == university.id()).toList();
     }
 
     public Teacher addTeacher(User user, String teacherName) {

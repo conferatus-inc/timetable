@@ -64,7 +64,8 @@ public class AudienceService {
 
     public List<Audience> getAllAudiences(University university) {
         return audienceRepository.findAll().stream()
-                .filter(it -> Objects.equals(it.getUniversity().id(), university.id())).toList();
+                .filter(it -> it.getUniversity().id() != null && Objects.equals(it.getUniversity().id(),
+                        university.id())).toList();
     }
 
     public Audience addAudience(University university, String audienceName, AudienceType audienceType,

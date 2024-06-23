@@ -88,6 +88,7 @@ public class StudyGroupService {
 
     public List<StudyGroup> getAllGroups(University university) {
         return studyGroupRepository.findAll()
-                .stream().filter(it -> Objects.equals(it.getUniversity().id(), university.id())).toList();
+                .stream().filter(it -> it.getUniversity().id() != null && Objects.equals(it.getUniversity().id(),
+                        university.id())).toList();
     }
 }
