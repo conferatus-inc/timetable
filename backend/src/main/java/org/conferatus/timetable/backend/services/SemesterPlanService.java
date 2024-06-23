@@ -106,7 +106,7 @@ public class SemesterPlanService {
     public SemesterPlan addSubjectTeacher(User user, Long semesterId, Long subjectId, Long teacherId) {
         SemesterPlan semesterPlan = getSemesterPlanByUserAndIdOrThrow(user, semesterId);
         SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
-        Teacher teacher = teacherService.getTeacher(teacherId);
+        Teacher teacher = teacherService.getTeacher(user, teacherId);
         subjectPlan.teacher(teacher);
         return semesterPlanRepository.save(semesterPlan);
     }
