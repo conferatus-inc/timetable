@@ -13,12 +13,15 @@ import org.conferatus.timetable.backend.dto.StudyGroupResponseDTO;
 import org.conferatus.timetable.backend.dto.TableNasrano.Nasrano;
 import org.conferatus.timetable.backend.dto.TimeListDTO;
 import org.conferatus.timetable.backend.exception.ServerException;
+import org.conferatus.timetable.backend.model.entity.User;
 import org.conferatus.timetable.backend.model.enums.TableTime;
 import org.conferatus.timetable.backend.services.ScheduleAlgorithmService;
 import org.conferatus.timetable.backend.services.ScheduleService;
+import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.conferatus.timetable.backend.services.TimeTableService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/admin/timetable")
 public class TimeTableController {
     private final TimeTableService timeTableService;
+    private final SemesterPlanService semesterPlanService;
     private final ScheduleService scheduleService;
     private final ScheduleAlgorithmService algoService;
     private final DtoConverter dtoConverter;
@@ -44,8 +48,10 @@ public class TimeTableController {
     }
 
     @GetMapping("/generate")
-    public ResponseEntity<Long> generateTimetable(@RequestParam Long semesterId) {
-        var task = scheduleService.generate(semesterId);
+    public ResponseEntity<Long> generateTimetable(
+            @AuthenticationPrincipal User user,
+            @RequestParam Long semesterId) {
+        var task = scheduleService.generate(semesterPlanService.getSemesterPlan(user, semesterId));
         return ResponseEntity.ok(task.id());
     }
 
