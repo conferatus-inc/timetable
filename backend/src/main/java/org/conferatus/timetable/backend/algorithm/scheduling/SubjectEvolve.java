@@ -5,7 +5,7 @@ import java.util.Map;
 
 public record SubjectEvolve(Long id,
                             Map<TeacherEvolve, List<GroupEvolve>> teacherToGroups,
-                            TeacherEvolve lectureTeacherEvolve,
+                            String subjectType,
                             int subId) {
 
     @Override
