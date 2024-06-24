@@ -175,6 +175,17 @@ public class GeneticAlgorithmScheduler {
         public CompletableFuture<List<AlgoSchedule>> getResult() {
             return result;
         }
+
+        public record StatusDto(
+                double percentage,
+                boolean running,
+                PenaltyChecker.CheckResult.CheckResultDTO checkResult
+        ) {
+        }
+
+        public StatusDto toStatusDto() {
+            return new StatusDto(percentage, running, checkResult.toDto());
+        }
     }
 
     public final AlgorithmStatus algorithmStatus = new AlgorithmStatus();

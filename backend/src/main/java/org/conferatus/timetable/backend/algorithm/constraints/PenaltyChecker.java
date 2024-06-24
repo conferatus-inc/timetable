@@ -1,18 +1,12 @@
 package org.conferatus.timetable.backend.algorithm.constraints;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.conferatus.timetable.backend.algorithm.scheduling.GeneticAlgorithmScheduler;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
+
+import java.util.*;
 
 @Getter
 @Setter
@@ -31,12 +25,40 @@ public class PenaltyChecker {
     @Getter
     @Setter
     public static final class CheckResult {
+        public record PenaltyResultDTO(
+                @JsonProperty("name") String penaltyName,
+                PenaltyResult result
+
+        ) {
+        }
+
+        public record CheckResultDTO(
+                List<PenaltyResultDTO> penalty_results,
+                boolean withHardViolation
+        ) {
+
+        }
+
         final Map<Penalty, PenaltyResult> penaltyToError;
         double total;
 
         public CheckResult(Map<Penalty, PenaltyResult> penaltyToError) {
             this.penaltyToError = penaltyToError;
             this.total = 0;
+        }
+
+        private List<PenaltyResultDTO> getResultDTO() {
+            return penaltyToError.entrySet().stream()
+                    .map(entry -> new PenaltyResultDTO(entry.getKey().name, entry.getValue()))
+                    .toList();
+        }
+
+        public CheckResultDTO toDto() {
+            List<PenaltyResultDTO> penaltyResultDTOS = getResultDTO();
+            boolean withHardViolation = penaltyToError.entrySet().stream().anyMatch(
+                    entry -> entry.getKey().isHard && (entry.getValue().summaryPenalty < 0.)
+            );
+            return new CheckResultDTO(penaltyResultDTOS, withHardViolation);
         }
 
         public Map<Penalty, PenaltyResult> penaltyToError() {
@@ -130,20 +152,20 @@ public class PenaltyChecker {
         Map<Penalty, PenaltyResult> penaltyToError = new HashMap<>();
         var checkResult = new CheckResult(penaltyToError);
         lessonWithTimes.forEach(lesson -> {
-            var data = new GeneticAlgorithmScheduler.DataForConstraint(lessonWithTimes, lesson, allLessons);
-            penalties.forEach(penalty -> {
-                var calculateResult = penalty.penaltyFunction.apply(data);
-                var value = calculateResult.value();
-                if (value < 0) {
-                    if (!penaltyToError.containsKey(penalty)) {
-                        penaltyToError.put(penalty, new PenaltyResult());
-                    }
-                    PenaltyResult result = penaltyToError.get(penalty);
-                    result.summaryPenalty += value;
-                    checkResult.total += value;
-                    result.problemLessons.add(new ProblemLesson(data.currentLesson(), calculateResult.message()));
-                }
-            });
+                    var data = new GeneticAlgorithmScheduler.DataForConstraint(lessonWithTimes, lesson, allLessons);
+                    penalties.forEach(penalty -> {
+                        var calculateResult = penalty.penaltyFunction.apply(data);
+                        var value = calculateResult.value();
+                        if (value < 0) {
+                            if (!penaltyToError.containsKey(penalty)) {
+                                penaltyToError.put(penalty, new PenaltyResult());
+                            }
+                            PenaltyResult result = penaltyToError.get(penalty);
+                            result.summaryPenalty += value;
+                            checkResult.total += value;
+                            result.problemLessons.add(new ProblemLesson(data.currentLesson(), calculateResult.message()));
+                        }
+                    });
                 }
         );
         return checkResult;

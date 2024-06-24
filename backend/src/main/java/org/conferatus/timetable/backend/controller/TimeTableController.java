@@ -68,12 +68,12 @@ public class TimeTableController {
     }
 
     @GetMapping("generate/state")
-    public ResponseEntity<AlgorithmStatus> getTaskState(@RequestParam(required = false) Long taskId,
-                                                        @AuthenticationPrincipal User user) {
+    public ResponseEntity<AlgorithmStatus.StatusDto> getTaskState(@RequestParam(required = false) Long taskId,
+                                                                  @AuthenticationPrincipal User user) {
         AlgorithmStatus algorithmStatus = taskId != null
                 ? algoService.getTaskStatus(taskId)
                 : algoService.getLastResult(user.getUniversity());
-        return ResponseEntity.ok(algorithmStatus);
+        return ResponseEntity.ok(algorithmStatus.toStatusDto());
     }
 
     @GetMapping("generate/result")

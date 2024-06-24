@@ -71,7 +71,7 @@ public class DtoConverter {
         );
         return new Nasrano(
                 timeListDTO,
-                algoSchedule.checkResult()
+                algoSchedule.checkResult().toDto()
         );
     }
 }
