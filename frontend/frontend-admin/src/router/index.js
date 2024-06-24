@@ -49,9 +49,27 @@ const routes = [
       },
 
       {
+        path: '/link-group-subject',
+        name: 'Link group subject',
+        component: () => import('@/views/LinkGroupSubject.vue'),
+      },
+
+      {
         path: '/generate-table',
         name: 'Generate table',
         component: () => import('@/views/GenerateTable.vue'),
+      },
+
+      { 
+        path: '/login', 
+        name: 'Login', 
+        component: () => import('@/views/Login.vue')
+      },
+
+      { 
+        path: '/login_successful', 
+        name: 'Login successful', 
+        component: () => import('@/views/LoginSuccess.vue')
       },
 
       // else
