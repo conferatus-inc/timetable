@@ -40,6 +40,7 @@ public class ScheduleAlgorithmService {
     private AlgorithmStatus createAlgorithmSchedule(List<StudyPlanEvolve> studyPlans,
                                                     List<AudienceEvolve> audiences) {
         GeneticAlgorithmScheduler geneticAlgorithmScheduler = new GeneticAlgorithmScheduler();
+        geneticAlgorithmScheduler.setAlgoExecutor(executor);
         geneticAlgorithmScheduler.setPenalties(penaltyChecker);
         var status = geneticAlgorithmScheduler.asyncStart(studyPlans, audiences, executor);
         return status;

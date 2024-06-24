@@ -14,7 +14,7 @@ public class ThreadPoolProvider {
 
     public ThreadPoolProvider() {
         lowPriority = Executors.newFixedThreadPool(2);
-        highPriority = Executors.newCachedThreadPool();
+        highPriority = Executors.newFixedThreadPool(3);
         //todo: setup required
     }
 

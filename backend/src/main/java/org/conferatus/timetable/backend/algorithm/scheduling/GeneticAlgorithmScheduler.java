@@ -25,7 +25,11 @@ public class GeneticAlgorithmScheduler {
     private int satisfiedScheduleAmount = 3;
     PenaltyChecker penaltyChecker;
     Map<GroupEvolve, List<Integer>> groupToIndexes = new HashMap<>();
+    Executor algoExecutor = null;
 
+    public void setAlgoExecutor(Executor algoExecutor) {
+        this.algoExecutor = algoExecutor;
+    }
 
     public void setSatisfiedScheduleAmount(int satisfiedScheduleAmount) {
         this.satisfiedScheduleAmount = satisfiedScheduleAmount;
@@ -213,6 +217,7 @@ public class GeneticAlgorithmScheduler {
                 .builder(this::fitness, gtf)
                 .populationSize(1000)
                 .alterers(new MyMutator())
+                .executor(algoExecutor)
                 .build();
         var evolutionResult = engine.evolve(EvolutionStart.empty());
         int goodPhenotypeCounter = 0;
