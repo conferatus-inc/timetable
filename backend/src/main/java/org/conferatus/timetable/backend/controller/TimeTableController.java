@@ -112,11 +112,14 @@ public class TimeTableController {
                 ? (group) -> Objects.equals(group.id(), id)
                 : (group) -> group.name().equals(name);
 
-        for (LessonDTO lessonDTO : currentScheduleByUniversity.get(user.getUniversity().id()).timeListDTO().cells()) {
-            for (StudyGroupResponseDTO group : lessonDTO.groups()) {
-                if (predicate.test(group)) {
-                    res.cells().add(lessonDTO);
-                    break;
+        Nasrano nasrano = currentScheduleByUniversity.get(user.getUniversity().id());
+        if (nasrano != null) {
+            for (LessonDTO lessonDTO : nasrano.timeListDTO().cells()) {
+                for (StudyGroupResponseDTO group : lessonDTO.groups()) {
+                    if (predicate.test(group)) {
+                        res.cells().add(lessonDTO);
+                        break;
+                    }
                 }
             }
         }
