@@ -69,7 +69,7 @@ public class TeacherService {
 
     public List<Teacher> getAllTeachers(University university) {
         return teacherRepository.findAll().stream()
-                .filter(it -> it.getUniversity() != null && it.getUniversity().id() == university.id()).toList();
+                .filter(it -> it.getUniversity() != null && it.getUniversity().id().equals(university.id())).toList();
     }
 
     public Teacher addTeacher(User user, String teacherName) {
