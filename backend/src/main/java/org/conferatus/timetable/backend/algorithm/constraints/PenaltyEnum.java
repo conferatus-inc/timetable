@@ -1,9 +1,9 @@
 package org.conferatus.timetable.backend.algorithm.constraints;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.conferatus.timetable.backend.algorithm.scheduling.GroupEvolve;
 import org.conferatus.timetable.backend.algorithm.scheduling.LessonWithTime;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.conferatus.timetable.backend.algorithm.constraints.CalculateResult.ok;
 import static org.conferatus.timetable.backend.algorithm.constraints.CalculateResult.problem;
@@ -15,15 +15,17 @@ import static org.conferatus.timetable.backend.algorithm.constraints.CalculateRe
  * positive if good ending
  */
 public enum PenaltyEnum {
-    TeacherAndAudienceType(
+    TeacherWish(
             (data) -> {
-                // FIXME видимо просто удалить эти строчки, препод же привязывается сразу в предмету
-//                LessonWithTime lesson = data.currentLesson();
-//                if (!lesson.audience().groupCapacity()
-//                        .equals(lesson.teacher().teacherType())) {
-//                    return problem(-100., "Teacher and audience has different types "
-//                            + lesson.teacher() + " " + lesson.audience());
-//                }
+                LessonWithTime lesson = data.currentLesson();
+                var maybeWish = lesson.teacher().wishes().stream().filter(wish -> wish.time().equals(lesson.time())).findAny();
+                if (maybeWish.isPresent()) {
+                    var wish = maybeWish.get();
+                    return wish.penalty() >= 0
+                            ? ok(wish.penalty())
+                            : problem(wish.penalty(), "Teacher {%s} doesn't want this time {%s}"
+                            .formatted(lesson.teacher().toString(), lesson.time()));
+                }
                 return ok();
             },
             true
@@ -57,7 +59,7 @@ public enum PenaltyEnum {
             },
             true
     ),
-    GroupsInOneAuditory( //todo: fix that
+    GroupsInOneAuditory(
             (data) -> {
                 LessonWithTime lesson = data.currentLesson();
                 var otherLessons = data.getOtherLessons(lesson);
@@ -105,9 +107,9 @@ public enum PenaltyEnum {
                 LessonWithTime lesson = data.currentLesson();
                 double roomCapacity = lesson.cell().audience().groupCapacity();
                 double groupsAmount = lesson.groups().size();
-                double value = baseVal * 1 - groupsAmount/roomCapacity;
-                if  (value >= 0.666 * baseVal) {
-                    return problem(-value*2, "Audience is almost empty");
+                double value = baseVal * 1 - groupsAmount / roomCapacity;
+                if (value >= 0.666 * baseVal) {
+                    return problem(-value * 2, "Audience is almost empty");
                 }
                 return ok(-value);
             }

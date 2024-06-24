@@ -56,14 +56,14 @@ public class AlgSimulation {
         int lectureTeachersAmount = 1600;
         for (long i = 1; i <= teachersAmount; i++) {
             long studyPlan = i % studyPlans + 1;
-            TeacherEvolve teacherEvolve = new TeacherEvolve(i/*AudienceType.PRACTICAL*/);
+            TeacherEvolve teacherEvolve = new TeacherEvolve(i/*AudienceType.PRACTICAL*/, null);
             planToSeminarTeachers.get(studyPlan).add(teacherEvolve);
 
         }
 
         for (long i = 1; i <= lectureTeachersAmount; i++) {
             long studyPlan = i % studyPlans + 1;
-            TeacherEvolve teacherEvolve = new TeacherEvolve(i/*AudienceType.LECTURE*/);
+            TeacherEvolve teacherEvolve = new TeacherEvolve(i/*AudienceType.LECTURE*/, null);
             planToLectureTeachers.get(studyPlan).add(teacherEvolve);
         }
 
