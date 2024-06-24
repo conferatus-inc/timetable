@@ -1,52 +1,71 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-on:
-  push:
-    branches: [ "master" ]
-    paths-ignore:
-      - '**.md'
-
-  pull_request:
-    paths-ignore:
-      - '**.md'
-  workflow_dispatch:
+name: CD
+on: [push]
 
 jobs:
-  backend:
+  backend_job:
     runs-on: ubuntu-latest
+#    runs-on: self-hosted
+    name: building and ssh
+    environment: backend?
     steps:
       - uses: actions/checkout@v3
+      - name: directory tree
+        run: echo tree
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-      
+      - name: aboba
+        run: pwd
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+      - name: Update db url
+        run: sed -i 's/<cluster_link>/${{ secrets.CLUSTER_LINK }}/' backend/src/main/resources/application.properties
 
+      - name: Update db port
+        run: sed -i 's/<port>/${{ secrets.PORT }}/' backend/src/main/resources/application.properties
 
-      - name: chmod gradlew
-        working-directory: ./backend
-        run: chmod +x ./gradlew
+      - name: Update db name
+        run: sed -i 's/<db>/${{ secrets.DB }}/' backend/src/main/resources/application.properties
 
-      - name: build gradle project
-        working-directory: ./backend
-        run: ./gradlew build
+      - name: Update db username
+        run: sed -i 's/<username>/${{ secrets.USERNAME }}/' backend/src/main/resources/application.properties
 
-      - name: Execute Gradle build
-        working-directory: ./backend
-        run: ./gradlew test
+      - name: Update db password
+        run: sed -i 's/<password>/${{ secrets.PASSWORD }}/' backend/src/main/resources/application.properties
 
-      - name: Generate Jacoco report
-        working-directory: ./backend
-        run: ./gradlew jacocoTestReport
+      - name: build
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Package
-          path: ./backend/build/libs
+        run: |
+          cd ./backend;
+          ls -al;
+          docker ps;
+          docker build -t timetable_backend:latest .;
+          docker image ls;
+          docker save -o /tmp/timetable_backend.tar timetable_backend:latest;
+          ls -al;
+          echo "ABOBA";
+          ls /tmp -al;
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/cloud.key
+          chmod 600 ~/.ssh/cloud.key
+          cat >>~/.ssh/config <<END
+            Host cloud
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/cloud.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.KEYYA }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+      #      - uses: actions/checkout@v3
+      - name: deploy
+        env:
+          KEYYA: ${{ secrets.KEYYA }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          scp -oStrictHostKeyChecking=no /tmp/timetable_backend.tar cloud:/tmp;
+          scp -oStrictHostKeyChecking=no ./backend/update.sh cloud:/tmp;
+          ssh cloud 'cd /tmp; ls -l; sh ./update.sh;';

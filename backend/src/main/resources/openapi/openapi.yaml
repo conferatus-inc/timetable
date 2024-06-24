@@ -1,0 +1,1236 @@
+openapi: "3.0.3"
+info:
+  title: "timetable API"
+  description: "timetable API"
+  version: "1.0.0"
+servers:
+  - url: "https://t"
+paths:
+  /api/v1/admin/timetable/generate:
+    get:
+      summary: "GET api/v1/admin/timetable/generate"
+      operationId: "generateTimetable"
+      parameters:
+        - name: "semesterId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "integer"
+                format: "int64"
+      tags:
+        - timetable
+  /api/v1/admin/timetable/generate/choose:
+    get:
+      summary: "GET api/v1/admin/timetable/generate/choose"
+      operationId: "chooseGeneratedTimetable"
+      parameters:
+        - name: "taskId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "chooseIndex"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: "0"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Nasrano"
+      tags:
+        - timetable
+  /api/v1/admin/timetable/generate/state:
+    get:
+      summary: "GET api/v1/admin/timetable/generate/state"
+      operationId: "getTaskState"
+      parameters:
+        - name: "taskId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AlgorithmStatus"
+      tags:
+        - timetable
+  /api/v1/admin/timetable/generate/result:
+    get:
+      summary: "GET api/v1/admin/timetable/generate/result"
+      operationId: "getTaskResult"
+      parameters:
+        - name: "taskId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Nasrano"
+      tags:
+        - timetable
+  /api/v1/admin/timetable/lessons/by_group:
+    get:
+      summary: "GET api/v1/admin/timetable/lessons/by_group"
+      operationId: "getGroupLessons"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "id"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TimeListDTO"
+      tags:
+        - timetable
+  /api/v1/admin/timetable/lessons/by_teacher:
+    get:
+      summary: "GET api/v1/admin/timetable/lessons/by_teacher"
+      operationId: "getTeacherLessons"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "id"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TimeListDTO"
+      tags:
+        - timetable
+  /api/v1/admin/timetable/lessons/by_audience:
+    get:
+      summary: "GET api/v1/admin/timetable/lessons/by_audience"
+      operationId: "getAudienceLessons"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "id"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TimeListDTO"
+      tags:
+        - timetable
+  /api/v1/admin/audience/by-id:
+    get:
+      summary: "GET api/v1/admin/audience/by-id"
+      operationId: "getAudienceById"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AudienceDTO"
+      tags:
+        - audience
+  /api/v1/admin/audience/by-name:
+    get:
+      summary: "GET api/v1/admin/audience/by-name"
+      operationId: "getAudienceByName"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AudienceDTO"
+      tags:
+        - audience
+  /api/v1/admin/audience/all:
+    get:
+      summary: "GET api/v1/admin/audience/all"
+      operationId: "getAllAudiences"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/AudienceDTO"
+      tags:
+        - audience
+  /api/v1/admin/audience:
+    post:
+      summary: "POST api/v1/admin/audience"
+      operationId: "addAudience"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "audience_type"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            enum:
+              - "LECTURE"
+              - "TERMINAL"
+              - "PRACTICAL"
+              - "LABORATORY"
+        - name: "audience_group_capacity"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AudienceDTO"
+      tags:
+        - audience
+    put:
+      summary: "PUT api/v1/admin/audience"
+      operationId: "updateAudience"
+      parameters:
+        - name: "current"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "new"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - audience
+    delete:
+      summary: "DELETE api/v1/admin/audience"
+      operationId: "deleteAudience"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - audience
+  /api/v1/accounts/login:
+    get:
+      summary: "GET api/v1/accounts/login"
+      operationId: "login"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+        - name: "role"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+            enum:
+              - "ROLE_ADMIN"
+              - "ROLE_USER"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginDto"
+      tags:
+        - auth
+  /api/v1/accounts/token/refresh:
+    post:
+      summary: "POST api/v1/accounts/token/refresh"
+      operationId: "refreshToken"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginDto"
+      tags:
+        - auth
+
+  /api/v1/admin/semesterplans:
+    get:
+      summary: "GET api/v1/admin/semesterplans"
+      operationId: "getSemesterPlan"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+    post:
+      summary: "POST api/v1/admin/semesterplans"
+      operationId: "addSemesterPlan"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+    delete:
+      summary: "DELETE api/v1/admin/semesterplans"
+      operationId: "deleteSemesterPlan"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+  /api/v1/admin/semesterplans/all:
+    get:
+      summary: "GET api/v1/admin/semesterplans/all"
+      operationId: "getAllSemesterPlans"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+  /api/v1/admin/semesterplans/subject:
+    post:
+      summary: "POST api/v1/admin/semesterplans/subject"
+      operationId: "addSubjectPlan"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "times"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "subject_name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "subject_type"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            enum:
+              - "LECTURE"
+              - "TERMINAL"
+              - "PRACTICAL"
+              - "LABORATORY"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+    delete:
+      summary: "DELETE api/v1/admin/semesterplans/subject"
+      operationId: "deleteSubjectPlan"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "subjectId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+    get:
+      summary: "GET api/v1/admin/semesterplans/subject"
+      operationId: "getSubjectPlan"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "subjectId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SubjectPlanDTO"
+      tags:
+        - semesterplan
+  /api/v1/admin/semesterplans/subject/teacher:
+    post:
+      summary: "POST api/v1/admin/semesterplans/subject/teacher"
+      operationId: "addSubjectTeacher"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "subject_id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "teacher_id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+    delete:
+      summary: "DELETE api/v1/admin/semesterplans/subject/teacher"
+      operationId: "deleteSubjectTeacher"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "subject_id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+  /api/v1/admin/semesterplans/groups:
+    post:
+      summary: "POST api/v1/admin/semesterplans/groups"
+      operationId: "linkGroup"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "group_id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SemesterPlanDTO"
+      tags:
+        - semesterplan
+  /api/v1/admin/semesterplans/subject/all:
+    get:
+      summary: "GET api/v1/admin/semesterplans/subject/all"
+      operationId: "getAllSubjectPlans"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SubjectPlanDTO"
+      tags:
+        - semesterplan
+
+  /api/v1/admin/group/by-id:
+    get:
+      summary: "GET api/v1/admin/group/by-id"
+      operationId: "getGroupById"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StudyGroupResponseDTO"
+      tags:
+        - group
+  /api/v1/admin/group/by-name:
+    get:
+      summary: "GET api/v1/admin/group/by-name"
+      operationId: "getGroupByName"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StudyGroupResponseDTO"
+      tags:
+        - group
+  /api/v1/admin/group/all:
+    get:
+      summary: "GET api/v1/admin/group/all"
+      operationId: "getAllGroups"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/StudyGroupResponseDTO"
+      tags:
+        - group
+  /api/v1/admin/group:
+    post:
+      summary: "POST api/v1/admin/group"
+      operationId: "addGroup"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StudyGroupResponseDTO"
+      tags:
+        - group
+    put:
+      summary: "PUT api/v1/admin/group"
+      operationId: "updateGroup"
+      parameters:
+        - name: "current"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "new"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - group
+    delete:
+      summary: "DELETE api/v1/admin/group"
+      operationId: "deleteGroup"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - group
+
+  /api/v1/admin/teacher/by-id:
+    get:
+      summary: "GET api/v1/admin/teacher/by-id"
+      operationId: "getTeacherById"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TeacherResponseDTO"
+      tags:
+        - teacher
+  /api/v1/admin/teacher/by-name:
+    get:
+      summary: "GET api/v1/admin/teacher/by-name"
+      operationId: "getTeacherByName"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TeacherResponseDTO"
+      tags:
+        - teacher
+  /api/v1/admin/teacher/all:
+    get:
+      summary: "GET api/v1/admin/teacher/all"
+      operationId: "getAllTeachers"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TeacherResponseDTO"
+      tags:
+        - teacher
+  /api/v1/admin/teacher:
+    post:
+      summary: "POST api/v1/admin/teacher"
+      operationId: "addTeacher"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TeacherResponseDTO"
+      tags:
+        - teacher
+    put:
+      summary: "PUT api/v1/admin/teacher"
+      operationId: "updateTeacher"
+      parameters:
+        - name: "current"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "new"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - teacher
+    delete:
+      summary: "DELETE api/v1/admin/teacher"
+      operationId: "deleteTeacher"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - teacher
+  /api/v1/admin/teacher/wishes:
+    post:
+      summary: "POST api/v1/admin/teacher/wishes"
+      operationId: "addTeacherWish"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeacherWishDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TeacherResponseDTO"
+      tags:
+        - teacher
+
+  /api/v1/admin/universities:
+    post:
+      summary: "POST api/v1/admin/universities"
+      operationId: "createUniversity"
+      parameters:
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UniversityDto"
+      tags:
+        - university
+  /api/v1/admin/universities/link:
+    post:
+      summary: "POST api/v1/admin/universities/link"
+      operationId: "linkUserToUniversity"
+      parameters:
+        - name: "universityId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "userId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDto"
+      tags:
+        - university
+
+components:
+  schemas:
+    AudienceDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        audienceGroupCapacity:
+          type: "integer"
+          format: "int64"
+    LessonDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        teacher:
+          $ref: "#/components/schemas/SimpleTeacher"
+        auditory:
+          $ref: "#/components/schemas/AudienceDTO"
+        groups:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/StudyGroupResponseDTO"
+        day_index:
+          type: "string"
+          enum:
+            - "MONDAY"
+            - "TUESDAY"
+            - "WEDNESDAY"
+            - "THURSDAY"
+            - "FRIDAY"
+            - "SATURDAY"
+            - "SUNDAY"
+        time_index:
+          type: "integer"
+          format: "int64"
+    TimeListDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        days_name:
+          type: "array"
+          items:
+            type: "string"
+        study_days_per_week:
+          type: "integer"
+          format: "int32"
+        lessons_per_day:
+          type: "integer"
+          format: "int32"
+        cells:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LessonDTO"
+    Penalty:
+      type: "object"
+      properties: { }
+    CheckResult:
+      type: "object"
+      properties:
+        penaltyToError:
+          $ref: "#/components/schemas/Penalty"
+        total:
+          type: "number"
+          format: "double"
+    Nasrano:
+      type: "object"
+      properties:
+        timeListDTO:
+          $ref: "#/components/schemas/TimeListDTO"
+        penalties:
+          $ref: "#/components/schemas/CheckResult"
+    AudienceEvolve:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        groupCapacity:
+          type: "integer"
+          format: "int64"
+    TableTime:
+      type: "object"
+      properties:
+        day:
+          type: "integer"
+          format: "int32"
+        cellNumber:
+          type: "integer"
+          format: "int32"
+    AudienceTimeCell:
+      type: "object"
+      properties:
+        audience:
+          $ref: "#/components/schemas/AudienceEvolve"
+        time:
+          $ref: "#/components/schemas/TableTime"
+    GroupEvolve:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+    TeacherEvolve:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+    SubjectEvolve:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        teacherToGroups:
+          $ref: "#/components/schemas/TeacherEvolve"
+        lectureTeacherEvolve:
+          $ref: "#/components/schemas/TeacherEvolve"
+        subId:
+          type: "integer"
+          format: "int32"
+    LessonGene:
+      type: "object"
+      properties:
+        groups:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/GroupEvolve"
+        teacher:
+          $ref: "#/components/schemas/TeacherEvolve"
+        subject:
+          $ref: "#/components/schemas/SubjectEvolve"
+    LessonWithTime:
+      type: "object"
+      properties:
+        cell:
+          $ref: "#/components/schemas/AudienceTimeCell"
+        lessonGene:
+          $ref: "#/components/schemas/LessonGene"
+    AlgoSchedule:
+      type: "object"
+      properties:
+        allLessons:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LessonWithTime"
+        checkResult:
+          $ref: "#/components/schemas/CheckResult"
+    AlgorithmStatus:
+      type: "object"
+      properties:
+        percentage:
+          type: "number"
+          format: "double"
+        running:
+          type: "boolean"
+        checkResult:
+          $ref: "#/components/schemas/CheckResult"
+        result:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/AlgoSchedule"
+    TeacherWishDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        dayOfWeek:
+          type: "string"
+          enum:
+            - "MONDAY"
+            - "TUESDAY"
+            - "WEDNESDAY"
+            - "THURSDAY"
+            - "FRIDAY"
+            - "SATURDAY"
+            - "SUNDAY"
+        lessonNumber:
+          type: "integer"
+          format: "int64"
+        priority:
+          type: "integer"
+          format: "int64"
+    SimpleTeacher:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        teacherWishes:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TeacherWishDto"
+    SubjectPlanDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        times:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        subjectType:
+          type: "string"
+          enum:
+            - "LECTURE"
+            - "TERMINAL"
+            - "PRACTICAL"
+            - "LABORATORY"
+        teacher:
+          $ref: "#/components/schemas/SimpleTeacher"
+    StudyGroupResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+    SemesterPlanDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        subjectPlans:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SubjectPlanDTO"
+        studyGroups:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/StudyGroupResponseDTO"
+    TeacherResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        lessons:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LessonDTO"
+        teacherWishes:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TeacherWishDto"
+    UniversityDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+    UserDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        universityDto:
+          $ref: "#/components/schemas/UniversityDto"
+    RoleDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+          enum:
+            - "ROLE_ADMIN"
+            - "ROLE_USER"
+    LoginDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        login:
+          type: "string"
+        accessToken:
+          type: "string"
+        refreshToken:
+          type: "string"
+        roles:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/RoleDto"
+
+tags:
+  - name: auth
+  - name: teacher
+  - name: audience
+  - name: group
+  - name: timetable
+  - name: semesterplan
+  - name: university

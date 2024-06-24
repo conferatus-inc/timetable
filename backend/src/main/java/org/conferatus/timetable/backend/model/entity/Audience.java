@@ -1,26 +1,31 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.conferatus.timetable.backend.model.AudienceType;
-
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.conferatus.timetable.backend.model.enums.AudienceType;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 public class Audience {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private AudienceType audienceType;
+    private long audienceGroupCapacity;
     private String name;
-    @OneToMany
-    @JoinColumn(name = "lesson_id")
-    private List<Lesson> lessons;
 
+    private AudienceType audienceType;
 
+    @ManyToOne
+    private University university;
 }

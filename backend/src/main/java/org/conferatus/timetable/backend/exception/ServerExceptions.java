@@ -15,7 +15,11 @@ public enum ServerExceptions {
     BAD_REQUEST(new ServerException(HttpStatus.BAD_REQUEST)),
     NO_ACCESS_TOKEN(new ServerException(HttpStatus.UNAUTHORIZED, "NO_ACCESS_TOKEN")),
     ACCESS_TOKEN_PROBLEM(new ServerException(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN_PROBLEM")),
-
+    ILLEGAL_YANDEX_TOKEN(new ServerException(HttpStatus.UNAUTHORIZED, "ILLEGAL_YANDEX_TOKEN")),
+    ROLE_NOT_EXISTS(new ServerException(HttpStatus.BAD_REQUEST, "ROLE_NOT_EXISTS")),
+    USER_NOT_FOUND(new ServerException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND")),
+    BAD_REFRESH_TOKEN(new ServerException(HttpStatus.BAD_REQUEST, "BAD_REFRESH_TOKEN")),
+    NOT_CURRENT_REFRESH_TOKEN(new ServerException(HttpStatus.FORBIDDEN, "NOT_CURRENT_REFRESH_TOKEN"))
     ;
 
     private final ServerException serverException;

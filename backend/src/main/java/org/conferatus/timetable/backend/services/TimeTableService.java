@@ -1,22 +1,22 @@
 package org.conferatus.timetable.backend.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.model.entity.Audience;
 import org.conferatus.timetable.backend.model.entity.Lesson;
 import org.conferatus.timetable.backend.model.entity.StudyGroup;
 import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.repos.AudienceRepository;
-import org.conferatus.timetable.backend.model.repos.LessonRepository;
-import org.conferatus.timetable.backend.model.repos.StudyGroupRepository;
-import org.conferatus.timetable.backend.model.repos.TeacherRepository;
+import org.conferatus.timetable.backend.repository.AudienceRepository;
+import org.conferatus.timetable.backend.repository.LessonRepository;
+import org.conferatus.timetable.backend.repository.StudyGroupRepository;
+import org.conferatus.timetable.backend.repository.TeacherRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -59,10 +59,16 @@ public class TimeTableService {
                         "Teacher with id " + id + " does not exist"));
     }
 
-    private Audience getAuditoryOrThrow(String name) {
+    private Audience getAudienceOrThrow(String name) {
         return audienceRepository.findByName(name)
                 .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
                         "Group with name " + name + " does not exist"));
+    }
+
+    private Audience getAudienceOrThrow(Long id) {
+        return audienceRepository.findAudienceById(id)
+                .orElseThrow(() -> new ServerException(HttpStatus.NOT_FOUND,
+                        "Group with id " + id + " does not exist"));
     }
 
 
@@ -77,7 +83,12 @@ public class TimeTableService {
     }
 
     public List<Lesson> getLessonsByAuditory(String auditoryName) {
-        Audience audience = getAuditoryOrThrow(auditoryName);
+        Audience audience = getAudienceOrThrow(auditoryName);
+        return List.of();
+    }
+
+    public List<Lesson> getLessonsByAuditory(Long id) {
+        Audience audience = getAudienceOrThrow(id);
         return List.of();
     }
 
@@ -87,10 +98,11 @@ public class TimeTableService {
         days.forEach((s -> {
             table.put(s, new HashMap<>());
         }));
-        lessons.forEach((lesson -> {
-            var day = days.get(lesson.getWeekDay());
-            table.get(day).put(lesson.getNumberOfTime(), lesson);
-        }));
+        // FIXME
+//        lessons.forEach((lesson -> {
+//            var day = days.get(lesson.getWeekDay());
+//            table.get(day).put(lesson.getNumberOfTime(), lesson);
+//        }));
         return table;
     }
 

@@ -1,13 +1,23 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.experimental.Accessors;
 
 @Entity
 @NoArgsConstructor
@@ -15,14 +25,22 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "semesterplan")
+@Accessors(fluent = true)
 public class SemesterPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "subject_id")
-    private List<Subject> subjects = new ArrayList<>();
-    //todo: ? manytomany
-    //@JoinTable
+    private String semesterName;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "subject_plan_id")
+    private List<SubjectPlan> subjectPlans = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "study_group_id")
+    private List<StudyGroup> studyGroups = new ArrayList<>();
+
+    @ManyToOne
+    private University university;
 }

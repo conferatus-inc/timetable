@@ -3,29 +3,47 @@ package org.conferatus.timetable.backend.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfiguration //implements WebSecurityConfigurerAdapter
-{
+public class WebSecurityConfiguration implements WebMvcConfigurer {
+    private final CustomAuthorizationFilter customAuthorizationFilter;
+
+    public static final String LOGIN_URL = "/api/v1/accounts/login";
+    public static final String REFRESH_URL = "/api/v1/accounts/token/refresh";
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-//                .authorizeHttpRequests(authz -> authz.requestMatchers("/admin").authenticated()) // TODO
-//                .httpBasic(withDefaults())                                                       // TODO
-                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.csrf(csrf -> csrf
+                .csrfTokenRepository(new CookieCsrfTokenRepository())
+                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+        );
+
+        http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+                authorizationManagerRequestMatcherRegistry
+                        .requestMatchers(LOGIN_URL).permitAll()
+                        .requestMatchers(REFRESH_URL).permitAll()
+                        .anyRequest().authenticated()
+        );
+        http.addFilterAfter(customAuthorizationFilter, AnonymousAuthenticationFilter.class);
+
         return http.build();
     }
 
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedMethods("*");
+    }
 }

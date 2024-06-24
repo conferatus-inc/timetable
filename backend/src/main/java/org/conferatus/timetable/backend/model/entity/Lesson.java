@@ -1,12 +1,19 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import jakarta.persistence.*;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 
 @NoArgsConstructor
@@ -18,25 +25,17 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private DayOfWeek dayOfWeek;
+
+    private long lessonNumber;
+
+    @ManyToOne
+    Audience audience;
+
+    @ManyToOne
+    Teacher teacher;
+
     @ManyToMany
-    @JoinTable(
-            name = "lesson_group",
-            joinColumns = @JoinColumn(name = "lesson_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "studygroup_id", referencedColumnName = "id")
-    )
-    private List<StudyGroup> groups;
-    @ManyToOne
-    @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
-    @ManyToOne
-    @JoinColumn(name = "subject_id")
-    private Subject subject;
-    @ManyToOne
-    @JoinColumn(name = "auditory_id")
-    private Audience audience;
-
-    private int numberOfTime; //time
-    private int weekDay; //day of the week
-
-//    //todo: maybe list<plans> or plan
+    List<StudyGroup> groups = new ArrayList<>();
 }
