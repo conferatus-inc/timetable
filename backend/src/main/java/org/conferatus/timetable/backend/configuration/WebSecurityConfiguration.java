@@ -1,14 +1,16 @@
 package org.conferatus.timetable.backend.configuration;
 
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,22 +21,26 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebSecurityConfiguration implements WebMvcConfigurer {
     private final CustomAuthorizationFilter customAuthorizationFilter;
 
-    public static final String LOGIN_URL = "/api/v1/accounts/login";
-    public static final String REFRESH_URL = "/api/v1/accounts/token/refresh";
+    public static final Set<String> NO_AUTH_ENDPOINTS = Set.of(
+            "/api/v1/accounts/login",
+            "/api/v1/accounts/token/refresh",
+            "/error"
+    );
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf
-                .csrfTokenRepository(new CookieCsrfTokenRepository())
-                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-        );
+        http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        ;
 
-        http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(LOGIN_URL).permitAll()
-                        .requestMatchers(REFRESH_URL).permitAll()
-                        .anyRequest().authenticated()
+        http.authorizeHttpRequests(request -> {
+                    NO_AUTH_ENDPOINTS.forEach(
+                            endpoint -> request.requestMatchers(endpoint).permitAll()
+                    );
+                    request.anyRequest().authenticated();
+                }
         );
         http.addFilterAfter(customAuthorizationFilter, AnonymousAuthenticationFilter.class);
 

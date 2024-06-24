@@ -15,8 +15,7 @@ import org.conferatus.timetable.backend.repository.RoleRepository;
 import org.conferatus.timetable.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import static org.conferatus.timetable.backend.configuration.WebSecurityConfiguration.LOGIN_URL;
-import static org.conferatus.timetable.backend.configuration.WebSecurityConfiguration.REFRESH_URL;
+import static org.conferatus.timetable.backend.configuration.WebSecurityConfiguration.NO_AUTH_ENDPOINTS;
 
 @Service
 @Transactional
@@ -27,7 +26,7 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final YandexIdService yandexIdService;
 
-    private static final Set<String> notAuthURLs = Set.of(LOGIN_URL, REFRESH_URL);
+    private static final Set<String> notAuthURLs = NO_AUTH_ENDPOINTS;
 
     public static final String UNIVERSITY_URL = "/api/v1/admin/universities";
     public static final String UNIVERSITY_URL_LINK = "/api/v1/admin/universities/link";
