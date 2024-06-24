@@ -1,8 +1,18 @@
 package org.conferatus.timetable.backend.algorithm.scheduling;
 
+import org.conferatus.timetable.backend.model.entity.Teacher;
+
+import java.util.List;
 import java.util.Objects;
 
-public record TeacherEvolve(Long id) {
+public record TeacherEvolve(Long id, List<TeacherWishEvolve> wishes) {
+    public TeacherEvolve(Teacher teacher) {
+        this(
+                teacher.getId(),
+                teacher.getTeacherWishes().stream().map(TeacherWishEvolve::new).toList()
+        );
+    }
+
     @Override
     public String toString() {
         return String.valueOf(id);

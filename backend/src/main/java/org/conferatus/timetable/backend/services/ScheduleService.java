@@ -34,7 +34,7 @@ public class ScheduleService {
 
         for (SubjectPlan subjectPlan : sp.subjectPlans()) {
             SubjectEvolve subjectEvolve;
-            TeacherEvolve teacherEvolve = new TeacherEvolve(subjectPlan.teacher().getId());
+            TeacherEvolve teacherEvolve = new TeacherEvolve(subjectPlan.teacher());
             Map<TeacherEvolve, List<GroupEvolve>> teacherToGroups = new HashMap<>();
             teacherToGroups.put(teacherEvolve, new ArrayList<>());
 
