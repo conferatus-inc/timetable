@@ -188,7 +188,7 @@ public class GeneticAlgorithmScheduler {
         }
 
         public StatusDto toStatusDto() {
-            return new StatusDto(percentage, running, checkResult.toDto());
+            return new StatusDto(percentage, running, checkResult != null ? checkResult.toDto() : null);
         }
     }
 
@@ -207,6 +207,7 @@ public class GeneticAlgorithmScheduler {
      */
     public List<AlgoSchedule> algorithm(List<StudyPlanEvolve> studyPlanEvolves,
                                         List<AudienceEvolve> audiences) {
+        System.out.println("ALGO START");
         algorithmStatus.running = true;
         cells.clear();
         lessonGenes.clear();
