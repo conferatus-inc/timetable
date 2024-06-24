@@ -1,5 +1,7 @@
 package org.conferatus.timetable.backend.services;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerExceptions;
 import org.conferatus.timetable.backend.model.entity.University;
@@ -25,12 +27,12 @@ public class UniversityService {
     public User linkUserToUniversity(Long universityId, Long userId) {
         var user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            ServerExceptions.NOT_FOUND_EXCEPTION.moreInfo("User with id" + userId + "is not found").throwException();
+            ServerExceptions.NOT_FOUND_EXCEPTION.moreInfo("User with id " + userId + "is not found").throwException();
         }
         var university = universityRepository.findById(universityId).orElse(null);
         if (university == null) {
             ServerExceptions.NOT_FOUND_EXCEPTION
-                    .moreInfo("University with id" + universityId + "is not found").throwException();
+                    .moreInfo("University with id " + universityId + "is not found").throwException();
         }
         user.setUniversity(university);
         System.out.println(user);
@@ -39,5 +41,9 @@ public class UniversityService {
 
     public University updateUniversity(University university) {
         return universityRepository.save(university);
+    }
+
+    public List<University> getAllUniversities() {
+        return universityRepository.findAll();
     }
 }

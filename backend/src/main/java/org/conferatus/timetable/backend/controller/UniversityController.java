@@ -1,10 +1,14 @@
 package org.conferatus.timetable.backend.controller;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.dto.UniversityDto;
 import org.conferatus.timetable.backend.dto.UserDto;
+import org.conferatus.timetable.backend.model.entity.University;
 import org.conferatus.timetable.backend.services.UniversityService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +23,12 @@ public class UniversityController {
     @PostMapping
     public ResponseEntity<UniversityDto> createUniversity(@RequestParam String name) {
         return ResponseEntity.ok(new UniversityDto(universityService.createUniversity(name)));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UniversityDto>> getAllUniversities() {
+        return ResponseEntity.ok(universityService.getAllUniversities().stream()
+                .map(University::toUniversityDto).toList());
     }
 
     @PostMapping("/link")
