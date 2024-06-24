@@ -27,7 +27,7 @@ public class AudienceService {
 
     private Audience getAudienceByIdAndUserOrThrow(User user, Long id) {
         var audience = audienceRepository.findAudienceById(id);
-        if (audience.isEmpty() || audience.get().getUniversity() != null &&
+        if (audience.isEmpty() || audience.get().getUniversity() == null ||
                 !user.checkUniversityAccess(audience.get().getUniversity().id())) {
             throw new ServerException(HttpStatus.NOT_FOUND,
                     String.format("Audience with id %s does dont exist within university %s",
@@ -40,7 +40,7 @@ public class AudienceService {
     private Audience getAudienceByNameAndUserOrThrow(User user, String name) {
         var audience = audienceRepository.findAudienceByName(name);
         if (audience.isEmpty() ||
-                audience.get().getUniversity() != null &&
+                audience.get().getUniversity() == null ||
                         !user.checkUniversityAccess(audience.get().getUniversity().id())) {
             throw new ServerException(HttpStatus.NOT_FOUND,
                     String.format("Audience with name %s does dont exist within university %s",

@@ -22,7 +22,9 @@ public class TeacherService {
 
     public Teacher getTeacherByUserAndIdOrThrow(User user, Long id) {
         var teacher = teacherRepository.findTeacherById(id);
-        if (teacher.isEmpty() || !user.checkUniversityAccess(teacher.get().getUniversity().id())) {
+        if (teacher.isEmpty() ||
+                teacher.get().getUniversity() == null ||
+                !user.checkUniversityAccess(teacher.get().getUniversity().id())) {
             throw new ServerException(HttpStatus.NOT_FOUND,
                     String.format("Teacher with id %s in university %s does not exist",
                             id, user.getUniversity().id()));
