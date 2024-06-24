@@ -16,7 +16,7 @@ public record SubjectPlanDTO(
                 subjectPlan.timesPerWeek(),
                 subjectPlan.name(),
                 subjectPlan.subjectType(),
-                subjectPlan.teacher().toSimpleTeacher()
+                subjectPlan.teacher() != null ? new SimpleTeacher(subjectPlan.teacher()) : null
         );
     }
 }

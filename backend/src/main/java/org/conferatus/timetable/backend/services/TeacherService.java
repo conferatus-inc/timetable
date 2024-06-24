@@ -1,7 +1,5 @@
 package org.conferatus.timetable.backend.services;
 
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.dto.TeacherWishDto;
 import org.conferatus.timetable.backend.exception.ServerException;
@@ -13,6 +11,8 @@ import org.conferatus.timetable.backend.repository.TeacherRepository;
 import org.conferatus.timetable.backend.repository.TeacherWishRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +76,7 @@ public class TeacherService {
         notExistsByNameOrThrow(teacherName);
         var teacher = new Teacher();
         teacher.setName(teacherName);
+        teacher.setUniversity(user.getUniversity());
         return teacherRepository.save(teacher);
     }
 
