@@ -13,6 +13,18 @@
         <v-spacer></v-spacer>
 
         <v-card class="ma-2">
+          <v-btn 
+          variant="flat" 
+          class="ma-2"
+          @click="$router.push({ path: '/login' })"
+          >
+            Авторизация
+          </v-btn>
+          </v-card>
+  
+          <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
         <v-btn 
         variant="flat" 
         class="ma-2"
