@@ -1,21 +1,14 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.conferatus.timetable.backend.model.enums.AudienceType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,7 +24,7 @@ public class SubjectPlan {
     private AudienceType subjectType;
     private Long timesPerWeek;
 
-    @OneToOne
+    @ManyToOne
     private Teacher teacher;
 
     @OneToMany(fetch = FetchType.EAGER)
