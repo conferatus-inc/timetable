@@ -22,10 +22,10 @@ public class AlgSimulation {
         // FIXME
         List<AudienceEvolve> audienceEvolves = new ArrayList<>(audiencesAmount + lectureAmount);
         for (long i = 1; i <= audiencesAmount; i++) {
-            audienceEvolves.add(new AudienceEvolve(i, 1/*AudienceType.PRACTICAL*/));
+            audienceEvolves.add(new AudienceEvolve(i, 1/*AudienceType.PRACTICAL*/, null));
         }
         for (long i = 1; i <= lectureAmount; i++) {
-            audienceEvolves.add(new AudienceEvolve(i, 16/*AudienceType.LECTURE*/));
+            audienceEvolves.add(new AudienceEvolve(i, 16/*AudienceType.LECTURE*/, null));
         }
 
         int groups = 16;
