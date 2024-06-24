@@ -27,7 +27,7 @@ public class AudienceService {
 
     private Audience getAudienceByIdAndUserOrThrow(User user, Long id) {
         var audience = audienceRepository.findAudienceById(id);
-        if (audience.isEmpty() || !user.checkUniversityAccess(audience.get().getUniversity().id())) {
+        if (audience.isEmpty() || user != null && !user.checkUniversityAccess(audience.get().getUniversity().id())) {
             throw new ServerException(HttpStatus.NOT_FOUND,
                     String.format("Audience with id %s does dont exist within university %s",
                             id, user.getUniversity().id())
@@ -38,7 +38,7 @@ public class AudienceService {
 
     private Audience getAudienceByNameAndUserOrThrow(User user, String name) {
         var audience = audienceRepository.findAudienceByName(name);
-        if (audience.isEmpty() || !user.checkUniversityAccess(audience.get().getUniversity().id())) {
+        if (audience.isEmpty() || user != null && !user.checkUniversityAccess(audience.get().getUniversity().id())) {
             throw new ServerException(HttpStatus.NOT_FOUND,
                     String.format("Audience with name %s does dont exist within university %s",
                             name, user.getUniversity().id())
@@ -76,9 +76,13 @@ public class AudienceService {
         auidence.setAudienceType(audienceType);
         auidence.setUniversity(university);
         auidence.setAudienceGroupCapacity(audienceGroupCapacity);
-        university.audiences().add(auidence);
+        if (university != null) {
+            university.audiences().add(auidence);
+        }
         var result = audienceRepository.save(auidence);
-        universityService.updateUniversity(university);
+        if (university != null) {
+            universityService.updateUniversity(university);
+        }
         return result;
     }
 
