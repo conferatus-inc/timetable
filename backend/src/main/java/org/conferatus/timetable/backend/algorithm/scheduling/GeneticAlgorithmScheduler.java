@@ -228,6 +228,7 @@ public class GeneticAlgorithmScheduler {
         var initialCheck = penaltyChecker.calculatePenalty(phenotypeToLessons(evolutionResult.bestPhenotype()));
         algorithmStatus.checkResult = initialCheck;
         double initialMaximum = initialCheck.total();
+        int prevMaxCounter = 2000;
         while (goodPhenotypeCounter < satisfiedScheduleAmount) {
             evolutionResult = engine.evolve(evolutionResult.next());
             goodPhenotypeCounter = 0;
@@ -249,7 +250,8 @@ public class GeneticAlgorithmScheduler {
                     });
                     algorithmStatus.checkResult = checkResult;
                 }
-                maxCounter = 3000;
+                maxCounter = prevMaxCounter;
+                prevMaxCounter -= 100 * (1 - maxCounter / prevMaxCounter);
             }
             if (bestResult >= 0) {
                 for (Phenotype<IntegerGene, Double> phenotype : evolutionResult.population()) {
