@@ -221,10 +221,10 @@ public class GeneticAlgorithmScheduler {
                 .build();
         var evolutionResult = engine.evolve(EvolutionStart.empty());
         int goodPhenotypeCounter = 0;
-        int maxCounter = 3000;
+        int maxCounter = 1500;
         double prev = -1e10;
         int i = 0;
-        algorithmStatus.percentage = 1;
+        algorithmStatus.percentage = 0.01;
         var initialCheck = penaltyChecker.calculatePenalty(phenotypeToLessons(evolutionResult.bestPhenotype()));
         algorithmStatus.checkResult = initialCheck;
         double initialMaximum = initialCheck.total();
@@ -232,7 +232,7 @@ public class GeneticAlgorithmScheduler {
             evolutionResult = engine.evolve(evolutionResult.next());
             goodPhenotypeCounter = 0;
             double bestResult = evolutionResult.bestFitness();
-            if (bestResult <= prev) {
+            if (bestResult - prev <= 0) {
 
                 maxCounter--;
 
