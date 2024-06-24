@@ -15,7 +15,6 @@ import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.conferatus.timetable.backend.services.SubjectPlanService;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class DtoConverter {
                             lessonWithTime.audience().groupCapacity()
                     ),
                     studyGroupResponseDTOS,
-                    DayOfWeek.of(lessonWithTime.time().day() + 1),
+                    lessonWithTime.time().day() + 1,
                     (long) lessonWithTime.time().cellNumber()
             );
             cells.add(lessonDTO);

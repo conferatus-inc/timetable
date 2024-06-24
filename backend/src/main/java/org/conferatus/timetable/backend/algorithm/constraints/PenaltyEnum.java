@@ -111,7 +111,7 @@ public enum PenaltyEnum {
                 if (value >= 0.666 * baseVal) {
                     return problem(-value * 2, "Audience {%s} is almost empty %s/%s".formatted(lesson.audience().id(), groupsAmount, roomCapacity));
                 }
-                return ok(-value);
+                return ok();
             }
             ,
             false

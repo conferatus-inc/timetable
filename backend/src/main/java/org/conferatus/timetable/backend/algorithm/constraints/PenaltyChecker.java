@@ -49,6 +49,7 @@ public class PenaltyChecker {
 
         private List<PenaltyResultDTO> getResultDTO() {
             return penaltyToError.entrySet().stream()
+                    .filter(entry -> entry.getValue().summaryPenalty >= 0)
                     .map(entry -> new PenaltyResultDTO(entry.getKey().name, entry.getValue()))
                     .toList();
         }
