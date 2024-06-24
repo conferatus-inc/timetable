@@ -152,7 +152,7 @@ public class GeneticAlgorithmScheduler {
 
     }
 
-    public class AlgorithmStatus {
+    public static class AlgorithmStatus {
         volatile double percentage = 1;
         volatile boolean running = false;
 

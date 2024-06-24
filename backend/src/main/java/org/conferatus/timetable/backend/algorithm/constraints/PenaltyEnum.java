@@ -116,6 +116,20 @@ public enum PenaltyEnum {
             ,
             false
     ),
+    AudienceCapacity(
+            data -> {
+                LessonWithTime lesson = data.currentLesson();
+                double roomCapacity = lesson.cell().audience().groupCapacity();
+                double groupsAmount = lesson.groups().size();
+                if (groupsAmount > roomCapacity) {
+                    return problem(-100, "Not enough space {%s} in the room %s, %s/%s groups/capacity"
+                            .formatted(groupsAmount - roomCapacity, lesson.audience(), groupsAmount, roomCapacity));
+                }
+                return ok();
+            }
+            ,
+            true
+    ),
 //    FakePenalty(
 //            data -> {
 //                LessonWithTime lesson = data.currentLesson();

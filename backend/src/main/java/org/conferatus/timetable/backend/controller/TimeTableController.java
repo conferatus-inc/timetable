@@ -73,7 +73,7 @@ public class TimeTableController {
         AlgorithmStatus algorithmStatus = taskId != null
                 ? algoService.getTaskStatus(taskId)
                 : algoService.getLastResult(user.getUniversity());
-        return ResponseEntity.ok(algorithmStatus.toStatusDto());
+        return ResponseEntity.ok(algorithmStatus == null ? null : algorithmStatus.toStatusDto());
     }
 
     @GetMapping("generate/result")

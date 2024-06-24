@@ -1,21 +1,17 @@
 package org.conferatus.timetable.backend.services;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.exception.ServerException;
 import org.conferatus.timetable.backend.exception.ServerExceptions;
-import org.conferatus.timetable.backend.model.entity.SemesterPlan;
-import org.conferatus.timetable.backend.model.entity.SubjectPlan;
-import org.conferatus.timetable.backend.model.entity.Teacher;
-import org.conferatus.timetable.backend.model.entity.University;
-import org.conferatus.timetable.backend.model.entity.User;
+import org.conferatus.timetable.backend.model.entity.*;
 import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.repository.SemesterPlanRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -142,5 +138,13 @@ public class SemesterPlanService {
     public List<SubjectPlan> getAllSubjectPlans(User user, Long semesterId) {
         SemesterPlan semesterPlan = getSemesterPlanByUserAndIdOrThrow(user, semesterId);
         return semesterPlan.subjectPlans();
+    }
+
+    public SemesterPlan addSubjectGroup(User user, Long semesterId, Long subjectId, Long groupId) {
+        SemesterPlan semesterPlan = getSemesterPlanByUserAndIdOrThrow(user, semesterId);
+        SubjectPlan subjectPlan = getSubjectPlanInSemesterPlanByIdOrThrow(semesterPlan, subjectId);
+        StudyGroup group = studyGroupService.getGroup(user, groupId);
+        subjectPlan.groups().add(group);
+        return semesterPlanRepository.save(semesterPlan);
     }
 }

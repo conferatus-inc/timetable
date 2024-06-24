@@ -1,7 +1,5 @@
 package org.conferatus.timetable.backend.controller;
 
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.conferatus.timetable.backend.dto.SemesterPlanDTO;
 import org.conferatus.timetable.backend.dto.SubjectPlanDTO;
@@ -10,12 +8,9 @@ import org.conferatus.timetable.backend.model.enums.AudienceType;
 import org.conferatus.timetable.backend.services.SemesterPlanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -79,6 +74,19 @@ public class SemesterPlanController {
                 user, semesterId, subjectId
         )));
     }
+
+    @PostMapping("/subject/group")
+    public ResponseEntity<SemesterPlanDTO> addSubjectGroup(
+            @AuthenticationPrincipal User user,
+            @RequestParam("id") Long semesterId,
+            @RequestParam("subject_id") Long subjectId,
+            @RequestParam("group_id") Long groupId
+    ) {
+        return ResponseEntity.ok(new SemesterPlanDTO(semesterPlanService.addSubjectGroup(
+                user, semesterId, subjectId, groupId
+        )));
+    }
+
 
     @PostMapping("/subject/teacher")
     public ResponseEntity<SemesterPlanDTO> addSubjectTeacher(
