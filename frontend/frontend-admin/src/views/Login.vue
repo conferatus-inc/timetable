@@ -1,49 +1,33 @@
 <template>
-  <!-- <HelloWorld /> -->
   <v-container>
-    <v-row>
-      <v-col>
-        <h2 class="ma-2">knock-knock</h2>
-        <div>
-          <v-text-field
-            label="Логин"
-            :rules="rules"
-            hide-details="auto"
-            v-model="login"
-          ></v-text-field>
-
-          <v-text-field 
-          label="Пароль"
-          type="password"
-          :rules="rules"
-          hide-details=true
-          v-model="pass"
-          ></v-text-field>
-        </div>
-        <v-spacer></v-spacer>
-        
-        <v-btn 
-        variant="flat" 
-        class="ma-2"
-        :to="{path: '/'}"
-        :disabled="login.length <3 || pass.length <3"
-        >
-          Войти
-        </v-btn>
-      </v-col>
-    </v-row>
+    <v-card class="ma-2">
+      <v-btn 
+      variant="flat" 
+      class="ma-2"
+      @click="loginWithYandex"
+      >
+        Войти через Яндекс
+      </v-btn>
+      </v-card>
   </v-container>
 </template>
 
-<script setup>
-import { http } from '@/http-common';
-import { ref } from 'vue'
+<script>
+import { ref } from 'vue';
 
-const rules = [
-  value => !!value || 'Required.',
-  value => (value && value.length >= 3) || 'Min 3 characters',
-]
+export default {
+  setup() {
+    const clientId = 'c4842a2eb8854095ac88ee089d1b0eca';
+    const redirectUri = 'https://redirectmeto.com/http://localhost:3001/login_successful';
+    const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}`;
 
-const login = ref('')
-const pass = ref('')
+    const loginWithYandex = () => {
+      window.location.href = yandexAuthUrl;
+    };
+
+    return {
+      loginWithYandex
+    };
+  }
+}
 </script>
