@@ -212,6 +212,7 @@ public class GeneticAlgorithmScheduler {
         cells.clear();
         lessonGenes.clear();
         prepareData(studyPlanEvolves, audiences);
+        System.out.println(cells + " " + lessonGenes);
         final Factory<Genotype<IntegerGene>> gtf =
                 Genotype.of(IntegerChromosome.of(0, cells.size()), lessonGenes.size());
         final Engine<IntegerGene, Double> engine = Engine
@@ -222,14 +223,14 @@ public class GeneticAlgorithmScheduler {
                 .build();
         var evolutionResult = engine.evolve(EvolutionStart.empty());
         int goodPhenotypeCounter = 0;
-        int maxCounter = 1500;
+        int maxCounter = 1400;
         double prev = -1e10;
         int i = 0;
         algorithmStatus.percentage = 0.01;
         var initialCheck = penaltyChecker.calculatePenalty(phenotypeToLessons(evolutionResult.bestPhenotype()));
         algorithmStatus.checkResult = initialCheck;
         double initialMaximum = initialCheck.total();
-        int prevMaxCounter = 2000;
+        int prevMaxCounter = 1400;
         while (goodPhenotypeCounter < satisfiedScheduleAmount) {
             evolutionResult = engine.evolve(evolutionResult.next());
             goodPhenotypeCounter = 0;
