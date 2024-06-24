@@ -58,7 +58,7 @@ public class DtoConverter {
                             lessonWithTime.audience().groupCapacity()
                     ),
                     studyGroupResponseDTOS,
-                    DayOfWeek.of(lessonWithTime.time().day()),
+                    DayOfWeek.of(lessonWithTime.time().day() + 1),
                     (long) lessonWithTime.time().cellNumber()
             );
             cells.add(lessonDTO);
