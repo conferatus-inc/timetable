@@ -1,14 +1,19 @@
 package org.conferatus.timetable.backend.model.entity;
 
-import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.conferatus.timetable.backend.dto.UserDto;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -31,7 +36,7 @@ public class User {
     private University university;
 
     public boolean checkUniversityAccess(long id) {
-        return university.id() == id;
+        return university != null && university.id() == id;
     }
 
     public UserDto toUserDto() {
