@@ -1,8 +1,9 @@
 package org.conferatus.timetable.backend.model.enums;
 
+import java.time.DayOfWeek;
 import java.util.Objects;
 
-public record TableTime(int day, int cellNumber){
+public record TableTime(int day, int cellNumber) {
     public int toIndex() {
         return day * cellsAmount + cellNumber;
     }
@@ -32,7 +33,7 @@ public record TableTime(int day, int cellNumber){
 
     @Override
     public String toString() {
-        return day + "/" + cellNumber;
+        return DayOfWeek.of(day + 1) + "/" + (cellNumber + 1);
     }
 
     @Override

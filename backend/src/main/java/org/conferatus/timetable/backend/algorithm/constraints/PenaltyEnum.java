@@ -109,7 +109,7 @@ public enum PenaltyEnum {
                 double groupsAmount = lesson.groups().size();
                 double value = baseVal * 1 - groupsAmount / roomCapacity;
                 if (value >= 0.666 * baseVal) {
-                    return problem(-value * 2, "Audience is almost empty");
+                    return problem(-value * 2, "Audience {%s} is almost empty %s/%s".formatted(lesson.audience().id(), groupsAmount, roomCapacity));
                 }
                 return ok(-value);
             }

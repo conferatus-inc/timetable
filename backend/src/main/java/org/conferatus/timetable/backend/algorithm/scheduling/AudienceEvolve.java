@@ -6,19 +6,21 @@ import java.util.Objects;
 
 public record AudienceEvolve(
         Long id,
-        long groupCapacity
+        long groupCapacity,
+        String name
 ) implements Comparable<AudienceEvolve>{
 
     public AudienceEvolve(Audience audience) {
         this(
                 audience.getId(),
-                audience.getAudienceGroupCapacity()
+                audience.getAudienceGroupCapacity(),
+                audience.getName()
         );
     }
 
     @Override
     public String toString() {
-        return id + ":" + groupCapacity;
+        return name;
     }
 
     @Override
