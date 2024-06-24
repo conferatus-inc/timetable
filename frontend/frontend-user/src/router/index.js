@@ -48,6 +48,18 @@ const routes = [
         component: () => import('@/views/GroupTable.vue')
       },
 
+      { 
+        path: '/login', 
+        name: 'Login', 
+        component: () => import('@/views/Login.vue')
+      },
+
+      { 
+        path: '/login_successful', 
+        name: 'Login successful', 
+        component: () => import('@/views/LoginSuccess.vue')
+      },
+
       // else
       { 
         path: '/:pathMatch(.*)*', 
