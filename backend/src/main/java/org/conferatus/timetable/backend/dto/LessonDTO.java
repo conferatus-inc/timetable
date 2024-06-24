@@ -1,10 +1,9 @@
 package org.conferatus.timetable.backend.dto;
 
-import java.time.DayOfWeek;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.conferatus.timetable.backend.model.entity.Lesson;
+
+import java.util.List;
 
 public record LessonDTO(
         Long id,
@@ -12,7 +11,7 @@ public record LessonDTO(
         SimpleTeacher teacher,
         AudienceDTO auditory,
         List<StudyGroupResponseDTO> groups,
-        @JsonProperty("day_index") DayOfWeek dayNumber,
+        @JsonProperty("day_index") int dayNumber,
         @JsonProperty("time_index") Long timeNumber
 
 ) {
@@ -23,7 +22,7 @@ public record LessonDTO(
                 new SimpleTeacher(lesson.getTeacher()),
                 new AudienceDTO(lesson.getAudience()),
                 lesson.getGroups().stream().map(StudyGroupResponseDTO::new).toList(),
-                lesson.getDayOfWeek(),
+                lesson.getDayOfWeek().ordinal(),
                 lesson.getLessonNumber()
         );
     }
