@@ -11,6 +11,18 @@
         <v-btn 
         variant="flat" 
         class="ma-2"
+        @click="$router.push({ path: '/login' })"
+        >
+          Авторизация
+        </v-btn>
+        </v-card>
+  
+        <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
         :to="{path: '/new-teacher'}"
         >
           Добавить преподавателя
@@ -66,6 +78,18 @@
         </v-card>
 
         <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+          <v-btn 
+          variant="flat" 
+          class="ma-2"
+          :to="{path: '/link-group-subject'}"
+          >
+            Добавить предмет к группе
+          </v-btn>
+          </v-card>
+  
+          <v-spacer></v-spacer>
 
         <v-card class="ma-2">
         <v-btn 

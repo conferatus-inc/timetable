@@ -26,6 +26,12 @@
         </v-radio-group>
         <v-spacer></v-spacer>
 
+        <v-text-field
+          label="Вместительность (кол-во групп)"
+          v-model="audienceGroupCapacity"
+        ></v-text-field>
+       <v-spacer></v-spacer>
+
         <v-btn 
         variant="flat" 
         class="ma-2"
@@ -59,10 +65,11 @@ const audienceTypes = {
 }
 
 const name = ref('')
+const audienceGroupCapacity = ref(1)
 const audienceType = ref('LECTURE')
 
 function postNewAudience() {
-  http.post("api/v1/admin/audience?name=" + name.value + "&audience_type=" + audienceType.value)
+  http.post("api/v1/admin/audience?name=" + name.value + "&audience_type=" + audienceType.value + "&audience_group_capacity=" + audienceGroupCapacity.value)
     .then(response => {
       if (response.status == 200) {
         showAlert("Аудитория добавлена!")

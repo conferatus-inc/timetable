@@ -69,6 +69,9 @@
   const arr2D = ref('')
   const items = props.items
 
+  console.log(items)
+  console.log("here ")
+
 
   arr2D.value = Array(6).fill(null).map(() => Array(6).fill(
     {subject : ' ', teacher : ' ', audience : ' ', group : ' '}

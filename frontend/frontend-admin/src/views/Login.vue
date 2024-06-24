@@ -18,7 +18,7 @@ import { ref } from 'vue';
 export default {
   setup() {
     const clientId = 'c4842a2eb8854095ac88ee089d1b0eca';
-    const redirectUri = 'https://redirectmeto.com/http://localhost:3001/login_successful';
+    const redirectUri = 'https://redirectmeto.com/http://localhost:3002/login_successful';
     const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}`;
 
     const loginWithYandex = () => {

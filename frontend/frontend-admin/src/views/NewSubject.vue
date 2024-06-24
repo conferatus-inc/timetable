@@ -1,5 +1,4 @@
 <template>
-  <!-- <HelloWorld /> -->
   <v-container>
     <v-row>
       <v-col>
