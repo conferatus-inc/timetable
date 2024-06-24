@@ -32,4 +32,21 @@ public class ExceptionHandlingController {
         }
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    private void handle(HttpServletResponse response, NullPointerException nullPointerException) {
+        response.setStatus(500);
+        response.addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        ObjectMapper mapper = new ObjectMapper();
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()))) {
+            bw.write(mapper.writeValueAsString(
+                    nullPointerException.getMessage() + " " +
+                            nullPointerException.getCause() + " " +
+                            Arrays.toString(nullPointerException.getStackTrace())
+            ));
+        } catch (IOException e) {
+//            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
 }
