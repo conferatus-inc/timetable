@@ -38,6 +38,6 @@ public class TeacherWish {
     private long priority;
 
     public TeacherWishDto toWishDto() {
-        return new TeacherWishDto(id, dayOfWeek, lessonNumber, priority);
+        return new TeacherWishDto(dayOfWeek, lessonNumber, priority);
     }
 }
