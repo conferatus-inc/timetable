@@ -1,0 +1,59 @@
+<template>
+  <!-- <HelloWorld /> -->
+  <v-container>
+    <v-row>
+      <v-col>
+        <h2 class="ma-2">Добавить ВУЗ</h2>
+        <div>
+          <v-text-field
+            label="Название"
+            :rules="rules"
+            hide-details="auto"
+            v-model="name"
+          ></v-text-field>
+        </div>
+        <v-spacer></v-spacer>
+        
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/'}"
+        @click="postNewUniversity()"
+        :disabled="name.length < 3"
+        :rules="rules"
+        >
+          Создать
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script setup>
+import { http } from '@/http-common';
+import { ref } from 'vue'
+import { showAlert } from '@/store/globalAlert.js'
+
+const rules = [
+  value => !!value || 'Это поле обязательно',
+  value => (value.length >= 3) || 'Требуется как минимум 3 символа',
+]
+
+const name = ref('')
+
+function postNewUniversity() {
+  http.post("api/v1/admin/universities?name=" + name.value)
+    .then(response => {
+      if (response.status == 200) {
+        showAlert("Университет добавлен!")
+        const universityId = response.data.id
+
+      } else {
+        showAlert(response.statusText)
+      }
+    }).catch(function (error) {
+      showAlert("Произошла ошибка: " + error)
+    })
+}
+
+</script>

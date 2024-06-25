@@ -2,11 +2,11 @@
   <!-- <HelloWorld /> -->
   <v-container>
     <v-col>
-      <h2 class="ma-2">Добавить преподавателя к предмету</h2>
+      <h2 class="ma-2">Добавить группу к предмету</h2>
 
       <v-row>
         <ItemsList
-        title="Преподаватель"
+        title="Группа"
         :items="groups"
         @choose="selectGroup">
         </ItemsList>
@@ -23,7 +23,7 @@
       class="ma-2"
       :to="{path: '/'}"
       @click="postNewLink()"
-      :disabled="selectedGroup < 1 || selectedSubject < 1 || possibleTimes < 1"
+      :disabled="selectedGroup < 1 || selectedSubject < 1"
       >
         Создать
       </v-btn>
