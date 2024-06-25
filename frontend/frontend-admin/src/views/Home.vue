@@ -68,6 +68,18 @@
         <v-spacer></v-spacer>
 
         <v-card class="ma-2">
+          <v-btn 
+          variant="flat" 
+          class="ma-2"
+          :to="{path: '/new-university'}"
+          >
+            Добавить университет
+          </v-btn>
+          </v-card>
+  
+          <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
         <v-btn 
         variant="flat" 
         class="ma-2"
@@ -80,16 +92,28 @@
         <v-spacer></v-spacer>
 
         <v-card class="ma-2">
-          <v-btn 
-          variant="flat" 
-          class="ma-2"
-          :to="{path: '/link-group-subject'}"
-          >
-            Добавить предмет к группе
-          </v-btn>
-          </v-card>
-  
-          <v-spacer></v-spacer>
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/link-group-subject'}"
+        >
+          Добавить предмет к группе
+        </v-btn>
+        </v-card>
+
+        <v-spacer></v-spacer>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/link-group-university'}"
+        >
+          Добавить пользователя к ВУЗу
+        </v-btn>
+        </v-card>
+
+        <v-spacer></v-spacer>
 
         <v-card class="ma-2">
         <v-btn 
@@ -98,6 +122,16 @@
         :to="{path: '/generate-table'}"
         >
           Сгенерировать расписание
+        </v-btn>
+        </v-card>
+
+        <v-card class="ma-2">
+        <v-btn 
+        variant="flat" 
+        class="ma-2"
+        :to="{path: '/regenerate-table'}"
+        >
+          Догенерировать расписание
         </v-btn>
         </v-card>
 

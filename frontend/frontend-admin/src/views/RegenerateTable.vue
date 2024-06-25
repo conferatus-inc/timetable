@@ -55,19 +55,19 @@
   import router from '@/router';
 
   function getTable() {
-    http.get('/api/v1/admin/timetable/generate/state')
+    http.get('/api/v1/admin/timetable/regenerate/state')
       .then(response => {
           serverState.value = response.data.percentage
           if (response.data.running == false) {
-            http.get('/api/v1/admin/timetable/generate/result')
+            http.get('/api/v1/admin/timetable/regenerate/result')
               .then(response2 => {
                 items.value = response2.data
                 state.value = 'loaded'
               })
 
-            http.get('/api/v1/admin/timetable/generate/choose?chooseIndex=0')
+            http.get('/api/v1/admin/timetable/regenerate/choose?chooseIndex=0')
           } else {
-            setTimeout(() => getTable(), 2000)
+            setTimeout(() => getTable(), 1000)
           }
       })
       .catch(e => {
@@ -81,12 +81,12 @@
   const errorMessage = ref('') 
   const serverState = ref(1)
 
-  http.get('/api/v1/admin/timetable/generate?semesterId=1')
+  http.get('/api/v1/admin/timetable/regenerate?semesterId=1')
     .catch(e => {
       errorMessage.value = e 
       state.value = 'error'
-    }).then(resp =>
-    getTable()
-    )
+    })
+
+  getTable()
 
 </script>

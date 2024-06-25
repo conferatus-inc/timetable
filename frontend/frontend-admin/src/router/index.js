@@ -43,6 +43,12 @@ const routes = [
       },
 
       {
+        path: '/new-university',
+        name: 'New university',
+        component: () => import('@/views/NewUniversity.vue'),
+      },
+
+      {
         path: '/link-teacher-subject',
         name: 'Link teacher subject',
         component: () => import('@/views/LinkTeacherSubject.vue'),
@@ -55,10 +61,23 @@ const routes = [
       },
 
       {
+        path: '/link-group-university',
+        name: 'Link group university',
+        component: () => import('@/views/LinkGroupUniversity.vue'),
+      },
+
+      {
         path: '/generate-table',
         name: 'Generate table',
         component: () => import('@/views/GenerateTable.vue'),
       },
+
+      {
+        path: '/regenerate-table',
+        name: 'Regenerate table',
+        component: () => import('@/views/RegenerateTable.vue'),
+      },
+
 
       { 
         path: '/login', 
